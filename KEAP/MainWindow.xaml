@@ -28,7 +28,7 @@
         <Button x:Name="LineButton" Content="Line" Grid.Column="1" HorizontalAlignment="Left" Margin="180,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" PreviewMouseLeftButtonDown="Line_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Line_PreviewMouseLeftButtonUp"/>
         <Button x:Name="RectangleButton" Content="Rectangle" Grid.Column="1" HorizontalAlignment="Left" Margin="260,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" PreviewMouseLeftButtonDown="Rectangle_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Rectangle_PreviewMouseLeftButtonUp"/>
         <Button x:Name="PolygonButton" Content="Polygon" Grid.Column="1" HorizontalAlignment="Left" Margin="340,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" PreviewMouseLeftButtonDown="Polygon_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Polygon_PreviewMouseLeftButtonUp"/>
-        <Button x:Name="ImageButton" Content="Image" Grid.Column="1" HorizontalAlignment="Left" Margin="420,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" PreviewMouseLeftButtonDown="Image_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Image_PreviewMouseLeftButtonUp"/>
+        <Button x:Name="ImageButton" Content="Image" Grid.Column="1" HorizontalAlignment="Left" Margin="420,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" Click="Image_Click" />
         <Button x:Name="TableButton" Content="Table" Grid.Column="1" HorizontalAlignment="Left" Margin="500,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" PreviewMouseLeftButtonDown="Table_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Table_PreviewMouseLeftButtonUp"/>
     </Grid>
 </Window>

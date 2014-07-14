@@ -31,6 +31,11 @@ namespace KEAP
         Point Start_Point, Start_Point_Poly;
 
         int prev_Count_Children = 0, prev_Poly_Count_Children=0;
+
+        BitmapImage new_Bitmap_Image;
+        string image_Path;
+        Rectangle image_Rect;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -62,7 +67,8 @@ namespace KEAP
         {
             canvas_LeftButton_Down = true;
             prev_Count_Children = MainCanvas.Children.Count;
-            
+            Start_Point = e.GetPosition(MainCanvas);
+
             if(line_Mode)
             {
                 if (line_Mode_Toggle)
@@ -93,7 +99,25 @@ namespace KEAP
                     Start_Point_Poly = e.GetPosition(MainCanvas);
                 }
             }
-            Start_Point = e.GetPosition(MainCanvas);
+            
+            if (image_Mode)
+            {
+                /*image_Rect = new Rectangle()
+                {
+                    Stroke = Brushes.LightBlue,
+                    StrokeThickness = 2
+                };
+                Canvas.SetLeft(image_Rect, Start_Point.X);
+                Canvas.SetTop(image_Rect, Start_Point.Y);
+                MainCanvas.Children.Add(image_Rect);*/
+                Image image = new Image();
+                image.Source = new_Bitmap_Image;
+                image.Stretch = Stretch.Fill;
+                Canvas.SetLeft(image, Start_Point.X);
+                Canvas.SetTop(image, Start_Point.Y);
+                MainCanvas.Children.Add(image);
+
+            }
         }
 
         void MainCanvas_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -109,7 +133,7 @@ namespace KEAP
             double x2 = End_Point.X;
             double y2 = End_Point.Y;
 
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed&&canvas_LeftButton_Down)
             {
                 if (pen_Mode)
                 {
@@ -135,11 +159,11 @@ namespace KEAP
 
                 else if (text_Mode)
                 {
-                    TextBlock textblock = new TextBlock()
+                    EditableTextBlock textblock = new EditableTextBlock()
                     {
                         Width = x2 - x1,
                         Height = y2 - y1,
-                        Background = new SolidColorBrush(Colors.Gray)
+                        Background = new SolidColorBrush(Colors.LightGray)
                     };
 
                     Canvas.SetLeft(textblock, x1);
@@ -193,7 +217,31 @@ namespace KEAP
 
                 else if (image_Mode)
                 {
-
+                    int area1 = 0, area2 = 0, area3 = 0;
+                    if (x1 < x2)
+                    {
+                        ((Image)MainCanvas.Children[prev_Count_Children]).Width = x2 - x1;
+                        area1 = 1;
+                    }
+                    else
+                    {
+                        ((Image)MainCanvas.Children[prev_Count_Children]).Width = x1 - x2;
+                        area2 = 1; area3 = 1;
+                    }
+                    if (y1 < y2)
+                    {
+                        ((Image)MainCanvas.Children[prev_Count_Children]).Height = y2 - y1;
+                        area3 = 0;
+                    }
+                    else
+                    {
+                        ((Image)MainCanvas.Children[prev_Count_Children]).Height = y1 - y2;
+                        area1 = 0; area2 = 0;
+                    }
+                    if (area1 == 1) { Canvas.SetLeft(((Image)MainCanvas.Children[prev_Count_Children]), x1); Canvas.SetTop(((Image)MainCanvas.Children[prev_Count_Children]), y1); }
+                    else if (area2 == 1) { Canvas.SetLeft(((Image)MainCanvas.Children[prev_Count_Children]), x2); Canvas.SetTop(((Image)MainCanvas.Children[prev_Count_Children]), y1); }
+                    else if (area3 == 1) { Canvas.SetLeft(((Image)MainCanvas.Children[prev_Count_Children]), x2); Canvas.SetTop(((Image)MainCanvas.Children[prev_Count_Children]), y2); }
+                    else { Canvas.SetLeft(((Image)MainCanvas.Children[prev_Count_Children]), x1); Canvas.SetTop(((Image)MainCanvas.Children[prev_Count_Children]), y2); }
                 }
 
                 else if (table_Mode)
@@ -288,8 +336,6 @@ namespace KEAP
             }
         }
 
-
-
         void SetAllModeFalse()
         {
             pen_Mode = text_Mode = line_Mode = rectangle_Mode = polygon_Mode = image_Mode = table_Mode = false;
@@ -345,16 +391,31 @@ namespace KEAP
         {
 
         }
-        private void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Image_Click(object sender, RoutedEventArgs e)
         {
             SetAllModeFalse();
-            image_Mode = true;
-        }
 
-        private void Image_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = ".jpeg"; // Default file extension
+            dlg.Filter = "JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif|BMP Files (*.bmp)|*.bmp"; // Filter files by extension
 
+            // Show open file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Process open file dialog box results
+            if (result == true)
+            {
+                // Open document
+                image_Path = dlg.FileName;
+                image_Mode = true;
+
+                new_Bitmap_Image = new BitmapImage();
+                new_Bitmap_Image.BeginInit();
+                new_Bitmap_Image.UriSource = new Uri(image_Path, UriKind.Absolute);
+                new_Bitmap_Image.EndInit();
+            }
         }
+        
         private void Table_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             SetAllModeFalse();
@@ -372,5 +433,6 @@ namespace KEAP
             d = Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
             return d;
         }
+       
     }
 }
