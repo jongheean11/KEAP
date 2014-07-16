@@ -1,10 +1,13 @@
 ﻿<Window x:Class="KEAP.OpenWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="OpenWindow" Height="300" Width="300">
+        Title="OpenWindow">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.9*"/>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="64"/>
+            <RowDefinition Height="0.14*"/>
             <RowDefinition Height="3.0*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
@@ -12,7 +15,7 @@
             <ColumnDefinition Width="0.7*"/>
             <ColumnDefinition Width="3.75*"/>
         </Grid.ColumnDefinitions>
-        <Button Content="새로 만들기" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="100" Height="30" Click="Click"  Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button Content="새로 만들기" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Row="5" VerticalAlignment="Top" Width="100" Height="30" Click="Click"  Background="{x:Null}" BorderBrush="{x:Null}"/>
 
     </Grid>
 </Window>
