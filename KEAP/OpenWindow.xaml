@@ -4,16 +4,15 @@
         Title="OpenWindow" Height="300" Width="300">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="3.4*"/>
-            <RowDefinition Height="0.3*"/>
-            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="0.9*"/>
+            <RowDefinition Height="3.0*"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="3.6*"/>
+            <ColumnDefinition Width="0.7*"/>
+            <ColumnDefinition Width="3.75*"/>
         </Grid.ColumnDefinitions>
-        <Button Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="Click"/>
+        <Button Content="새로 만들기" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,0,0" Grid.Row="2" VerticalAlignment="Top" Width="100" Height="30" Click="Click"  Background="{x:Null}" BorderBrush="{x:Null}"/>
 
     </Grid>
 </Window>
