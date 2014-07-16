@@ -13,5 +13,6 @@ namespace KEAP
         public static double resolution_Height = SystemParameters.MaximizedPrimaryScreenHeight;
         public static double current_Width;
         public static double current_Height;
+        public static WindowState current_WindowState = WindowState.Maximized;
     }
 }

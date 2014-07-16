@@ -8,9 +8,9 @@
             <ColumnDefinition Width="3.75*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.14*"/>
-            <RowDefinition Height="0.14*"/>
-            <RowDefinition Height="0.4*"/>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="64"/>
             <RowDefinition Height="0.14*"/>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="0.4*"/>
@@ -23,12 +23,129 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="PenButton" Content="Pen" Grid.Column="1" HorizontalAlignment="Left" Margin="20,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" PreviewMouseLeftButtonDown="Pen_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Pen_PreviewMouseLeftButtonUp"/>
-        <Button x:Name="TextButton" Content="Text" Grid.Column="1" HorizontalAlignment="Left" Margin="100,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" PreviewMouseLeftButtonDown="Text_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Text_PreviewMouseLeftButtonUp"/>
-        <Button x:Name="LineButton" Content="Line" Grid.Column="1" HorizontalAlignment="Left" Margin="180,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" PreviewMouseLeftButtonDown="Line_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Line_PreviewMouseLeftButtonUp"/>
-        <Button x:Name="RectangleButton" Content="Rectangle" Grid.Column="1" HorizontalAlignment="Left" Margin="260,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" PreviewMouseLeftButtonDown="Rectangle_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Rectangle_PreviewMouseLeftButtonUp"/>
-        <Button x:Name="PolygonButton" Content="Polygon" Grid.Column="1" HorizontalAlignment="Left" Margin="340,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" PreviewMouseLeftButtonDown="Polygon_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Polygon_PreviewMouseLeftButtonUp"/>
-        <Button x:Name="ImageButton" Content="Image" Grid.Column="1" HorizontalAlignment="Left" Margin="420,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" Click="Image_Click" />
-        <Button x:Name="TableButton" Content="Table" Grid.Column="1" HorizontalAlignment="Left" Margin="500,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="70" PreviewMouseLeftButtonDown="Table_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Table_PreviewMouseLeftButtonUp"/>
+        <Button x:Name="PenButton" Content="펜" HorizontalAlignment="Left" Margin="26,34,0,0" Grid.Row="4" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Pen_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Pen_PreviewMouseLeftButtonUp" RenderTransformOrigin="-0.82,-1.137" Grid.Column="1"/>
+        <Button x:Name="TextButton" Content="텍스트" Grid.Column="1" HorizontalAlignment="Left" Margin="106,39,0,0" Grid.Row="4" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Text_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Text_PreviewMouseLeftButtonUp"/>
+        <Button x:Name="LineButton" Content="선" Grid.Column="1" HorizontalAlignment="Left" Margin="196,66,0,0" Grid.Row="4" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Line_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Line_PreviewMouseLeftButtonUp"/>
+        <Button x:Name="RectangleButton" Content="사각형" Grid.Column="1" HorizontalAlignment="Left" Margin="282,71,0,0" Grid.Row="4" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Rectangle_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Rectangle_PreviewMouseLeftButtonUp"/>
+        <Button x:Name="PolygonButton" Content="다각형" Grid.Column="1" HorizontalAlignment="Left" Margin="364,76,0,0" Grid.Row="4" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Polygon_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Polygon_PreviewMouseLeftButtonUp"/>
+        <Button x:Name="ImageButton" Content="이미지" Grid.Column="1" HorizontalAlignment="Left" Margin="438,81,0,0" Grid.Row="4" VerticalAlignment="Top" Width="50" Click="Image_Click" />
+        <Button x:Name="TableButton" Content="표" Grid.Column="1" HorizontalAlignment="Left" Margin="510,71,0,0" Grid.Row="4" VerticalAlignment="Top" Width="50" Click="Table_Click" />
+        <Button x:Name="ClearAllButton" Content="선택취소" Grid.Column="1" HorizontalAlignment="Left" Margin="544,128,0,0" Grid.Row="4" VerticalAlignment="Top" Width="50" Click="ClearAll_Click" />
+
+        <Button x:Name="BackMenu" Content="뒤로가기" HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Margin="10,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="BackMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="HomeMenu" Content="홈" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="75,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="HomeMenu_Click" Background="{x:Null}" BorderBrush="Gray"/>
+        <Button x:Name="InsertMenu" Content="삽입" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="120,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="InsertMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="DesignMenu" Content="디자인" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="170,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="DesignMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="AnimationMenu" Content="애니메이션" HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="225,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="AnimationMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="ConvertMenu" Content="전환" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="295,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="ConvertMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="StyleMenu" Content="서식" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="345,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="StyleMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+
+        <Border x:Name="Menu_Border" BorderBrush="Gray" BorderThickness="1" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2">
+        </Border>
+        <Grid x:Name="HomeMenu_Grid"  Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <!--0-->
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="145"/>
+                <!--5-->
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button x:Name="ClipBoardButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,0,1" Background="{x:Null}" Grid.Column="0" Grid.RowSpan="3" BorderBrush="LightGray">
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Top" Source="Images/Button/clip.png" Height="30" />
+                    <Label HorizontalContentAlignment="Center" DockPanel.Dock="Bottom">클립보드</Label>
+                </DockPanel>
+            </Button>
+            <Button x:Name="CutButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,0,0" Background="{x:Null}" Grid.Row="0" Grid.Column="1" BorderBrush="LightGray">
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Left" Source="Images/Button/cut.png" Width="25"/>
+                    <Label HorizontalContentAlignment="Center" DockPanel.Dock="Right">잘라내기</Label>
+                </DockPanel>
+            </Button>
+            <Button x:Name="CopyButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,0" Background="{x:Null}" Grid.Row="1" Grid.Column="1" BorderBrush="LightGray">
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Left" Source="Images/Button/copy.png"/>
+                    <Label HorizontalContentAlignment="Center" DockPanel.Dock="Right">복사하기</Label>
+                </DockPanel>
+            </Button>
+            <Button x:Name="PasteButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,1" Background="{x:Null}" Grid.Row="2" Grid.Column="1" BorderBrush="LightGray">
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Left" Source="Images/Button/paste.png"/>
+                    <Label HorizontalContentAlignment="Center" DockPanel.Dock="Right">붙여넣기</Label>
+                </DockPanel>
+            </Button>
+            <Rectangle Grid.Column="2" Grid.RowSpan="3" Fill="Gray"/>
+
+
+            <Button x:Name="NewSlideButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,0,1" Background="{x:Null}" Grid.Row="0" Grid.Column="3" Grid.RowSpan="3" BorderBrush="LightGray">
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Top" Source="Images/Button/newslide.png" Height="34"/>
+                    <Label HorizontalContentAlignment="Center" DockPanel.Dock="Bottom" FontSize="9">새 슬라이드</Label>
+                </DockPanel>
+            </Button>
+
+            <Rectangle Grid.Column="4" Grid.RowSpan="3" Fill="Gray"/>
+            <ComboBox x:Name="FontFamily_ComboBox" ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}" Grid.Column="5" HorizontalAlignment="Left" Width="140" Margin="5,15,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="LightGray" IsSynchronizedWithCurrentItem="True" Height="25" Grid.RowSpan="3">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontFamily="{Binding}" FontSize="16"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox x:Name="FontSize_ComboBox" ItemsSource="{Binding Source={x:Static SystemFonts.IconFontStyleKey}}" Grid.Column="6" HorizontalAlignment="Left" Width="60" Margin="5,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="LightGray" Height="25" Grid.RowSpan="3"/>
+            <Button x:Name="BoldButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Bottom" Source="Images/Button/bold.png"/>
+                </DockPanel>
+            </Button>
+            <Button x:Name="ItalicButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="35,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Bottom" Source="Images/Button/italic.png"/>
+                </DockPanel>
+            </Button>
+            <Button x:Name="UnderlineButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="65,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Bottom" Source="Images/Button/underline.png"/>
+                </DockPanel>
+            </Button>
+            <Button x:Name="ShadowButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="95,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Bottom" Source="Images/Button/shadow.png"/>
+                </DockPanel>
+            </Button>
+            <Button x:Name="FontColorButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="125,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Top" Source="Images/Button/fontcolor.png" Height="17"/>
+                    <Rectangle DockPanel.Dock="Bottom" Width="20" Height="8" Fill="Black"/>
+                </DockPanel>
+            </Button>
+            
+        </Grid>
+        <Grid x:Name="InsertMenu_Grid"  Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <Grid x:Name="DesignMenu_Grid"  Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Visibility="Collapsed"></Grid>
+        <Grid x:Name="AnimationMenu_Grid"  Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Visibility="Collapsed"></Grid>
+        <Grid x:Name="ConvertMenu_Grid"  Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Visibility="Collapsed"></Grid>
+        <Grid x:Name="StyleMenu_Grid"  Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Visibility="Collapsed"></Grid>
     </Grid>
 </Window>

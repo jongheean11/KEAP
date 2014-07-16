@@ -96,6 +96,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Images\Button\Thumbs.db" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -110,6 +111,22 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Themes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Button\clip.png" />
+    <Resource Include="Images\Button\copy.png" />
+    <Resource Include="Images\Button\cut.png" />
+    <Resource Include="Images\Button\newslide.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Button\paste.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Button\bold.png" />
+    <Resource Include="Images\Button\fontcolor.png" />
+    <Resource Include="Images\Button\italic.png" />
+    <Resource Include="Images\Button\shadow.png" />
+    <Resource Include="Images\Button\underline.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

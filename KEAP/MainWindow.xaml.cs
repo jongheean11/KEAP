@@ -36,10 +36,13 @@ namespace KEAP
         string image_Path;
         Rectangle image_Rect;
 
+        int table_Row_Count = 2, table_Column_Count = 3;
+
         public MainWindow()
         {
             InitializeComponent();
-            
+            WindowState = WindowSettings.current_WindowState;
+
             // 그냥 최대로 했음
             this.Width = WindowSettings.resolution_Width;
             this.Height = WindowSettings.resolution_Height;
@@ -52,7 +55,6 @@ namespace KEAP
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
                 Background=new SolidColorBrush(Colors.White)
             };
-
             Grid.SetRow(MainCanvas, 4);
             Grid.SetColumn(MainCanvas, 1);
             Grid.SetRowSpan(MainCanvas, 1);
@@ -102,21 +104,66 @@ namespace KEAP
             
             if (image_Mode)
             {
-                /*image_Rect = new Rectangle()
-                {
-                    Stroke = Brushes.LightBlue,
-                    StrokeThickness = 2
-                };
-                Canvas.SetLeft(image_Rect, Start_Point.X);
-                Canvas.SetTop(image_Rect, Start_Point.Y);
-                MainCanvas.Children.Add(image_Rect);*/
                 Image image = new Image();
                 image.Source = new_Bitmap_Image;
                 image.Stretch = Stretch.Fill;
                 Canvas.SetLeft(image, Start_Point.X);
                 Canvas.SetTop(image, Start_Point.Y);
                 MainCanvas.Children.Add(image);
+            }
 
+            if (table_Mode)
+            {
+                Grid grid = new Grid()
+                {
+                    Background = new SolidColorBrush(Colors.LightGray),
+                    Width = 1,
+                    Height = 1
+                };
+                
+                int i;
+                for (i = 0; i < table_Row_Count; i++)
+                {
+                    RowDefinition row_Definition = new RowDefinition();
+                    grid.RowDefinitions.Add(row_Definition);
+                }
+                for (i = 0; i < table_Column_Count; i++)
+                {
+                    ColumnDefinition column_Definition = new ColumnDefinition();
+                    grid.ColumnDefinitions.Add(column_Definition);
+                }
+
+                int table_Entry_X = 0, table_Entry_Y = 0;
+                while (table_Entry_X * table_Entry_Y != table_Row_Count * table_Column_Count)
+                {
+                    EditableTextBlock textblock = new EditableTextBlock()
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        TextAlignment = TextAlignment.Center,
+                        //BorderBrush = new SolidColorBrush(Colors.Black),
+                        Background = new SolidColorBrush(Colors.LightCyan),
+                        TextWrapping = TextWrapping.Wrap,
+                        //FontStyle = Windows.UI.Text.FontStyle.Normal,
+                    };
+                    
+                    Grid.SetRow(textblock, table_Entry_X);
+                    Grid.SetColumn(textblock, table_Entry_Y);
+                    Grid.SetRowSpan(textblock, 1);
+                    Grid.SetColumnSpan(textblock, 1);
+
+                    textblock.Width = (grid.Width / table_Column_Count);
+                    textblock.Height = (grid.Height / table_Row_Count);
+                    if (table_Entry_Y == table_Column_Count - 1)
+                    {
+                        table_Entry_Y = 0;
+                        table_Entry_X++;
+                    }
+                    else
+                        table_Entry_Y++;
+                    grid.Children.Add(textblock);
+                }
+                MainCanvas.Children.Add(grid);
             }
         }
 
@@ -246,7 +293,47 @@ namespace KEAP
 
                 else if (table_Mode)
                 {
+                    int area1 = 0, area2 = 0, area3 = 0;
+                    if (x1 < x2)
+                    {
+                        ((Grid)MainCanvas.Children[prev_Count_Children]).Width = x2 - x1;
+                        area1 = 1;
+                    }
+                    else
+                    {
+                        ((Grid)MainCanvas.Children[prev_Count_Children]).Width = x1 - x2;
+                        area2 = 1; area3 = 1;
+                    }
+                    if (y1 < y2)
+                    {
+                        ((Grid)MainCanvas.Children[prev_Count_Children]).Height = y2 - y1;
+                        area3 = 0;
+                    }
+                    else
+                    {
+                        ((Grid)MainCanvas.Children[prev_Count_Children]).Height = y1 - y2;
+                        area1 = 0; area2 = 0;
+                    }
+                    double block_Width= ((Grid)MainCanvas.Children[prev_Count_Children]).Width / table_Column_Count,
+                        block_Height = ((Grid)MainCanvas.Children[prev_Count_Children]).Height / table_Row_Count;
+                    if (block_Width > 2)
+                    {
+                        block_Width = block_Width - 2;
+                    }
+                    if (block_Height > 2)
+                    {
+                        block_Height = block_Height - 2;
+                    }
+                    foreach (EditableTextBlock textblock in ((Grid)MainCanvas.Children[prev_Count_Children]).Children)
+                    {
+                        textblock.Width = block_Width;
+                        textblock.Height = block_Height;
+                    }
 
+                    if (area1 == 1) { Canvas.SetLeft(((Grid)MainCanvas.Children[prev_Count_Children]), x1); Canvas.SetTop(((Grid)MainCanvas.Children[prev_Count_Children]), y1); }
+                    else if (area2 == 1) { Canvas.SetLeft(((Grid)MainCanvas.Children[prev_Count_Children]), x2); Canvas.SetTop(((Grid)MainCanvas.Children[prev_Count_Children]), y1); }
+                    else if (area3 == 1) { Canvas.SetLeft(((Grid)MainCanvas.Children[prev_Count_Children]), x2); Canvas.SetTop(((Grid)MainCanvas.Children[prev_Count_Children]), y2); }
+                    else { Canvas.SetLeft(((Grid)MainCanvas.Children[prev_Count_Children]), x1); Canvas.SetTop(((Grid)MainCanvas.Children[prev_Count_Children]), y2); }
                 }
             }
 
@@ -381,6 +468,7 @@ namespace KEAP
         {
 
         }
+
         private void Polygon_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             SetAllModeFalse();
@@ -391,6 +479,7 @@ namespace KEAP
         {
 
         }
+
         private void Image_Click(object sender, RoutedEventArgs e)
         {
             SetAllModeFalse();
@@ -405,7 +494,6 @@ namespace KEAP
             // Process open file dialog box results
             if (result == true)
             {
-                // Open document
                 image_Path = dlg.FileName;
                 image_Mode = true;
 
@@ -415,16 +503,18 @@ namespace KEAP
                 new_Bitmap_Image.EndInit();
             }
         }
-        
-        private void Table_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+
+        private void Table_Click(object sender, RoutedEventArgs e)
         {
             SetAllModeFalse();
+
+            
             table_Mode = true;
+
         }
-
-        private void Table_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void ClearAll_Click(object sender, RoutedEventArgs e)
         {
-
+            SetAllModeFalse();
         }
 
         private double GetDistance(double x1, double y1, double x2, double y2)
@@ -433,6 +523,55 @@ namespace KEAP
             d = Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
             return d;
         }
-       
+
+        private void BackMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ////////////
+            AllMenuBorderToWhite();
+            BackMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
+            ///////////
+        }
+
+        private void HomeMenu_Click(object sender, RoutedEventArgs e)
+        {
+            AllMenuBorderToWhite();
+            HomeMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
+
+        }
+
+        private void InsertMenu_Click(object sender, RoutedEventArgs e)
+        {
+            AllMenuBorderToWhite();
+            InsertMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
+        }
+
+        private void DesignMenu_Click(object sender, RoutedEventArgs e)
+        {
+            AllMenuBorderToWhite();
+            DesignMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
+        }
+
+        private void AnimationMenu_Click(object sender, RoutedEventArgs e)
+        {
+            AllMenuBorderToWhite();
+            AnimationMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
+        }
+
+        private void ConvertMenu_Click(object sender, RoutedEventArgs e)
+        {
+            AllMenuBorderToWhite();
+            ConvertMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
+        }
+
+        private void StyleMenu_Click(object sender, RoutedEventArgs e)
+        {
+            AllMenuBorderToWhite();
+            BackMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
+        }
+        void AllMenuBorderToWhite()
+        {
+            HomeMenu.BorderBrush = InsertMenu.BorderBrush = DesignMenu.BorderBrush
+                = AnimationMenu.BorderBrush = ConvertMenu.BorderBrush = StyleMenu.BorderBrush = new SolidColorBrush(Colors.White);
+        }
     }
 }

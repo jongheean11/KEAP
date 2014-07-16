@@ -22,6 +22,7 @@ namespace KEAP
         public OpenWindow()
         {
             InitializeComponent();
+            WindowState = WindowSettings.current_WindowState;
 
             //그냥 최대로 했음.
             this.Width = WindowSettings.resolution_Width;
@@ -36,7 +37,7 @@ namespace KEAP
             main.Show();
             FileSettings.file_Path = null;
             this.Hide();
-            
+
             
         }
 
@@ -44,6 +45,7 @@ namespace KEAP
         {
             WindowSettings.current_Width = Width;
             WindowSettings.current_Height = Height;
+            WindowSettings.current_WindowState = WindowState;
         }
     }
 }
