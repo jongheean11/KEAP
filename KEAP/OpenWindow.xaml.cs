@@ -22,11 +22,31 @@ namespace KEAP
         public OpenWindow()
         {
             InitializeComponent();
-            WindowState = WindowSettings.current_WindowState;
-
+//            WindowState = WindowSettings.current_WindowState;
+            LoadPresentaions();
             //그냥 최대로 했음.
-            this.Width = WindowSettings.resolution_Width;
-            this.Height = WindowSettings.resolution_Height;
+            //this.Width = WindowSettings.resolution_Width;
+            //this.Height = WindowSettings.resolution_Height;
+        }
+
+        private void LoadPresentaions()
+        {
+            List<PresentationListItem> pItems = new List<PresentationListItem>();
+
+            //TODO : add pItems read from presentation files
+            pItems.Add(new PresentationListItem() { presentationSmall = "Images/Button/newslide.png", name = "test", date = "test" });
+            recentPresentationsList.ItemsSource = pItems;
+        }
+
+        private void Close(object sender, RoutedEventArgs e)
+        {
+            //save_Settings();
+            //MainWindow main = new MainWindow();
+            ////App.Current.MainWindow = main;
+            //main.Show();
+            //FileSettings.file_Path = null;
+            //this.Hide();
+            this.Close();
         }
 
         private void Click(object sender, RoutedEventArgs e)
@@ -37,8 +57,6 @@ namespace KEAP
             main.Show();
             FileSettings.file_Path = null;
             this.Hide();
-
-            
         }
 
         void save_Settings()
@@ -46,6 +64,16 @@ namespace KEAP
             WindowSettings.current_Width = Width;
             WindowSettings.current_Height = Height;
             WindowSettings.current_WindowState = WindowState;
+        }
+
+        private void recentPresentations_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void recentPresentationsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // TODO : open selected file
         }
     }
 }
