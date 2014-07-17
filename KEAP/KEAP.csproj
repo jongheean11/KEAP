@@ -130,6 +130,14 @@
     <Resource Include="Images\Button\shadow.png" />
     <Resource Include="Images\Button\underline.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Button\centeralignment.png" />
+    <Resource Include="Images\Button\leftalignment.png" />
+    <Resource Include="Images\Button\normalalignment.png" />
+    <Resource Include="Images\Button\rightalignment.png" />
+    <Resource Include="Images\Button\textarrange.png" />
+    <Resource Include="Images\Button\textflow.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

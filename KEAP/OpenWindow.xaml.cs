@@ -97,6 +97,8 @@ namespace KEAP
             main.Show();
             FileSettings.file_Path = null;
             this.Hide();
+            FileSettings.file_Name = "NewFile" + Convert.ToString(FileSettings.count);
+            FileSettings.count++;
         }
 
         void save_Settings()

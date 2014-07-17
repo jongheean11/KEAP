@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace KEAP
 {
@@ -20,11 +21,12 @@ namespace KEAP
     /// </summary>
     public partial class MainWindow : Window
     {
+        private List<KEAPCanvas> Slides = new List<KEAPCanvas>();
         KEAPCanvas MainCanvas;
 
         bool pen_Mode = false, text_Mode = false, line_Mode = false, line_Mode_Toggle = false,
             rectangle_Mode = false, polygon_Mode = false, polygon_Mode_Toggle = false, image_Mode = false,
-            table_Mode = false,
+            table_Mode = false, ellipse_Mode = false,
             canvas_LeftButton_Down=false;
         bool poly_Start_Get = false;
         
@@ -38,6 +40,7 @@ namespace KEAP
 
         int table_Row_Count = 2, table_Column_Count = 3;
 
+
         public MainWindow()
         {
             InitializeComponent();
@@ -49,8 +52,8 @@ namespace KEAP
 
             MainCanvas = new KEAPCanvas()    
             {
-                Width = (this.Width/4.45)*3.75,
-                Height = (this.Height/4.32)*3,
+                Width = (WindowSettings.resolution_Width/4.45)*3.75,
+                Height = (WindowSettings.resolution_Height/4.32)*3,
                 VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
                 Background=new SolidColorBrush(Colors.White)
@@ -63,6 +66,7 @@ namespace KEAP
             MainCanvas.PreviewMouseMove += MainCanvas_PreviewMouseMove;
             MainCanvas.PreviewMouseLeftButtonUp += MainCanvas_PreviewMouseLeftButtonUp;
             MainGrid.Children.Add(MainCanvas);
+            Slides.Add(MainCanvas);
         }
 
         void MainCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -335,6 +339,44 @@ namespace KEAP
                     else if (area3 == 1) { Canvas.SetLeft(((Grid)MainCanvas.Children[prev_Count_Children]), x2); Canvas.SetTop(((Grid)MainCanvas.Children[prev_Count_Children]), y2); }
                     else { Canvas.SetLeft(((Grid)MainCanvas.Children[prev_Count_Children]), x1); Canvas.SetTop(((Grid)MainCanvas.Children[prev_Count_Children]), y2); }
                 }
+
+                else if(ellipse_Mode)
+                {
+                    int area1 = 0, area2 = 0, area3 = 0;
+                    Ellipse ellipse = new Ellipse();
+                    if (x1 < x2)
+                    {
+                        ellipse.Width = x2 - x1;
+                        area1 = 1;
+                    }
+                    else
+                    {
+                        ellipse.Width = x1 - x2;
+                        area2 = 1; area3 = 1;
+                    }
+                    if (y1 < y2)
+                    {
+                        ellipse.Height = y2 - y1;
+                        area3 = 0;
+                    }
+                    else
+                    {
+                        ellipse.Height = y1 - y2;
+                        area1 = 0; area2 = 0;
+                    }
+                    ellipse.StrokeThickness = 4.0;
+                    ellipse.Stroke = new SolidColorBrush(Colors.Green);
+                    if (area1 == 1) { Canvas.SetLeft(ellipse, x1); Canvas.SetTop(ellipse, y1); }
+                    else if (area2 == 1) { Canvas.SetLeft(ellipse, x2); Canvas.SetTop(ellipse, y1); }
+                    else if (area3 == 1) { Canvas.SetLeft(ellipse, x2); Canvas.SetTop(ellipse, y2); }
+                    else { Canvas.SetLeft(ellipse, x1); Canvas.SetTop(ellipse, y2); }
+
+                    if (prev_Count_Children != MainCanvas.Children.Count)
+                    {
+                        MainCanvas.Children.RemoveAt(prev_Count_Children);
+                    }
+                    MainCanvas.Children.Add(ellipse);
+                }
             }
 
             else
@@ -425,7 +467,7 @@ namespace KEAP
 
         void SetAllModeFalse()
         {
-            pen_Mode = text_Mode = line_Mode = rectangle_Mode = polygon_Mode = image_Mode = table_Mode = false;
+            pen_Mode = text_Mode = line_Mode = rectangle_Mode = polygon_Mode = image_Mode = table_Mode = ellipse_Mode = false;
         }
 
         private void Pen_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -572,6 +614,122 @@ namespace KEAP
         {
             HomeMenu.BorderBrush = InsertMenu.BorderBrush = DesignMenu.BorderBrush
                 = AnimationMenu.BorderBrush = ConvertMenu.BorderBrush = StyleMenu.BorderBrush = new SolidColorBrush(Colors.White);
+        }
+
+        private void NewSlideButton_Click(object sender, RoutedEventArgs e)
+        {
+            KEAPCanvas new_Canvas = new KEAPCanvas()
+            {
+                Width = (this.Width / 4.45) * 3.75,
+                Height = (this.Height / 4.32) * 3,
+                VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
+                Background = new SolidColorBrush(Colors.White)
+            };
+            Grid.SetRow(new_Canvas, 4);
+            Grid.SetColumn(new_Canvas, 1);
+            Grid.SetRowSpan(new_Canvas, 1);
+            Grid.SetColumnSpan(new_Canvas, 1);
+
+            Slides.Add(new_Canvas);
+
+            Save_SlideView(new_Canvas,Slides.Count);
+
+            Add_Slide(Slides.Count);
+
+            Change_Slide(Slides.Count-1);
+            
+            
+        }
+
+        private void Slide_ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Change_Slide(Slide_ListView.SelectedIndex);
+        }
+
+        void Add_Slide(int param_count)
+        {
+            //var xmlFile = System.IO.File.OpenRead(FileSettings.file_Name + "_slide" + Convert.ToString(param_count) + ".xml")/;
+            //XmlDocument xmlDoc = await XmlDocument.LoadFromFileAsync(xmlFile);
+            //XmlDocument xmlDoc;
+            //xmlDoc.Load(FileSettings.file_Name + "_slide" + Convert.ToString(param_count) + ".xml");
+           /* var fs=System.IO.File.OpenRead((FileSettings.file_Name + "_slide" + Convert.ToString(param_count) + ".xml"));
+            BitmapImage bitmapImage = new BitmapImage();
+            bitmapImage.StreamSource = fs;
+            XmlElement root = xmlDoc.DocumentElement;
+            XmlNodeList fileNodeList = root.GetElementsByTagName("file");
+            //string filename = ((XmlElement)fileNodeList.ElementAt(ItemLists.SelectedIndex)).GetAttribute("id");
+
+            
+            ImageSource source = new BitmapImage();
+                    StorageFile imagefile = await StorageFile.GetFileFromPathAsync(ImagePath);
+                    if (imagefile != null)
+                    {
+                        var stream = await imagefile.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                        using (IRandomAccessStream fileStream = await imagefile.OpenAsync(Windows.Storage.FileAccessMode.Read))
+                        {
+                            BitmapImage bitmapImage = new BitmapImage();
+
+                            await bitmapImage.SetSourceAsync(fileStream);
+                            source = bitmapImage;
+                        }
+                    }
+                    FileLists.Add(new FileComp()
+                    {
+                        Source=source,
+                        Title = "파일이름 : " + munoramaName, 
+                        Description = "파일설명 : " + munoramaFD + "\n" });
+                }
+                ItemLists.ItemsSource = FileLists;*/ 
+        }
+
+        void Change_Slide(int index)
+        {
+            MainCanvas = Slides.ElementAt(index);
+        }
+
+        private void Ellipse_Click(object sender, RoutedEventArgs e)
+        {
+            SetAllModeFalse();
+            ellipse_Mode = true;
+        }
+
+        void Save_SlideView(KEAPCanvas param_Canvas, int param_count)
+        {
+            Transform transform = param_Canvas.LayoutTransform;
+            // reset current transform (in case it is scaled or rotated)
+            param_Canvas.LayoutTransform = null;
+
+            // Get the size of canvas
+            Size size = new Size(param_Canvas.RenderSize.Width, param_Canvas.RenderSize.Height);
+            // Measure and arrange the surface
+            // VERY IMPORTANT
+            param_Canvas.Measure(size);
+            param_Canvas.Arrange(new Rect(size));
+
+            // Create a render bitmap and push the surface to it
+            RenderTargetBitmap renderBitmap =
+              new RenderTargetBitmap(
+                (int)size.Width,
+                (int)size.Height,
+                96d,
+                96d,
+                PixelFormats.Pbgra32);
+            renderBitmap.Render(param_Canvas);
+            
+            // Create a file stream for saving image
+            using (var fs = System.IO.File.OpenWrite(FileSettings.file_Name+"_slide"+Convert.ToString(param_count)+".jpg"))
+            {
+                // Use png encoder for our data
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                // push the rendered bitmap to it
+                encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+                // save the data to the stream
+                encoder.Save(fs);
+            }
+
+            // Restore previously saved layout
+            param_Canvas.LayoutTransform = transform;
         }
     }
 }
