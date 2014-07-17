@@ -23,7 +23,7 @@ namespace KEAP
         {
             InitializeComponent();
             WindowState = WindowSettings.current_WindowState;
-
+            
             //그냥 최대로 했음.
             this.Width = WindowSettings.resolution_Width;
             this.Height = WindowSettings.resolution_Height;
@@ -37,8 +37,8 @@ namespace KEAP
             main.Show();
             FileSettings.file_Path = null;
             this.Hide();
-
-            
+            FileSettings.file_Name = "NewFile" + Convert.ToString(FileSettings.count);
+            FileSettings.count++;
         }
 
         void save_Settings()
