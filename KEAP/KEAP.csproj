@@ -56,6 +56,7 @@
     <Compile Include="EditableTextBlock.cs" />
     <Compile Include="EditableTextBlockAdorner.cs" />
     <Compile Include="PresentationListItem.cs" />
+    <Compile Include="TemplateListItem.cs" />
     <Compile Include="WindowSettings.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
