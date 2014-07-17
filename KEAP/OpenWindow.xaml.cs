@@ -19,6 +19,7 @@ namespace KEAP
     /// </summary>
     public partial class OpenWindow : Window
     {
+        PresentationListItem toOpenPresentationInfo = null;
         public OpenWindow()
         {
             InitializeComponent();
@@ -80,13 +81,10 @@ namespace KEAP
 
         private void Open(object sender, RoutedEventArgs e)
         {
-            //save_Settings();
-            //MainWindow main = new MainWindow();
-            ////App.Current.MainWindow = main;
-            //main.Show();
-            //FileSettings.file_Path = null;
-            //this.Hide();
-            this.Close();
+            // if toOpenPresentationInfo is not null, open the presentation file
+            PresentationOpen(toOpenPresentationInfo);
+
+            // else alert using diagram
         }
 
         private void Click(object sender, RoutedEventArgs e)
@@ -111,12 +109,23 @@ namespace KEAP
 
         private void recentPresentations_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            var selected_item = recentPresentationsList.SelectedItem as PresentationListItem;
+            toOpenPresentationInfo = selected_item;
+            PresentationOpen(toOpenPresentationInfo);
         }
 
         private void recentPresentationsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             // TODO : open selected file
+            var selected_item = recentPresentationsList.SelectedItem as PresentationListItem;
+            toOpenPresentationInfo = selected_item;
+            PresentationOpen(toOpenPresentationInfo);
+
+        }
+
+        private void PresentationOpen(PresentationListItem toOpenPresentationInfo)
+        {
+            throw new NotImplementedException();
         }
     }
 }
