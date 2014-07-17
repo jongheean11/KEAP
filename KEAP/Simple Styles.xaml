@@ -37,7 +37,7 @@
 	<!-- DisabledBrush는 각 컨트롤의 Disabled 모양에 사용됩니다.-->
 	<SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888"/>
 	<SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#EEE"/>
-	<SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAA"/>
+	<SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAA" Opacity="0"/>
 
 	<!-- ScrollViewer, TreeView, ListBox, Expander, TextBox, TabControl의 배경에 사용됩니다. -->
 	<SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFF"/>

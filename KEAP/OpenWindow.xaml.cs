@@ -26,6 +26,7 @@ namespace KEAP
 //            WindowState = WindowSettings.current_WindowState;
             LoadPresentaions();
             LoadTemplates();
+            openBtn.IsEnabled = false;
 
             //그냥 최대로 했음.
             //this.Width = WindowSettings.resolution_Width;
@@ -82,8 +83,10 @@ namespace KEAP
         private void Open(object sender, RoutedEventArgs e)
         {
             // if toOpenPresentationInfo is not null, open the presentation file
-            PresentationOpen(toOpenPresentationInfo);
-
+            if (toOpenPresentationInfo != null)
+                PresentationOpen(toOpenPresentationInfo);
+            else
+                openBtn.IsEnabled = false;
             // else alert using diagram
         }
 
@@ -109,6 +112,7 @@ namespace KEAP
 
         private void recentPresentations_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            openBtn.IsEnabled = true;
             var selected_item = recentPresentationsList.SelectedItem as PresentationListItem;
             toOpenPresentationInfo = selected_item;
             PresentationOpen(toOpenPresentationInfo);
@@ -125,7 +129,7 @@ namespace KEAP
 
         private void PresentationOpen(PresentationListItem toOpenPresentationInfo)
         {
-            throw new NotImplementedException();
+//            throw new NotImplementedException();
         }
     }
 }
