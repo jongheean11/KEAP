@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,9 +23,12 @@ namespace KEAP
     /// </summary>
     public partial class MainWindow : Window
     {
-        private List<KEAPCanvas> Slides = new List<KEAPCanvas>();
+        private List<KEAPCanvas> canvas_List = new List<KEAPCanvas>();
+        //private List<SlideInfo> Slides_List = new List<SlideInfo>();
+        private ObservableCollection<SlideInfo> Slides_List = new ObservableCollection<SlideInfo>();
+        int previous_selection = -1;
         KEAPCanvas MainCanvas;
-
+        
         bool pen_Mode = false, text_Mode = false, line_Mode = false, line_Mode_Toggle = false,
             rectangle_Mode = false, polygon_Mode = false, polygon_Mode_Toggle = false, image_Mode = false,
             table_Mode = false, ellipse_Mode = false,
@@ -52,23 +57,69 @@ namespace KEAP
 
             MainCanvas = new KEAPCanvas()    
             {
-                Width = (WindowSettings.resolution_Width/4.45)*3.75,
-                Height = (WindowSettings.resolution_Height/4.32)*3,
+//                Width = (WindowSettings.resolution_Height/4.32)*16/3,
+  //              Height = (WindowSettings.resolution_Height/4.32)*3,
                 VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
                 Background=new SolidColorBrush(Colors.White)
+                
             };
-            Grid.SetRow(MainCanvas, 4);
-            Grid.SetColumn(MainCanvas, 1);
-            Grid.SetRowSpan(MainCanvas, 1);
-            Grid.SetColumnSpan(MainCanvas, 1);
+            if (((this.Width - this.Width * (92 / 876)) / (this.Height - 92)) < 1.15)
+            {
+
+                MainCanvas.Width = ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 50; //= ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 15*2
+                //MainCanvas.Width = Main_Border.Width - 30;
+                //MainCanvas.Height = Main_Border.Width * 0.8;
+                MainCanvas.Height = MainCanvas.Width * 0.8;
+            }
+            else
+            {
+                //MainCanvas.Height = Main_Border.Height - 30;
+                //MainCanvas.Width = Main_Border.Height * 1.25;
+                MainCanvas.Height = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 50; // = (this.Height - 92) * (3 / 3.8) - 15*2;
+                MainCanvas.Width = MainCanvas.Height * 1.25;
+            }
+            
+            MainCanvas_Border.Child = MainCanvas;
             MainCanvas.PreviewMouseLeftButtonDown += MainCanvas_PreviewMouseLeftButtonDown;
             MainCanvas.PreviewMouseMove += MainCanvas_PreviewMouseMove;
             MainCanvas.PreviewMouseLeftButtonUp += MainCanvas_PreviewMouseLeftButtonUp;
-            MainGrid.Children.Add(MainCanvas);
-            Slides.Add(MainCanvas);
+
+            canvas_List.Add(MainCanvas);
+            
+            Add_Slide_List(canvas_List.Count);
+            Slide_ListView.SelectedIndex = 0;
+            this.SizeChanged += MainWindow_SizeChanged;
+        }
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            WindowSettings.resolution_Width = availableSize.Width;
+            WindowSettings.resolution_Height = availableSize.Height;
+            return base.MeasureOverride(availableSize);
+        }
+        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (((this.Width - this.Width * (92 / 876)) / (this.Height - 92)) < 1.15)
+            {
+                MainCanvas.Width = ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 50; //= ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 15*2
+                //MainCanvas.Width = Main_Border.Width - 30;
+                //MainCanvas.Height = Main_Border.Width * 0.8;
+                MainCanvas.Height = MainCanvas.Width * 0.8;
+            }
+            else
+            {
+                //MainCanvas.Height = Main_Border.Height - 30;
+                //MainCanvas.Width = Main_Border.Height * 1.25;
+                MainCanvas.Height = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 50; // = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 15*2;
+                MainCanvas.Width = MainCanvas.Height * 1.25;
+            }
+
+            Autoedit_Slide_List(MainCanvas, Slide_ListView.SelectedIndex);
+            MainCanvas.Measure(new Size(MainCanvas.Width, MainCanvas.Height));
+            MainCanvas.Arrange(new Rect(0, 0, MainCanvas.Width, MainCanvas.Height));
         }
 
+        #region MainCanvas 함수
         void MainCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             canvas_LeftButton_Down = true;
@@ -174,6 +225,7 @@ namespace KEAP
         void MainCanvas_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             canvas_LeftButton_Down = false;
+            Autoedit_Slide_List(MainCanvas, Slide_ListView.SelectedIndex);
         }
 
         void MainCanvas_PreviewMouseMove(object sender, MouseEventArgs e)
@@ -210,15 +262,39 @@ namespace KEAP
 
                 else if (text_Mode)
                 {
+                    int area1 = 0, area2 = 0, area3 = 0;
                     EditableTextBlock textblock = new EditableTextBlock()
                     {
-                        Width = x2 - x1,
-                        Height = y2 - y1,
-                        Background = new SolidColorBrush(Colors.LightGray)
+                        Background = new SolidColorBrush(Colors.LightGray),
+                        HorizontalAlignment=HorizontalAlignment.Stretch,
+                        VerticalAlignment=VerticalAlignment.Stretch
                     };
-
-                    Canvas.SetLeft(textblock, x1);
-                    Canvas.SetTop(textblock, y1);
+                    if (x1 < x2)
+                    {
+                        textblock.Width = x2 - x1;
+                        area1 = 1;
+                    }
+                    else
+                    {
+                        textblock.Width = x1 - x2;
+                        area2 = 1; area3 = 1;
+                    }
+                    if (y1 < y2)
+                    {
+                        textblock.Height = y2 - y1;
+                        area3 = 0;
+                    }
+                    else
+                    {
+                        textblock.Height = y1 - y2;
+                        area1 = 0; area2 = 0;
+                    }
+                    if (area1 == 1) { Canvas.SetLeft(textblock, x1); Canvas.SetTop(textblock, y1); }
+                    else if (area2 == 1) { Canvas.SetLeft(textblock, x2); Canvas.SetTop(textblock, y1); }
+                    else if (area3 == 1) { Canvas.SetLeft(textblock, x2); Canvas.SetTop(textblock, y2); }
+                    else { Canvas.SetLeft(textblock, x1); Canvas.SetTop(textblock, y2); }
+                   // Canvas.SetLeft(textblock, x1);
+                  //  Canvas.SetTop(textblock, y1);
 
                     if (prev_Count_Children != MainCanvas.Children.Count)
                     {
@@ -464,7 +540,9 @@ namespace KEAP
                 }
             }
         }
+#endregion
 
+        #region 버튼Boolean Settion
         void SetAllModeFalse()
         {
             pen_Mode = text_Mode = line_Mode = rectangle_Mode = polygon_Mode = image_Mode = table_Mode = ellipse_Mode = false;
@@ -550,7 +628,7 @@ namespace KEAP
         {
             SetAllModeFalse();
 
-            
+
             table_Mode = true;
 
         }
@@ -559,6 +637,15 @@ namespace KEAP
             SetAllModeFalse();
         }
 
+        private void Ellipse_Click(object sender, RoutedEventArgs e)
+        {
+            SetAllModeFalse();
+            ellipse_Mode = true;
+        }
+
+        #endregion
+
+        
         private double GetDistance(double x1, double y1, double x2, double y2)
         {
             double d = 0;
@@ -578,7 +665,6 @@ namespace KEAP
         {
             AllMenuBorderToWhite();
             HomeMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
-
         }
 
         private void InsertMenu_Click(object sender, RoutedEventArgs e)
@@ -620,81 +706,141 @@ namespace KEAP
         {
             KEAPCanvas new_Canvas = new KEAPCanvas()
             {
-                Width = (this.Width / 4.45) * 3.75,
-                Height = (this.Height / 4.32) * 3,
-                VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
+                VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 Background = new SolidColorBrush(Colors.White)
             };
-            Grid.SetRow(new_Canvas, 4);
-            Grid.SetColumn(new_Canvas, 1);
-            Grid.SetRowSpan(new_Canvas, 1);
-            Grid.SetColumnSpan(new_Canvas, 1);
+            if (((this.Width - this.Width * (92 / 876)) / (this.Height - 92)) < 1.15)
+            {
 
-            Slides.Add(new_Canvas);
+                new_Canvas.Width = ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 50; //= ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 15*2
+                //new_Canvas.Width = Main_Border.Width - 30;
+                //new_Canvas.Height = Main_Border.Width * 0.8;
+                new_Canvas.Height = new_Canvas.Width * 0.8;
+            }
+            else
+            {
+                //new_Canvas.Height = Main_Border.Height - 30;
+                //new_Canvas.Width = Main_Border.Height * 1.25;
+                new_Canvas.Height = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 50; // = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 15*2;
+                new_Canvas.Width = new_Canvas.Height * 1.25;
+            }
 
-            Save_SlideView(new_Canvas,Slides.Count);
+            new_Canvas.PreviewMouseLeftButtonDown += MainCanvas_PreviewMouseLeftButtonDown;
+            new_Canvas.PreviewMouseLeftButtonUp += MainCanvas_PreviewMouseLeftButtonUp;
+            new_Canvas.PreviewMouseMove += MainCanvas_PreviewMouseMove;
 
-            Add_Slide(Slides.Count);
+            MainCanvas_Border.Child = new_Canvas;
+            canvas_List.Add(new_Canvas);
 
-            Change_Slide(Slides.Count-1);
-            
-            
+            Add_Slide_List(canvas_List.Count);
+            //Slide_ListView.SelectedIndex = canvas_List.Count - 1;
+            //Change_Slide(canvas_List.Count - 1);
+
+            Autoedit_Slide_List(new_Canvas, canvas_List.Count-1);
         }
 
         private void Slide_ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Change_Slide(Slide_ListView.SelectedIndex);
+            if (Slide_ListView.SelectedIndex == -1 && previous_selection!=-1)
+                Slide_ListView.SelectedIndex = 0;
+            if (previous_selection != Slide_ListView.SelectedIndex)
+                {
+                previous_selection = Slide_ListView.SelectedIndex;
+                //Autoedit_Slide_List(canvas_List.ElementAt(Slide_ListView.SelectedIndex),Slide_ListView.SelectedIndex);
+            }
+            MainCanvas_Border.Child = canvas_List.ElementAt(Slide_ListView.SelectedIndex);
+            MainCanvas = canvas_List.ElementAt(Slide_ListView.SelectedIndex);
         }
 
-        void Add_Slide(int param_count)
-        {
-            //var xmlFile = System.IO.File.OpenRead(FileSettings.file_Name + "_slide" + Convert.ToString(param_count) + ".xml")/;
-            //XmlDocument xmlDoc = await XmlDocument.LoadFromFileAsync(xmlFile);
-            //XmlDocument xmlDoc;
-            //xmlDoc.Load(FileSettings.file_Name + "_slide" + Convert.ToString(param_count) + ".xml");
-           /* var fs=System.IO.File.OpenRead((FileSettings.file_Name + "_slide" + Convert.ToString(param_count) + ".xml"));
-            BitmapImage bitmapImage = new BitmapImage();
-            bitmapImage.StreamSource = fs;
-            XmlElement root = xmlDoc.DocumentElement;
-            XmlNodeList fileNodeList = root.GetElementsByTagName("file");
-            //string filename = ((XmlElement)fileNodeList.ElementAt(ItemLists.SelectedIndex)).GetAttribute("id");
 
+        public class SlideInfo
+        {
+            public ImageSource Source { get; set; }
+            public string Number { get; set; }
+            public double Image_Width { get; set; }
+            public double Image_Height { get; set; }
+        }
+
+        private Image RenderCanvas(KEAPCanvas param_Canvas)
+		{
+			Image img = new Image();
+			RenderTargetBitmap rtb = new RenderTargetBitmap((int)param_Canvas.Width + 200, (int)param_Canvas.Height + 200, 96d, 96d, System.Windows.Media.PixelFormats.Default);
+			rtb.Render(param_Canvas);
+			img.Source = rtb;
+//			img.Height = 120;
+//			img.Width = 160;
+			return img;
+		}
+
+        void Add_Slide_List(int param_Number)
+        {
+            Image image = RenderCanvas(canvas_List.ElementAt(param_Number-1));
+            //ObservableCollection<SlideInfo> new_Slides_List = new ObservableCollection<SlideInfo>();
+            /*int i = 0, count = Slides_List.Count;
+            while (i < count)
+            {
+                new_Slides_List.Add(Slides_List.ElementAt(i));
+                i++;
+            }
+            new_Slides_List.Add(new SlideInfo()
+            {
+                Source = image.Source,
+                Number = Convert.ToString(canvas_List.Count),
+                Image_Width = (MainCanvas.Width * 0.75 / 4.45) - 15,
+                Image_Height = ((MainCanvas.Width * 0.75 / 4.45) - 15) * (MainCanvas.Height / MainCanvas.Width)
+            });
             
-            ImageSource source = new BitmapImage();
-                    StorageFile imagefile = await StorageFile.GetFileFromPathAsync(ImagePath);
-                    if (imagefile != null)
-                    {
-                        var stream = await imagefile.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                        using (IRandomAccessStream fileStream = await imagefile.OpenAsync(Windows.Storage.FileAccessMode.Read))
-                        {
-                            BitmapImage bitmapImage = new BitmapImage();
+            Slide_ListView.ItemsSource = new_Slides_List;*/
+            Slides_List.Add(new SlideInfo()
+            {
+                Source = image.Source,
+                Number = Convert.ToString(canvas_List.Count),
+                Image_Width = (MainCanvas.Width * 0.75 / 4.45) - 15+200,
+                Image_Height = (((MainCanvas.Width * 0.75 / 4.45) - 15) * (MainCanvas.Height / MainCanvas.Width))+100
+            });
 
-                            await bitmapImage.SetSourceAsync(fileStream);
-                            source = bitmapImage;
-                        }
-                    }
-                    FileLists.Add(new FileComp()
-                    {
-                        Source=source,
-                        Title = "파일이름 : " + munoramaName, 
-                        Description = "파일설명 : " + munoramaFD + "\n" });
-                }
-                ItemLists.ItemsSource = FileLists;*/ 
+            Slide_ListView.ItemsSource = Slides_List;
         }
 
-        void Change_Slide(int index)
+        void Autoedit_Slide_List(KEAPCanvas param_Canvas, int param_Number)
         {
-            MainCanvas = Slides.ElementAt(index);
+            Image image = RenderCanvas(param_Canvas);
+
+            /*ObservableCollection<SlideInfo> new_Slides_List = new ObservableCollection<SlideInfo>();
+            int i=0, count=Slide_ListView.Items.Count;
+            while (i<count) { 
+                new_Slides_List.Add((SlideInfo)Slide_ListView.Items[i]);
+                i++;
+            }
+            new_Slides_List.Insert(param_Number,new SlideInfo()
+            {
+                Source = image.Source,
+                Number = Convert.ToString(canvas_List.Count),
+                Image_Width = (MainCanvas.Width*0.75/4.45)-15,
+                Image_Height = ((MainCanvas.Width*0.75/4.45)-15)*(MainCanvas.Height/MainCanvas.Width)
+            });
+            
+            new_Slides_List.RemoveAt(param_Number+1);
+            *///Slide_ListView.ItemsSource = new_Slides_List;
+            Slides_List.Insert(param_Number, new SlideInfo()
+            {
+                Source = image.Source,
+                Number = Convert.ToString(param_Number+1),
+                Image_Width = (MainCanvas.Width * 0.75 / 4.45) - 15,
+                Image_Height = ((MainCanvas.Width * 0.75 / 4.45) - 15) * (MainCanvas.Height / MainCanvas.Width)
+            });
+            Slide_ListView.SelectedIndex = param_Number;
+            Slides_List.RemoveAt(param_Number + 1);
+            Slide_ListView.SelectedIndex = param_Number;
+            ////Slides_List.RemoveAt(param_Number);
+            //Slide_ListView.SelectedIndex = param_Number;
+            MainCanvas.Measure(new Size(MainCanvas.Width, MainCanvas.Height));
+            MainCanvas.Arrange(new Rect(0, 0, MainCanvas.Width, MainCanvas.Height));
         }
 
-        private void Ellipse_Click(object sender, RoutedEventArgs e)
-        {
-            SetAllModeFalse();
-            ellipse_Mode = true;
-        }
-
-        void Save_SlideView(KEAPCanvas param_Canvas, int param_count)
+        FileStream fs;
+        void Save_SlideView(KEAPCanvas param_Canvas, int param_Number)
         {
             Transform transform = param_Canvas.LayoutTransform;
             // reset current transform (in case it is scaled or rotated)
@@ -710,23 +856,24 @@ namespace KEAP
             // Create a render bitmap and push the surface to it
             RenderTargetBitmap renderBitmap =
               new RenderTargetBitmap(
-                (int)size.Width,
-                (int)size.Height,
+                (int)param_Canvas.Width+200,
+                (int)param_Canvas.Height+200,
                 96d,
                 96d,
-                PixelFormats.Pbgra32);
+                PixelFormats.Default);
             renderBitmap.Render(param_Canvas);
-            
+
             // Create a file stream for saving image
-            using (var fs = System.IO.File.OpenWrite(FileSettings.file_Name+"_slide"+Convert.ToString(param_count)+".jpg"))
-            {
-                // Use png encoder for our data
-                PngBitmapEncoder encoder = new PngBitmapEncoder();
-                // push the rendered bitmap to it
-                encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
-                // save the data to the stream
-                encoder.Save(fs);
-            }
+            
+            fs = System.IO.File.OpenWrite(FileSettings.file_Path+"/"+FileSettings.file_Name+"_slide"+Convert.ToString(param_Number)+".jpg");    
+            
+            // Use png encoder for our data
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            // push the rendered bitmap to it
+            encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+            // save the data to the stream
+            encoder.Save(fs);
+            fs.Close();
 
             // Restore previously saved layout
             param_Canvas.LayoutTransform = transform;

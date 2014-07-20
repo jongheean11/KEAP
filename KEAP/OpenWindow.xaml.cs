@@ -32,13 +32,15 @@ namespace KEAP
         private void Click(object sender, RoutedEventArgs e)
         {
             save_Settings();
-            MainWindow main = new MainWindow();
+            
             //App.Current.MainWindow = main;
-            main.Show();
-            FileSettings.file_Path = null;
-            this.Hide();
+            FileSettings.file_Path = "C://KEAP";
             FileSettings.file_Name = "NewFile" + Convert.ToString(FileSettings.count);
             FileSettings.count++;
+
+            MainWindow main = new MainWindow();
+            main.Show();
+            this.Hide();
         }
 
         void save_Settings()

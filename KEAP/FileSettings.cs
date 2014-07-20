@@ -8,8 +8,8 @@ namespace KEAP
 {
     class FileSettings
     {
-        public static string file_Path = null;
+        public static string file_Path = "C://KEAP";
         public static int count = 1;
-        public static string file_Name;
+        public static string file_Name = "New_File";
     }
 }
