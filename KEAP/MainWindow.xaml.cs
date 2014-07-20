@@ -879,5 +879,10 @@ namespace KEAP
             // Restore previously saved layout
             param_Canvas.LayoutTransform = transform;
         }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

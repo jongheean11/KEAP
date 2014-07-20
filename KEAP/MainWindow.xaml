@@ -194,5 +194,6 @@
         <Button x:Name="TableButton" Content="표" Grid.Column="1" HorizontalAlignment="Left" Margin="500,35,0,0" Grid.Row="2" VerticalAlignment="Top" Width="50" Click="Table_Click" />
         <Button x:Name="ClearAllButton" Content="선택취소" Grid.Column="1" HorizontalAlignment="Left" Margin="451,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="50" Click="ClearAll_Click" Grid.RowSpan="2"/>
         <Button x:Name="EllipseButton" Content="원" Grid.Column="1" HorizontalAlignment="Left" Margin="521,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="50" Click="Ellipse_Click" Grid.RowSpan="2"/>
+        <Button Content="저장" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Click="Save_Click" />
     </Grid>
 </Window>
