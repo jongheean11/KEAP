@@ -70,14 +70,15 @@ namespace KEAP
                 MainCanvas.Width = ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 50; //= ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 15*2
                 //MainCanvas.Width = Main_Border.Width - 30;
                 //MainCanvas.Height = Main_Border.Width * 0.8;
-                MainCanvas.Height = MainCanvas.Width * 0.8;
+                MainCanvas.Height = MainCanvas.Width * 0.5625;
             }
             else
             {
                 //MainCanvas.Height = Main_Border.Height - 30;
                 //MainCanvas.Width = Main_Border.Height * 1.25;
                 MainCanvas.Height = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 50; // = (this.Height - 92) * (3 / 3.8) - 15*2;
-                MainCanvas.Width = MainCanvas.Height * 1.25;
+                //MainCanvas.Width = MainCanvas.Height * 1.25;
+                MainCanvas.Width = MainCanvas.Height * 16 / 9;
             }
             
             MainCanvas_Border.Child = MainCanvas;
@@ -104,14 +105,14 @@ namespace KEAP
                 MainCanvas.Width = ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 50; //= ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 15*2
                 //MainCanvas.Width = Main_Border.Width - 30;
                 //MainCanvas.Height = Main_Border.Width * 0.8;
-                MainCanvas.Height = MainCanvas.Width * 0.8;
+                MainCanvas.Height = MainCanvas.Width * 0.5625;
             }
             else
             {
                 //MainCanvas.Height = Main_Border.Height - 30;
                 //MainCanvas.Width = Main_Border.Height * 1.25;
                 MainCanvas.Height = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 50; // = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 15*2;
-                MainCanvas.Width = MainCanvas.Height * 1.25;
+                MainCanvas.Width = MainCanvas.Height * 16 / 9;
             }
 
             Autoedit_Slide_List(MainCanvas, Slide_ListView.SelectedIndex);
@@ -716,14 +717,14 @@ namespace KEAP
                 new_Canvas.Width = ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 50; //= ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 15*2
                 //new_Canvas.Width = Main_Border.Width - 30;
                 //new_Canvas.Height = Main_Border.Width * 0.8;
-                new_Canvas.Height = new_Canvas.Width * 0.8;
+                new_Canvas.Height = new_Canvas.Width * 0.5625;
             }
             else
             {
                 //new_Canvas.Height = Main_Border.Height - 30;
                 //new_Canvas.Width = Main_Border.Height * 1.25;
                 new_Canvas.Height = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 50; // = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 15*2;
-                new_Canvas.Width = new_Canvas.Height * 1.25;
+                new_Canvas.Width = new_Canvas.Height * 16 / 9;
             }
 
             new_Canvas.PreviewMouseLeftButtonDown += MainCanvas_PreviewMouseLeftButtonDown;
