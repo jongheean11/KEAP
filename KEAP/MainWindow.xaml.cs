@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
+using KEAP.Animations;
+using System.Windows.Media.Animation;
 
 namespace KEAP
 {
@@ -598,8 +600,6 @@ namespace KEAP
         {
             if(IsSelectMode())
             {
-                select_Mode = true;
-                Console.WriteLine("select_mode true");
                 if(sender is EditableTextBlock)
                 {
                     select_Text_Mode = true;
@@ -621,6 +621,7 @@ namespace KEAP
             }
         }
 
+        // 객체에 마우스를 놓고 클릭하면 드래그 가능하다.
         private void UIElement_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (select_Text_Mode && selected_Text != null)
@@ -641,22 +642,26 @@ namespace KEAP
             }
         }
 
+        // 객체에 마우스를 놓고 떼면 드래그 설정이 풀린다.
+        // 이 때 객체를 선택했는지 안했는지를 설정한다.
         private void UIElement_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            
             if (select_Text_Mode && selected_Text != null)
             {
                 drag_Mode = false;
+                select_Mode = !select_Mode;
                 selected_Text.ReleaseMouseCapture();
             }
             else if (select_Line_Mode && selected_Line != null)
             {
                 drag_Mode = false;
+                select_Mode = !select_Mode;
                 selected_Line.ReleaseMouseCapture();
             }
             else if (select_Shape_Mode && selected_Shape != null)
             {
                 drag_Mode = false;
+                select_Mode = !select_Mode;
                 selected_Shape.ReleaseMouseCapture();
             }
         }
@@ -1107,5 +1112,248 @@ namespace KEAP
         {
 
         }
+
+        #region animation effects
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 왼쪽에서 등장
+        private void BoundsLTR(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double xMove = 500;
+
+            ThicknessAnimation bounceAnimation = new ThicknessAnimation();
+            BounceEase BounceOrientation = new BounceEase();
+            BounceOrientation.Bounces = 4;
+            BounceOrientation.Bounciness = 2;
+            bounceAnimation.From = new Thickness(143, 0, 0, 0);
+            bounceAnimation.From = new Thickness(x - xMove, y, 0, 0);
+
+            bounceAnimation.To = new Thickness(x, y, 0, 0);
+            bounceAnimation.EasingFunction = BounceOrientation;
+
+            shape.BeginAnimation(MarginProperty, bounceAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 오른쪽에서 등장
+        private void BoundsRTL(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double xMove = 500;
+
+            ThicknessAnimation bounceAnimation = new ThicknessAnimation();
+            BounceEase BounceOrientation = new BounceEase();
+            BounceOrientation.Bounces = 4;
+            BounceOrientation.Bounciness = 2;
+            bounceAnimation.From = new Thickness(143, 0, 0, 0);
+            bounceAnimation.From = new Thickness(x + xMove, y, 0, 0);
+
+            bounceAnimation.To = new Thickness(x, y, 0, 0);
+            bounceAnimation.EasingFunction = BounceOrientation;
+
+            shape.BeginAnimation(MarginProperty, bounceAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 위쪽에서 등장
+        private void BoundsTTB(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double yMove = 500;
+
+            ThicknessAnimation bounceAnimation = new ThicknessAnimation();
+            BounceEase BounceOrientation = new BounceEase();
+            BounceOrientation.Bounces = 4;
+            BounceOrientation.Bounciness = 2;
+            bounceAnimation.From = new Thickness(143, 0, 0, 0);
+            bounceAnimation.From = new Thickness(x, y - yMove, 0, 0);
+
+            bounceAnimation.To = new Thickness(x, y, 0, 0);
+            bounceAnimation.EasingFunction = BounceOrientation;
+
+            shape.BeginAnimation(MarginProperty, bounceAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 아래쪽에서 등장
+        private void BoundsBTT(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double yMove = 500;
+
+            ThicknessAnimation bounceAnimation = new ThicknessAnimation();
+            BounceEase BounceOrientation = new BounceEase();
+            BounceOrientation.Bounces = 4;
+            BounceOrientation.Bounciness = 2;
+            bounceAnimation.From = new Thickness(143, 0, 0, 0);
+            bounceAnimation.From = new Thickness(x, y + yMove, 0, 0);
+
+            bounceAnimation.To = new Thickness(x, y, 0, 0);
+            bounceAnimation.EasingFunction = BounceOrientation;
+
+            shape.BeginAnimation(MarginProperty, bounceAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 왼쪽에서 등장
+        private void MoveLTR(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double xMove = 500;
+
+            PowerEase power = new PowerEase();
+            ThicknessAnimation linearAnimation = new ThicknessAnimation();
+            linearAnimation.From = new Thickness(x - xMove, y, 0, 0);
+            linearAnimation.To = new Thickness(x, y, 0, 0);
+            linearAnimation.EasingFunction = power;
+
+            shape.BeginAnimation(MarginProperty, linearAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 오른쪽에서 등장
+        private void MoveRTL(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double xMove = 500;
+
+            PowerEase power = new PowerEase();
+            ThicknessAnimation linearAnimation = new ThicknessAnimation();
+            linearAnimation.From = new Thickness(x + xMove, y, 0, 0);
+            linearAnimation.To = new Thickness(x, y, 0, 0);
+            linearAnimation.EasingFunction = power;
+
+            shape.BeginAnimation(MarginProperty, linearAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 위쪽에서 등장
+        private void MoveTTB(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double yMove = 500;
+
+            PowerEase power = new PowerEase();
+            ThicknessAnimation linearAnimation = new ThicknessAnimation();
+            linearAnimation.From = new Thickness(x, y - yMove, 0, 0);
+            linearAnimation.To = new Thickness(x, y, 0, 0);
+            linearAnimation.EasingFunction = power;
+
+            shape.BeginAnimation(MarginProperty, linearAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 아래쪽에서 등장
+        private void MoveBTT(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double yMove = 500;
+
+            PowerEase power = new PowerEase();
+            ThicknessAnimation linearAnimation = new ThicknessAnimation();
+            linearAnimation.From = new Thickness(x, y + yMove, 0, 0);
+            linearAnimation.To = new Thickness(x, y, 0, 0);
+            linearAnimation.EasingFunction = power;
+
+            shape.BeginAnimation(MarginProperty, linearAnimation);
+        }
+
+        // 밝아졌다가 형체가 나타난다.
+        private void FadeIn(FrameworkElement shape)
+        {
+            DoubleAnimation fadeIn = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(1), FillBehavior.HoldEnd);
+            shape.BeginAnimation(OpacityProperty, fadeIn);
+        }
+
+        // 어두워졌다가 밝아져서 형체가 사라진다.
+        private void FadeOut(FrameworkElement shape)
+        {
+            DoubleAnimation fadeOut = new DoubleAnimation(1.0, 0.0, TimeSpan.FromSeconds(1), FillBehavior.HoldEnd);
+            shape.BeginAnimation(OpacityProperty, fadeOut);
+        }
+
+        // 사각형이 커졌다 작아진다
+        private void ZoomIn(FrameworkElement shape)
+        {
+            DoubleAnimation zoomIn = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(0.5), FillBehavior.HoldEnd);
+
+            CustomZoomInEaseOutFunction be = new CustomZoomInEaseOutFunction();
+            be.EasingMode = EasingMode.EaseOut;
+
+            ScaleTransform trans = new ScaleTransform();
+            shape.RenderTransform = trans;
+            shape.RenderTransformOrigin = new Point(0.5, 0.5);
+            zoomIn.EasingFunction = be;
+            trans.BeginAnimation(ScaleTransform.ScaleXProperty, zoomIn);
+            trans.BeginAnimation(ScaleTransform.ScaleYProperty, zoomIn);
+        }
+
+        // 사각형이 작아진다 커졌다
+        private void ZoomOut(FrameworkElement shape)
+        {
+            DoubleAnimation zoomOut = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(0.5), FillBehavior.HoldEnd);
+
+            CustomZoomOutEaseOutFunction be = new CustomZoomOutEaseOutFunction();
+            be.EasingMode = EasingMode.EaseOut;
+
+            ScaleTransform trans = new ScaleTransform();
+            shape.RenderTransform = trans;
+            shape.RenderTransformOrigin = new Point(0.5, 0.5);
+            zoomOut.EasingFunction = be;
+            trans.BeginAnimation(ScaleTransform.ScaleXProperty, zoomOut);
+            trans.BeginAnimation(ScaleTransform.ScaleYProperty, zoomOut);
+        }
+
+        // 360도 회전, 0.5초
+        private void Tornado(FrameworkElement shape)
+        {
+            DoubleAnimation dbRotate = new DoubleAnimation(0, 360, new Duration(TimeSpan.FromSeconds(0.5)));
+
+            RotateTransform rotate = new RotateTransform();
+            shape.RenderTransform = rotate;
+            shape.RenderTransformOrigin = new Point(0.5, 0.5);
+            rotate.BeginAnimation(RotateTransform.AngleProperty, dbRotate);
+        }
+        private static void circleAnimation(FrameworkElement shape)
+        {
+            CircleAnimation circleAnimationHelper = new CircleAnimation();
+            //            circleAnimationHelper.MakeCircleAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            circleAnimationHelper.MakeCircleAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
+        }
+        private static void interlacedAnimation(FrameworkElement shape)
+        {
+            InterlacedAnimation interlacedAnimation = new InterlacedAnimation();
+            interlacedAnimation.MakeInterlacedAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
+            //            interlacedAnimation.MakeInterlacedAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+        }
+
+        private static void blockAnimation(FrameworkElement shape)
+        {
+            BlockAnimation blockAnimation = new BlockAnimation();
+            //            blockAnimation.MakeBlockAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            blockAnimation.MakeBlockAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
+        }
+        private static void radialAnimation(FrameworkElement shape)
+        {
+            RadialAnimation radialAnimation = new RadialAnimation();
+            //            radialAnimation.MakeRadiaAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            radialAnimation.MakeRadiaAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromMilliseconds(250));
+        }
+        private static void WaterFallAnimation(FrameworkElement shape)
+        {
+            WaterFallAnimation WaterFall = new WaterFallAnimation();
+            //            WaterFall.MakeWaterFallAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            WaterFall.MakeWaterFallAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
+        }
+        #endregion
     }
 }

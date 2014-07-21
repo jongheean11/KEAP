@@ -69,6 +69,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Animations\BlockAnimation.cs" />
+    <Compile Include="Animations\CircleAnimation.cs" />
+    <Compile Include="Animations\CustomZoomInEaseOutFunction.cs" />
+    <Compile Include="Animations\InterlacedAnimation.cs" />
+    <Compile Include="Animations\RadialAnimation.cs" />
+    <Compile Include="Animations\WaterFallAnimation.cs" />
     <Compile Include="EditableTextBlock.cs" />
     <Compile Include="EditableTextBlockAdorner.cs" />
     <Compile Include="PresentationListItem.cs" />
