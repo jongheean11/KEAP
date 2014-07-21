@@ -31,8 +31,18 @@ namespace KEAP
         
         bool pen_Mode = false, text_Mode = false, line_Mode = false, line_Mode_Toggle = false,
             rectangle_Mode = false, polygon_Mode = false, polygon_Mode_Toggle = false, image_Mode = false,
-            table_Mode = false, ellipse_Mode = false,
-            canvas_LeftButton_Down=false;
+            table_Mode = false, ellipse_Mode = false;
+        
+        bool select_Mode = false;
+
+        bool pen_Move_Mode = false, text_Move_Mode = false, line_Move_Mode = false,
+            rectangle_Move_Mode = false, polygon_Move_Mode = false, image_Move_Mode = false,
+            table_Move_Mode = false, ellipse_Move_Mode = false;
+        bool drag_Mode = true;
+        bool select_Shape_Mode = false, select_Line_Mode = false, select_Text_Mode = false;
+
+        bool canvas_in_Mode = false;
+        bool canvas_LeftButton_Down = false;
         bool poly_Start_Get = false;
         
         Point Start_Point, Start_Point_Poly;
@@ -42,6 +52,10 @@ namespace KEAP
         BitmapImage new_Bitmap_Image;
         string image_Path;
         Rectangle image_Rect;
+
+        Shape selected_Shape;
+        Line selected_Line;
+        EditableTextBlock selected_Text;
 
         int table_Row_Count = 2, table_Column_Count = 3;
 
@@ -85,6 +99,8 @@ namespace KEAP
             MainCanvas.PreviewMouseLeftButtonDown += MainCanvas_PreviewMouseLeftButtonDown;
             MainCanvas.PreviewMouseMove += MainCanvas_PreviewMouseMove;
             MainCanvas.PreviewMouseLeftButtonUp += MainCanvas_PreviewMouseLeftButtonUp;
+            //MainCanvas.MouseEnter += MainCanvas_MouseEnter;
+            //MainCanvas.MouseLeave += MainCanvas_MouseLeave;
 
             canvas_List.Add(MainCanvas);
             
@@ -92,12 +108,14 @@ namespace KEAP
             Slide_ListView.SelectedIndex = 0;
             this.SizeChanged += MainWindow_SizeChanged;
         }
+
         protected override Size MeasureOverride(Size availableSize)
         {
             WindowSettings.resolution_Width = availableSize.Width;
             WindowSettings.resolution_Height = availableSize.Height;
             return base.MeasureOverride(availableSize);
         }
+
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (((this.Width - this.Width * (92 / 876)) / (this.Height - 92)) < 1.15)
@@ -165,6 +183,11 @@ namespace KEAP
                 image.Stretch = Stretch.Fill;
                 Canvas.SetLeft(image, Start_Point.X);
                 Canvas.SetTop(image, Start_Point.Y);
+                image.MouseEnter += UIElement_MouseEnter;
+                image.MouseLeftButtonDown += UIElement_MouseLeftButtonDown;
+                image.MouseLeftButtonUp += UIElement_MouseLeftButtonUp;
+                image.MouseMove += UIElement_MouseMove;
+                image.MouseLeave += UIElement_MouseLeave;
                 MainCanvas.Children.Add(image);
             }
 
@@ -219,14 +242,22 @@ namespace KEAP
                         table_Entry_Y++;
                     grid.Children.Add(textblock);
                 }
+                grid.MouseEnter += UIElement_MouseEnter;
+                grid.MouseLeftButtonDown += UIElement_MouseLeftButtonDown;
+                grid.MouseLeftButtonUp += UIElement_MouseLeftButtonUp;
+                grid.MouseMove += UIElement_MouseMove;
+                grid.MouseLeave += UIElement_MouseLeave;
+
                 MainCanvas.Children.Add(grid);
             }
+
         }
 
         void MainCanvas_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             canvas_LeftButton_Down = false;
             Autoedit_Slide_List(MainCanvas, Slide_ListView.SelectedIndex);
+            
         }
 
         void MainCanvas_PreviewMouseMove(object sender, MouseEventArgs e)
@@ -256,7 +287,6 @@ namespace KEAP
                         Start_Point = End_Point;
 
                         // Draw the line on the canvas by adding the Line object as
-                        // a child of the Canvas object.
                         MainCanvas.Children.Add(line);
                     }
                 }
@@ -301,6 +331,11 @@ namespace KEAP
                     {
                         MainCanvas.Children.RemoveAt(prev_Count_Children);
                     }
+                    textblock.MouseEnter += UIElement_MouseEnter;
+                    textblock.MouseLeftButtonDown += UIElement_MouseLeftButtonDown;
+                    textblock.MouseLeftButtonUp += UIElement_MouseLeftButtonUp;
+                    textblock.MouseMove += UIElement_MouseMove;
+                    textblock.MouseLeave += UIElement_MouseLeave;
                     MainCanvas.Children.Add(textblock);
                 }
 
@@ -339,6 +374,11 @@ namespace KEAP
                     {
                         MainCanvas.Children.RemoveAt(prev_Count_Children);
                     }
+                    rectangle.MouseEnter += UIElement_MouseEnter;
+                    rectangle.MouseLeftButtonDown += UIElement_MouseLeftButtonDown;
+                    rectangle.MouseLeftButtonUp += UIElement_MouseLeftButtonUp;
+                    rectangle.MouseMove += UIElement_MouseMove;
+                    rectangle.MouseLeave += UIElement_MouseLeave;
                     MainCanvas.Children.Add(rectangle);
                 }
 
@@ -452,11 +492,14 @@ namespace KEAP
                     {
                         MainCanvas.Children.RemoveAt(prev_Count_Children);
                     }
+                    ellipse.MouseEnter += UIElement_MouseEnter;
+                    ellipse.MouseLeftButtonDown += UIElement_MouseLeftButtonDown;
+                    ellipse.MouseLeftButtonUp += UIElement_MouseLeftButtonUp;
+                    ellipse.MouseMove += UIElement_MouseMove;
+                    ellipse.MouseLeave += UIElement_MouseLeave;
                     MainCanvas.Children.Add(ellipse);
                 }
-            }
-
-            else
+            }else
             {
                 if (line_Mode)
                 {
@@ -466,8 +509,8 @@ namespace KEAP
                         {
                             X1 = x1,
                             Y1 = y1,
-                            X2 = x2-1,
-                            Y2 = y2-1,
+                            X2 = x2 - 1,
+                            Y2 = y2 - 1,
                             StrokeThickness = 4.0,
                             Stroke = new SolidColorBrush(Colors.Black)
                         };
@@ -475,7 +518,7 @@ namespace KEAP
                         {
                             line.X2 += 2;
                         }
-                        if(line.Y2 < line.Y1)
+                        if (line.Y2 < line.Y1)
                         {
                             line.Y2 += 2;
                         }
@@ -484,13 +527,18 @@ namespace KEAP
                         {
                             MainCanvas.Children.RemoveAt(prev_Count_Children);
                         }
+                        line.MouseEnter += UIElement_MouseEnter;
+                        line.MouseLeftButtonDown += UIElement_MouseLeftButtonDown;
+                        line.MouseLeftButtonUp += UIElement_MouseLeftButtonUp;
+                        line.MouseMove += UIElement_MouseMove;
+                        line.MouseLeave += UIElement_MouseLeave;
                         MainCanvas.Children.Add(line);
                     }
                 }
-                
+
                 else if (polygon_Mode && polygon_Mode_Toggle)
                 {
-                    if ((prev_Poly_Count_Children >= 2)&&(GetDistance(End_Point.X, End_Point.Y, Start_Point_Poly.X, Start_Point_Poly.Y) < 7.0))
+                    if ((prev_Poly_Count_Children >= 2) && (GetDistance(End_Point.X, End_Point.Y, Start_Point_Poly.X, Start_Point_Poly.Y) < 7.0))
                     {
                         End_Point = Start_Point_Poly;
                         poly_Start_Get = true;
@@ -502,13 +550,13 @@ namespace KEAP
 
                     Line line;
                     if (!poly_Start_Get)
-                    { 
+                    {
                         line = new Line()
                         {
                             X1 = x1,
                             Y1 = y1,
-                            X2 = x2-1,
-                            Y2 = y2-1,
+                            X2 = x2 - 1,
+                            Y2 = y2 - 1,
                             StrokeThickness = 4.0,
                             Stroke = new SolidColorBrush(Colors.Black)
                         };
@@ -537,11 +585,175 @@ namespace KEAP
                     if (prev_Count_Children != MainCanvas.Children.Count)
                         MainCanvas.Children.RemoveAt(prev_Count_Children);
 
+                    // :TODO 
+                    // Polygon
                     MainCanvas.Children.Add(line);
+
                 }
             }
         }
-#endregion
+
+        // TODO
+        void UIElement_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if(IsSelectMode())
+            {
+                select_Mode = true;
+                Console.WriteLine("select_mode true");
+                if(sender is EditableTextBlock)
+                {
+                    select_Text_Mode = true;
+                    selected_Text = (EditableTextBlock)sender;
+                }
+                else if (sender is Line)
+                {
+                    select_Line_Mode = true;
+                    selected_Line = (Line)sender;
+
+                }
+                else if (sender is Shape)
+                {
+                    select_Shape_Mode = true;
+                    Console.WriteLine("shape enter");
+
+                    selected_Shape = (Shape)sender;
+                }
+            }
+        }
+
+        private void UIElement_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (select_Text_Mode && selected_Text != null)
+            {
+                drag_Mode = true;
+                selected_Text.CaptureMouse();
+            }
+            else if (select_Line_Mode && selected_Line != null)
+            {
+                drag_Mode = true;
+                selected_Line.CaptureMouse();
+            }
+            else if (select_Shape_Mode && selected_Shape != null)
+            {
+                drag_Mode = true;
+                Console.WriteLine("Capture");
+                selected_Shape.CaptureMouse();
+            }
+        }
+
+        private void UIElement_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            
+            if (select_Text_Mode && selected_Text != null)
+            {
+                drag_Mode = false;
+                selected_Text.ReleaseMouseCapture();
+            }
+            else if (select_Line_Mode && selected_Line != null)
+            {
+                drag_Mode = false;
+                selected_Line.ReleaseMouseCapture();
+            }
+            else if (select_Shape_Mode && selected_Shape != null)
+            {
+                drag_Mode = false;
+                selected_Shape.ReleaseMouseCapture();
+            }
+        }
+
+        double m_left;
+        double m_top;
+        private void UIElement_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!IsSelectMode() || !drag_Mode) return;
+            if(e.LeftButton == MouseButtonState.Pressed)
+            { 
+                Point End_Point = e.GetPosition(MainCanvas);
+                if (select_Text_Mode && selected_Text != null)
+                {
+                    if (End_Point.X < selected_Text.Width / 2)
+                        m_left = 0;
+                    else if (End_Point.X < MainCanvas.Width - selected_Text.Width)
+                        m_left = End_Point.X - (selected_Text.Width / 2);
+                    else
+                        m_left = MainCanvas.ActualWidth - selected_Text.Width;
+
+                    if (End_Point.Y < selected_Text.Height / 2)
+                        m_top = 0;
+                    else if (End_Point.Y < MainCanvas.Height - selected_Text.Height)
+                        m_top = End_Point.Y - (selected_Text.Height / 2);
+                    else
+                        m_top = MainCanvas.ActualHeight - selected_Text.Height;
+
+                    Canvas.SetLeft(selected_Text, m_left);
+                    Canvas.SetTop(selected_Text, m_top);
+                }
+                else if (select_Line_Mode && selected_Line != null)
+                {
+                    if (End_Point.X < selected_Line.Width / 2)
+                        m_left = 0;
+                    else if (End_Point.X < MainCanvas.Width - selected_Line.Width)
+                        m_left = End_Point.X - (selected_Line.Width / 2);
+                    else
+                        m_left = MainCanvas.ActualWidth - selected_Line.Width;
+
+                    if (End_Point.Y < selected_Line.Height / 2)
+                        m_top = 0;
+                    else if (End_Point.Y < MainCanvas.Height - selected_Line.Height)
+                        m_top = End_Point.Y - (selected_Line.Height / 2);
+                    else
+                        m_top = MainCanvas.ActualHeight - selected_Line.Height;
+
+                    Canvas.SetLeft(selected_Line, m_left);
+                    Canvas.SetTop(selected_Line, m_top);
+                }
+                else if (select_Shape_Mode && selected_Shape != null)
+                {
+                    if (End_Point.X < selected_Shape.Width / 2)
+                        m_left = 0;
+                    else if (End_Point.X < MainCanvas.Width - selected_Shape.Width)
+                        m_left = End_Point.X - (selected_Shape.Width / 2);
+                    else
+                        m_left = MainCanvas.ActualWidth - selected_Shape.Width;
+
+                    if (End_Point.Y < selected_Shape.Height / 2)
+                        m_top = 0;
+                    else if (End_Point.Y < MainCanvas.Height - selected_Shape.Height)
+                        m_top = End_Point.Y - (selected_Shape.Height / 2);
+                    else
+                        m_top = MainCanvas.ActualHeight - selected_Shape.Height;
+
+                    Canvas.SetLeft(selected_Shape, m_left);
+                    Canvas.SetTop(selected_Shape, m_top);
+                }
+            }
+        }
+
+        void UIElement_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (IsSelectMode())
+            {
+                select_Mode = false;
+                if (sender is EditableTextBlock)
+                {
+                    select_Text_Mode = false;
+//                    selected_Text = null;
+                }
+                else if (sender is Line)
+                {
+                    select_Line_Mode = false;
+//                    selected_Line = null;
+                }
+                else if (sender is Shape)
+                {
+                    Console.WriteLine("shape");
+
+                    select_Shape_Mode = false;
+//                    selected_Shape = null;
+                }
+            }
+        }
+        #endregion
 
         #region 버튼Boolean Settion
         void SetAllModeFalse()
@@ -644,8 +856,19 @@ namespace KEAP
             ellipse_Mode = true;
         }
 
+
+        void SetAllMoveModeFalse()
+        {
+            pen_Move_Mode = text_Move_Mode = line_Move_Mode = rectangle_Move_Mode = polygon_Move_Mode = image_Move_Mode = table_Move_Mode = ellipse_Move_Mode = false;
+        }
+
+
         #endregion
 
+        private bool IsSelectMode()
+        {
+            return !(pen_Mode || text_Mode || line_Mode || rectangle_Mode || polygon_Mode || image_Mode || table_Mode || ellipse_Mode);
+        }
         
         private double GetDistance(double x1, double y1, double x2, double y2)
         {
