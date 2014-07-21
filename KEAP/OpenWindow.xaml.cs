@@ -109,7 +109,6 @@ namespace KEAP
             WindowSettings.current_Width = Width;
             WindowSettings.current_Height = Height;
             WindowSettings.current_WindowState = WindowState;
-            Button t;
         }
 
         private void recentPresentations_SelectionChanged(object sender, SelectionChangedEventArgs e)
