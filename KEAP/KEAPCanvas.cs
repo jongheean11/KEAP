@@ -132,12 +132,28 @@ namespace KEAP
                     ((EditableTextBlock)child).Height = ((EditableTextBlock)child).Height * ratio_Y;
                     child.Arrange(new Rect(init_Point, new Size(child.DesiredSize.Width * ratio_X, child.DesiredSize.Height * ratio_Y)));
                 }
-                else if (child is Shape)
+                else if (child is Rectangle)
                 {
                     Canvas.SetLeft((child), X*ratio_X);
                     Canvas.SetTop((child), Y*ratio_Y);
-                    ((Shape)child).Width = ((Shape)child).Width * ratio_X;
-                    ((Shape)child).Height = ((Shape)child).Height * ratio_Y;
+                    ((Rectangle)child).Width = ((Rectangle)child).Width * ratio_X;
+                    ((Rectangle)child).Height = ((Rectangle)child).Height * ratio_Y;
+                    child.Arrange(new Rect(init_Point, new Size(child.DesiredSize.Width * ratio_X, child.DesiredSize.Height * ratio_Y)));
+                }
+                else if (child is Ellipse)
+                {
+                    Canvas.SetLeft((child), X * ratio_X);
+                    Canvas.SetTop((child), Y * ratio_Y);
+                    ((Ellipse)child).Width = ((Ellipse)child).Width * ratio_X;
+                    ((Ellipse)child).Height = ((Ellipse)child).Height * ratio_Y;
+                    child.Arrange(new Rect(init_Point, new Size(child.DesiredSize.Width * ratio_X, child.DesiredSize.Height * ratio_Y)));
+                }
+                else if (child is Image)
+                {
+                    Canvas.SetLeft((child), X * ratio_X);
+                    Canvas.SetTop((child), Y * ratio_Y);
+                    ((Image)child).Width = ((Image)child).Width * ratio_X;
+                    ((Image)child).Height = ((Image)child).Height * ratio_Y;
                     child.Arrange(new Rect(init_Point, new Size(child.DesiredSize.Width * ratio_X, child.DesiredSize.Height * ratio_Y)));
                 }
                 //final_Rect = new Rect(X*ratio_X, Y*ratio_Y, arrangeSize.Width * ratio_X, arrangeSize.Height * ratio_Y);

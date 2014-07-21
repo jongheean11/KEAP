@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
+using System.IO.Compression;
+using Microsoft.Win32;
 
 namespace KEAP
 {
@@ -26,6 +28,8 @@ namespace KEAP
         private List<KEAPCanvas> canvas_List = new List<KEAPCanvas>();
         //private List<SlideInfo> Slides_List = new List<SlideInfo>();
         private ObservableCollection<SlideInfo> Slides_List = new ObservableCollection<SlideInfo>();
+        private Dictionary<int, List<RenderTargetBitmap>> renderbitmap_Dictionary = new Dictionary<int, List<RenderTargetBitmap>>();
+
         int previous_selection = -1;
         KEAPCanvas MainCanvas;
         
@@ -64,9 +68,8 @@ namespace KEAP
                 Background=new SolidColorBrush(Colors.White)
                 
             };
-            if (((this.Width - this.Width * (92 / 876)) / (this.Height - 92)) < 1.15)
+            if (((this.Width - this.Width * (92 / 876)) / (this.Height - 92)) < 1.6)
             {
-
                 MainCanvas.Width = ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 50; //= ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 15*2
                 //MainCanvas.Width = Main_Border.Width - 30;
                 //MainCanvas.Height = Main_Border.Width * 0.8;
@@ -98,9 +101,16 @@ namespace KEAP
             WindowSettings.resolution_Height = availableSize.Height;
             return base.MeasureOverride(availableSize);
         }
+        protected override Size ArrangeOverride(Size arrangeBounds)
+        {
+            WindowSettings.resolution_Width = arrangeBounds.Width;
+            WindowSettings.resolution_Height = arrangeBounds.Height;
+            return base.ArrangeOverride(arrangeBounds);
+        }
+        
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (((this.Width - this.Width * (92 / 876)) / (this.Height - 92)) < 1.15)
+            if (((this.Width - this.Width * (92 / 876)) / (this.Height - 92)) < 1.6)
             {
                 MainCanvas.Width = ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 50; //= ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 15*2
                 //MainCanvas.Width = Main_Border.Width - 30;
@@ -225,6 +235,18 @@ namespace KEAP
 
         void MainCanvas_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            /*if (canvas_LeftButton_Down == true && image_Mode)
+            {
+                int index = Slide_ListView.SelectedIndex;
+                Image image = MainCanvas.Children[MainCanvas.Children.Count - 1] as Image;
+                if (renderbitmap_Dictionary.Count < Slide_ListView.Items.Count)
+                {
+                    renderbitmap_Dictionary[index] = new List<Image>();
+                }
+                List<Image> image_List = renderbitmap_Dictionary[index];
+                image_List.Add(image);
+                renderbitmap_Dictionary[index] = image_List;
+            }*/
             canvas_LeftButton_Down = false;
             Autoedit_Slide_List(MainCanvas, Slide_ListView.SelectedIndex);
         }
@@ -236,7 +258,7 @@ namespace KEAP
             double y1 = Start_Point.Y;
             double x2 = End_Point.X;
             double y2 = End_Point.Y;
-
+            
             if (e.LeftButton == MouseButtonState.Pressed&&canvas_LeftButton_Down)
             {
                 if (pen_Mode)
@@ -711,18 +733,14 @@ namespace KEAP
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 Background = new SolidColorBrush(Colors.White)
             };
-            if (((this.Width - this.Width * (92 / 876)) / (this.Height - 92)) < 1.15)
+            if (((this.Width - this.Width * (92 / 876)) / (this.Height - 92)) < 1.6)
             {
 
                 new_Canvas.Width = ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 50; //= ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 15*2
-                //new_Canvas.Width = Main_Border.Width - 30;
-                //new_Canvas.Height = Main_Border.Width * 0.8;
                 new_Canvas.Height = new_Canvas.Width * 0.5625;
             }
             else
             {
-                //new_Canvas.Height = Main_Border.Height - 30;
-                //new_Canvas.Width = Main_Border.Height * 1.25;
                 new_Canvas.Height = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 50; // = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 15*2;
                 new_Canvas.Width = new_Canvas.Height * 16 / 9;
             }
@@ -746,7 +764,7 @@ namespace KEAP
             if (Slide_ListView.SelectedIndex == -1 && previous_selection!=-1)
                 Slide_ListView.SelectedIndex = 0;
             if (previous_selection != Slide_ListView.SelectedIndex)
-                {
+            {
                 previous_selection = Slide_ListView.SelectedIndex;
                 //Autoedit_Slide_List(canvas_List.ElementAt(Slide_ListView.SelectedIndex),Slide_ListView.SelectedIndex);
             }
@@ -768,31 +786,17 @@ namespace KEAP
 			Image img = new Image();
 			RenderTargetBitmap rtb = new RenderTargetBitmap((int)param_Canvas.Width + 200, (int)param_Canvas.Height + 200, 96d, 96d, System.Windows.Media.PixelFormats.Default);
 			rtb.Render(param_Canvas);
+            List<RenderTargetBitmap> render_List = renderbitmap_Dictionary[Slide_ListView.SelectedIndex];
+            render_List.Add(rtb);
+            renderbitmap_Dictionary[Slide_ListView.SelectedIndex] = render_List;
 			img.Source = rtb;
-//			img.Height = 120;
-//			img.Width = 160;
 			return img;
 		}
 
         void Add_Slide_List(int param_Number)
         {
             Image image = RenderCanvas(canvas_List.ElementAt(param_Number-1));
-            //ObservableCollection<SlideInfo> new_Slides_List = new ObservableCollection<SlideInfo>();
-            /*int i = 0, count = Slides_List.Count;
-            while (i < count)
-            {
-                new_Slides_List.Add(Slides_List.ElementAt(i));
-                i++;
-            }
-            new_Slides_List.Add(new SlideInfo()
-            {
-                Source = image.Source,
-                Number = Convert.ToString(canvas_List.Count),
-                Image_Width = (MainCanvas.Width * 0.75 / 4.45) - 15,
-                Image_Height = ((MainCanvas.Width * 0.75 / 4.45) - 15) * (MainCanvas.Height / MainCanvas.Width)
-            });
             
-            Slide_ListView.ItemsSource = new_Slides_List;*/
             Slides_List.Add(new SlideInfo()
             {
                 Source = image.Source,
@@ -840,49 +844,715 @@ namespace KEAP
             MainCanvas.Arrange(new Rect(0, 0, MainCanvas.Width, MainCanvas.Height));
         }
 
-        FileStream fs;
-        void Save_SlideView(KEAPCanvas param_Canvas, int param_Number)
-        {
-            Transform transform = param_Canvas.LayoutTransform;
-            // reset current transform (in case it is scaled or rotated)
-            param_Canvas.LayoutTransform = null;
-
-            // Get the size of canvas
-            Size size = new Size(param_Canvas.RenderSize.Width, param_Canvas.RenderSize.Height);
-            // Measure and arrange the surface
-            // VERY IMPORTANT
-            param_Canvas.Measure(size);
-            param_Canvas.Arrange(new Rect(size));
-
-            // Create a render bitmap and push the surface to it
-            RenderTargetBitmap renderBitmap =
-              new RenderTargetBitmap(
-                (int)param_Canvas.Width+200,
-                (int)param_Canvas.Height+200,
-                96d,
-                96d,
-                PixelFormats.Default);
-            renderBitmap.Render(param_Canvas);
-
-            // Create a file stream for saving image
-            
-            fs = System.IO.File.OpenWrite(FileSettings.file_Path+"/"+FileSettings.file_Name+"_slide"+Convert.ToString(param_Number)+".jpg");    
-            
-            // Use png encoder for our data
-            PngBitmapEncoder encoder = new PngBitmapEncoder();
-            // push the rendered bitmap to it
-            encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
-            // save the data to the stream
-            encoder.Save(fs);
-            fs.Close();
-
-            // Restore previously saved layout
-            param_Canvas.LayoutTransform = transform;
-        }
-
         private void Save_Click(object sender, RoutedEventArgs e)
         {
+            SaveFileDialog savedlg = new SaveFileDialog();
+            savedlg.FileName = ""; // Default file name
+            savedlg.DefaultExt = ".keap"; // Default file extension
+            savedlg.Filter = "KEAP File (.keap)|*.keap"; // Filter files by extension 
+            
+            Nullable<bool> result = savedlg.ShowDialog();
 
+            if (result == true)
+            {
+                string filename = savedlg.SafeFileName;
+                string name = filename.Substring(0,filename.Length-5);
+                
+                string fullpath = savedlg.FileName;
+
+                string startPath = "c:\\KEAP\\" + name + "\\";
+                string zipPath = "c:\\KEAP\\testing\\" + name + ".keap";
+
+                Save_Xml(name, startPath);
+                // Declare Variables
+             
+                ZipFile.CreateFromDirectory(startPath, zipPath);
+            }
+        }
+
+        /*try
+            {
+                var dlg = new OpenFileDialog { DefaultExt = "keap", Filter = "KEAP File (*.keap)|*.keap" };
+                if (dlg.ShowDialog() != DialogResult.OK) return;
+
+                listbox.Items.Clear(); listbox.Tag = dlg.FileName;
+                using (var zip = ZipArchive.OpenOnFile(dlg.FileName))
+                    listbox.Items.AddRange(zip.Files.OrderBy(file => file.Name).Select(file => file.Name).ToArray());
+                form.Text = dlg.FileName + " - " + "ZipArchiveTest";
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }*/
+        /*
+        string zipPath = savedlg.InitialDirectory + savedlg.FileName;
+                string extractPath = @"c:\KEAP\";
+
+                using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+                {
+                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    {
+                        if (entry.FullName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+                        {
+                            entry.ExtractToFile(System.IO.Path.Combine(extractPath, entry.FullName));
+                        }
+                    }
+                } 
+         
+*/
+        private void Save_Xml(string param_name, string param_path)
+        {
+            Directory.CreateDirectory(param_path);
+            using (var xmlfile = System.IO.File.Create(param_path + param_name + ".xml")) //Convert.ToString(i++))
+            {
+                String xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><files></files>";
+                var doc = new XmlDocument();
+                doc.LoadXml(xml);
+                doc.Save(xmlfile);
+                xmlfile.Dispose();
+                xmlfile.Close();
+            }
+            using (XmlWriter xmlFile = XmlWriter.Create(param_path + param_name + ".xml"))
+            //using (XmlReader xmlFile = XmlReader.Create(param_path + param_name + ".xml"))
+            {
+                XmlDocument xmlDoc;
+                xmlDoc = new XmlDocument();
+                //xmlDoc.lLoad(xmlFile);
+                
+                XmlElement file = xmlDoc.CreateElement("file");
+                file.SetAttribute("Time", DateTime.Now.ToLongDateString() + "\\" + DateTime.Now.ToLongTimeString());
+                
+                int i = 1;
+                foreach (KEAPCanvas canvas in canvas_List)
+                {
+                    XmlElement canvas_element = xmlDoc.CreateElement("Slide" + Convert.ToString(i));
+                    List<RenderTargetBitmap> render_List = renderbitmap_Dictionary[i - 1];
+                    int j = 0;
+                    foreach (UIElement obj in canvas.Children)
+                    {
+                        if (obj is Polygon)
+                        {
+                            Polygon thispolygon = obj as Polygon;
+                            int index = 0;
+                            XmlElement P = xmlDoc.CreateElement("Polygon");
+                            XmlElement polygon_count = xmlDoc.CreateElement("Count");
+                            polygon_count.InnerText = Convert.ToString(thispolygon.Points.Count);
+                            P.AppendChild(polygon_count);
+                            while (index < thispolygon.Points.Count)
+                            {
+                                XmlElement x1 = xmlDoc.CreateElement("X" + Convert.ToString(index));
+                                x1.InnerText = Convert.ToString(thispolygon.Points.ElementAt(index).X);
+                                P.AppendChild(x1);
+                                XmlElement y1 = xmlDoc.CreateElement("Y" + Convert.ToString(index));
+                                y1.InnerText = Convert.ToString(thispolygon.Points.ElementAt(index).Y);
+                                P.AppendChild(y1);
+                                index++;
+                            }
+
+                            Brush stroke_Brush = thispolygon.Stroke;
+                            XmlElement stroke_Color_Of_A = xmlDoc.CreateElement("Stroke_Color_A");//((Color)stroke_Brush.GetValue(SolidColorstroke_Brush.ColorProperty)).A;
+                            stroke_Color_Of_A.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            P.AppendChild(stroke_Color_Of_A);
+                            XmlElement stroke_Color_Of_R = xmlDoc.CreateElement("Stroke_Color_R");
+                            stroke_Color_Of_R.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            P.AppendChild(stroke_Color_Of_R);
+                            XmlElement stroke_Color_Of_G = xmlDoc.CreateElement("Stroke_Color_G");
+                            stroke_Color_Of_G.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            P.AppendChild(stroke_Color_Of_G);
+                            XmlElement stroke_Color_Of_B = xmlDoc.CreateElement("Stroke_Color_B");
+                            stroke_Color_Of_B.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            P.AppendChild(stroke_Color_Of_B);
+
+                            Brush fill_Brush = thispolygon.Fill;
+                            XmlElement fill_Color_Of_A = xmlDoc.CreateElement("Fill_Color_A");//((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                            fill_Color_Of_A.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            P.AppendChild(fill_Color_Of_A);
+                            XmlElement fill_Color_Of_R = xmlDoc.CreateElement("Fill_Color_R");
+                            fill_Color_Of_R.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            P.AppendChild(fill_Color_Of_R);
+                            XmlElement fill_Color_Of_G = xmlDoc.CreateElement("Fill_Color_G");
+                            fill_Color_Of_G.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            P.AppendChild(fill_Color_Of_G);
+                            XmlElement fill_Color_Of_B = xmlDoc.CreateElement("Fill_Color_B");
+                            fill_Color_Of_B.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            P.AppendChild(fill_Color_Of_B);
+
+                            canvas_element.AppendChild(P);
+                        }
+
+                        else if (obj is Line)
+                        {
+                            Line thisline = obj as Line;
+                            XmlElement L = xmlDoc.CreateElement("Line");
+                            XmlElement x1 = xmlDoc.CreateElement("X1");
+                            x1.InnerText = Convert.ToString(thisline.X1);
+                            L.AppendChild(x1);
+                            XmlElement y1 = xmlDoc.CreateElement("Y1");
+                            y1.InnerText = Convert.ToString(thisline.Y1);
+                            L.AppendChild(y1);
+                            XmlElement x2 = xmlDoc.CreateElement("X2");
+                            x2.InnerText = Convert.ToString(thisline.X2);
+                            L.AppendChild(x2);
+                            XmlElement y2 = xmlDoc.CreateElement("Y2");
+                            y2.InnerText = Convert.ToString(thisline.Y2);
+                            L.AppendChild(y2);
+
+                            Brush brush = thisline.Stroke;
+                            XmlElement Color_of_A = xmlDoc.CreateElement("Color_A");//((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                            Color_of_A.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            L.AppendChild(Color_of_A);
+                            XmlElement Color_of_G = xmlDoc.CreateElement("Color_G");
+                            Color_of_G.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            L.AppendChild(Color_of_G);
+                            XmlElement Color_of_R = xmlDoc.CreateElement("Color_R");
+                            Color_of_R.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            L.AppendChild(Color_of_R);
+                            XmlElement Color_of_B = xmlDoc.CreateElement("Color_B");
+                            Color_of_B.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            L.AppendChild(Color_of_B);
+
+                            canvas_element.AppendChild(L);
+                        }
+
+                        else if (obj is EditableTextBlock)
+                        {
+                            EditableTextBlock thistextblock = obj as EditableTextBlock;
+                            XmlElement T = xmlDoc.CreateElement("Textblock");
+                            XmlElement x1 = xmlDoc.CreateElement("X1");
+                            x1.InnerText = Convert.ToString(Canvas.GetLeft(thistextblock));
+                            T.AppendChild(x1);
+                            XmlElement y1 = xmlDoc.CreateElement("Y1");
+                            y1.InnerText = Convert.ToString(Canvas.GetTop(thistextblock));
+                            T.AppendChild(y1);
+                            XmlElement x2 = xmlDoc.CreateElement("X2");
+                            x2.InnerText = Convert.ToString(Canvas.GetLeft(thistextblock) + thistextblock.Width);
+                            T.AppendChild(x2);
+                            XmlElement y2 = xmlDoc.CreateElement("Y2");
+                            y2.InnerText = Convert.ToString(Canvas.GetTop(thistextblock) + thistextblock.Height);
+                            T.AppendChild(y2);
+
+                            XmlElement text = xmlDoc.CreateElement("Text");
+                            text.InnerText = thistextblock.Text;
+                            T.AppendChild(text);
+                            XmlElement fontsize = xmlDoc.CreateElement("FontSize");
+                            fontsize.InnerText = Convert.ToString(thistextblock.FontSize);
+                            T.AppendChild(fontsize);
+
+                            Brush brush = thistextblock.Background;
+                            XmlElement Color_of_A = xmlDoc.CreateElement("Color_A");//((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                            Color_of_A.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            T.AppendChild(Color_of_A);
+                            XmlElement Color_of_G = xmlDoc.CreateElement("Color_G");
+                            Color_of_G.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            T.AppendChild(Color_of_G);
+                            XmlElement Color_of_R = xmlDoc.CreateElement("Color_R");
+                            Color_of_R.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            T.AppendChild(Color_of_R);
+                            XmlElement Color_of_B = xmlDoc.CreateElement("Color_B");
+                            Color_of_B.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            T.AppendChild(Color_of_B);
+
+                            canvas_element.AppendChild(T);
+                        }
+
+                        else if (obj is Rectangle)
+                        {
+                            Rectangle thisrectangle = obj as Rectangle;
+                       
+                            XmlElement R = xmlDoc.CreateElement("Rectangle");
+                            XmlElement rectangle_left = xmlDoc.CreateElement("X");
+                            rectangle_left.InnerText = Convert.ToString(Canvas.GetLeft(thisrectangle));
+                            R.AppendChild(rectangle_left);
+                            XmlElement rectangle_top = xmlDoc.CreateElement("Y");
+                            rectangle_top.InnerText = Convert.ToString(Canvas.GetTop(thisrectangle));
+                            R.AppendChild(rectangle_top);
+
+                            XmlElement rectangle_width = xmlDoc.CreateElement("Width");
+                            rectangle_width.InnerText = Convert.ToString(thisrectangle.Width);
+                            R.AppendChild(rectangle_width);
+                            XmlElement rectangle_height = xmlDoc.CreateElement("Height");
+                            rectangle_height.InnerText = Convert.ToString(thisrectangle.Height);
+                            R.AppendChild(rectangle_height);
+
+                            Brush stroke_Brush = thisrectangle.Stroke;
+                            XmlElement stroke_Color_Of_A = xmlDoc.CreateElement("Stroke_Color_A");//((Color)stroke_Brush.GetValue(SolidColorstroke_Brush.ColorProperty)).A;
+                            stroke_Color_Of_A.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            R.AppendChild(stroke_Color_Of_A);
+                            XmlElement stroke_Color_Of_R = xmlDoc.CreateElement("Stroke_Color_R");
+                            stroke_Color_Of_R.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            R.AppendChild(stroke_Color_Of_R);
+                            XmlElement stroke_Color_Of_G = xmlDoc.CreateElement("Stroke_Color_G");
+                            stroke_Color_Of_G.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            R.AppendChild(stroke_Color_Of_G);
+                            XmlElement stroke_Color_Of_B = xmlDoc.CreateElement("Stroke_Color_B");
+                            stroke_Color_Of_B.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            R.AppendChild(stroke_Color_Of_B);
+
+                            if (thisrectangle.Fill != null)
+                            {
+                                Brush fill_Brush = thisrectangle.Fill;
+                                XmlElement fill_Color_Of_A = xmlDoc.CreateElement("Fill_Color_A");//((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                                fill_Color_Of_A.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                                R.AppendChild(fill_Color_Of_A);
+                                XmlElement fill_Color_Of_R = xmlDoc.CreateElement("Fill_Color_R");
+                                fill_Color_Of_R.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                                R.AppendChild(fill_Color_Of_R);
+                                XmlElement fill_Color_Of_G = xmlDoc.CreateElement("Fill_Color_G");
+                                fill_Color_Of_G.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                                R.AppendChild(fill_Color_Of_G);
+                                XmlElement fill_Color_Of_B = xmlDoc.CreateElement("Fill_Color_B");
+                                fill_Color_Of_B.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                                R.AppendChild(fill_Color_Of_B);
+                            }
+
+                            canvas_element.AppendChild(R);
+                        }
+
+                        else if (obj is Ellipse)
+                        {
+                            Ellipse thisellipse = obj as Ellipse;
+
+                            XmlElement E = xmlDoc.CreateElement("Ellipse");
+                            XmlElement ellipse_left = xmlDoc.CreateElement("X");
+                            ellipse_left.InnerText = Convert.ToString(Canvas.GetLeft(thisellipse));
+                            E.AppendChild(ellipse_left);
+                            XmlElement ellipse_top = xmlDoc.CreateElement("Y");
+                            ellipse_top.InnerText = Convert.ToString(Canvas.GetTop(thisellipse));
+                            E.AppendChild(ellipse_top);
+
+                            Brush stroke_Brush = thisellipse.Stroke;
+                            XmlElement stroke_Color_Of_A = xmlDoc.CreateElement("Stroke_Color_A");//((Color)stroke_Brush.GetValue(SolidColorstroke_Brush.ColorProperty)).A;
+                            stroke_Color_Of_A.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            E.AppendChild(stroke_Color_Of_A);
+                            XmlElement stroke_Color_Of_R = xmlDoc.CreateElement("Stroke_Color_R");
+                            stroke_Color_Of_R.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            E.AppendChild(stroke_Color_Of_R);
+                            XmlElement stroke_Color_Of_G = xmlDoc.CreateElement("Stroke_Color_G");
+                            stroke_Color_Of_G.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            E.AppendChild(stroke_Color_Of_G);
+                            XmlElement stroke_Color_Of_B = xmlDoc.CreateElement("Stroke_Color_B");
+                            stroke_Color_Of_B.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            E.AppendChild(stroke_Color_Of_B);
+
+                            Brush fill_Brush = thisellipse.Fill;
+                            XmlElement fill_Color_Of_A = xmlDoc.CreateElement("Fill_Color_A");//((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                            fill_Color_Of_A.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            E.AppendChild(fill_Color_Of_A);
+                            XmlElement fill_Color_Of_R = xmlDoc.CreateElement("Fill_Color_R");
+                            fill_Color_Of_R.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            E.AppendChild(fill_Color_Of_R);
+                            XmlElement fill_Color_Of_G = xmlDoc.CreateElement("Fill_Color_G");
+                            fill_Color_Of_G.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            E.AppendChild(fill_Color_Of_G);
+                            XmlElement fill_Color_Of_B = xmlDoc.CreateElement("Fill_Color_B");
+                            fill_Color_Of_B.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            E.AppendChild(fill_Color_Of_B);
+
+                            canvas_element.AppendChild(E);
+                        }
+
+                        else if (obj is Image)
+                        {
+                            Image thisimage = obj as Image;
+                            XmlElement I = xmlDoc.CreateElement("Image");
+                            XmlElement x1 = xmlDoc.CreateElement("X1");
+                            x1.InnerText = Convert.ToString(Canvas.GetLeft(thisimage));
+                            I.AppendChild(x1);
+                            XmlElement y1 = xmlDoc.CreateElement("Y1");
+                            y1.InnerText = Convert.ToString(Canvas.GetTop(thisimage));
+                            I.AppendChild(y1);
+                            XmlElement x2 = xmlDoc.CreateElement("X2");
+                            x2.InnerText = Convert.ToString(Canvas.GetLeft(thisimage) + thisimage.Width);
+                            I.AppendChild(x2);
+                            XmlElement y2 = xmlDoc.CreateElement("Y2");
+                            y2.InnerText = Convert.ToString(Canvas.GetTop(thisimage) + thisimage.Height);
+                            I.AppendChild(y2);
+                            Canvas.SetLeft(thisimage, 0);
+                            Canvas.SetTop(thisimage, 0);
+                            /*RenderTargetBitmap renderBitmap = new RenderTargetBitmap(
+                                (int)thisimage.Width,
+                                (int)thisimage.Height,
+                                96d,
+                                96d,
+                                PixelFormats.Default);
+                            renderBitmap.Render(thisimage);*/
+                            Canvas.SetLeft(thisimage, 0);
+                            Canvas.SetTop(thisimage, 0);
+                            FileStream fs;
+                            RenderTargetBitmap renderBitmap = render_List.ElementAt(j);
+                            string filepath = param_path + param_name + "_Image_" + Convert.ToString(i) + "_" + Convert.ToString(j++) + ".png"; // filename_Image_(Canvas#)_(Image#).png
+                            
+                            // Create a file stream for saving image
+                            fs = System.IO.File.OpenWrite(param_path + param_name + "_Image" + Convert.ToString(j++) + ".png");
+                            // Use png encoder for our data
+                            PngBitmapEncoder encoder = new PngBitmapEncoder();
+                            // push the rendered bitmap to it
+                            encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+                            // save the data to the stream
+                            encoder.Save(fs);
+                            //fs.Dispose();
+                            fs.Close();
+                            
+                            XmlElement image_path = xmlDoc.CreateElement("Path");
+                            image_path.InnerText = filepath;
+                            I.AppendChild(image_path);
+
+                            canvas_element.AppendChild(I);
+                        }
+                    }
+                    file.AppendChild(canvas_element);
+                    i++;
+                }
+                file.WriteTo(xmlFile);
+                xmlDoc.Save(xmlFile);
+                xmlFile.Close();
+            }
+        }
+
+        private void Open_Xml(string param_name, string param_path)
+        {
+            Directory.CreateDirectory(param_path);
+            using (var xmlfile = System.IO.File.Create(param_path + param_name + ".xml")) //Convert.ToString(i++))
+            {
+                String xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><files></files>";
+                var doc = new XmlDocument();
+                doc.LoadXml(xml);
+                doc.Save(xmlfile);
+                xmlfile.Dispose();
+                xmlfile.Close();
+            }
+            using (XmlWriter xmlFile = XmlWriter.Create(param_path + param_name + ".xml"))
+            //using (XmlReader xmlFile = XmlReader.Create(param_path + param_name + ".xml"))
+            {
+                XmlDocument xmlDoc;
+                xmlDoc = new XmlDocument();
+                //xmlDoc.lLoad(xmlFile);
+
+                XmlElement file = xmlDoc.CreateElement("file");
+                file.SetAttribute("Time", DateTime.Now.ToLongDateString() + "\\" + DateTime.Now.ToLongTimeString());
+
+                int i = 1;
+                foreach (KEAPCanvas canvas in canvas_List)
+                {
+                    XmlElement canvas_element = xmlDoc.CreateElement("Slide" + Convert.ToString(i));
+                    int j = 1;
+                    foreach (UIElement obj in canvas.Children)
+                    {
+                        if (obj is Polygon)
+                        {
+                            Polygon thispolygon = obj as Polygon;
+                            int index = 0;
+                            XmlElement P = xmlDoc.CreateElement("Polygon");
+                            XmlElement polygon_count = xmlDoc.CreateElement("Count");
+                            polygon_count.InnerText = Convert.ToString(thispolygon.Points.Count);
+                            P.AppendChild(polygon_count);
+                            while (index < thispolygon.Points.Count)
+                            {
+                                XmlElement x1 = xmlDoc.CreateElement("X" + Convert.ToString(index));
+                                x1.InnerText = Convert.ToString(thispolygon.Points.ElementAt(index).X);
+                                P.AppendChild(x1);
+                                XmlElement y1 = xmlDoc.CreateElement("Y" + Convert.ToString(index));
+                                y1.InnerText = Convert.ToString(thispolygon.Points.ElementAt(index).Y);
+                                P.AppendChild(y1);
+                                index++;
+                            }
+
+                            Brush stroke_Brush = thispolygon.Stroke;
+                            XmlElement stroke_Color_Of_A = xmlDoc.CreateElement("Stroke_Color_A");//((Color)stroke_Brush.GetValue(SolidColorstroke_Brush.ColorProperty)).A;
+                            stroke_Color_Of_A.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            P.AppendChild(stroke_Color_Of_A);
+                            XmlElement stroke_Color_Of_R = xmlDoc.CreateElement("Stroke_Color_R");
+                            stroke_Color_Of_R.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            P.AppendChild(stroke_Color_Of_R);
+                            XmlElement stroke_Color_Of_G = xmlDoc.CreateElement("Stroke_Color_G");
+                            stroke_Color_Of_G.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            P.AppendChild(stroke_Color_Of_G);
+                            XmlElement stroke_Color_Of_B = xmlDoc.CreateElement("Stroke_Color_B");
+                            stroke_Color_Of_B.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            P.AppendChild(stroke_Color_Of_B);
+
+                            Brush fill_Brush = thispolygon.Fill;
+                            XmlElement fill_Color_Of_A = xmlDoc.CreateElement("Fill_Color_A");//((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                            fill_Color_Of_A.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            P.AppendChild(fill_Color_Of_A);
+                            XmlElement fill_Color_Of_R = xmlDoc.CreateElement("Fill_Color_R");
+                            fill_Color_Of_R.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            P.AppendChild(fill_Color_Of_R);
+                            XmlElement fill_Color_Of_G = xmlDoc.CreateElement("Fill_Color_G");
+                            fill_Color_Of_G.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            P.AppendChild(fill_Color_Of_G);
+                            XmlElement fill_Color_Of_B = xmlDoc.CreateElement("Fill_Color_B");
+                            fill_Color_Of_B.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            P.AppendChild(fill_Color_Of_B);
+
+                            canvas_element.AppendChild(P);
+                        }
+
+                        else if (obj is Line)
+                        {
+                            Line thisline = obj as Line;
+                            XmlElement L = xmlDoc.CreateElement("Line");
+                            XmlElement x1 = xmlDoc.CreateElement("X1");
+                            x1.InnerText = Convert.ToString(thisline.X1);
+                            L.AppendChild(x1);
+                            XmlElement y1 = xmlDoc.CreateElement("Y1");
+                            y1.InnerText = Convert.ToString(thisline.Y1);
+                            L.AppendChild(y1);
+                            XmlElement x2 = xmlDoc.CreateElement("X2");
+                            x2.InnerText = Convert.ToString(thisline.X2);
+                            L.AppendChild(x2);
+                            XmlElement y2 = xmlDoc.CreateElement("Y2");
+                            y2.InnerText = Convert.ToString(thisline.Y2);
+                            L.AppendChild(y2);
+
+                            Brush brush = thisline.Stroke;
+                            XmlElement Color_of_A = xmlDoc.CreateElement("Color_A");//((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                            Color_of_A.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            L.AppendChild(Color_of_A);
+                            XmlElement Color_of_G = xmlDoc.CreateElement("Color_G");
+                            Color_of_G.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            L.AppendChild(Color_of_G);
+                            XmlElement Color_of_R = xmlDoc.CreateElement("Color_R");
+                            Color_of_R.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            L.AppendChild(Color_of_R);
+                            XmlElement Color_of_B = xmlDoc.CreateElement("Color_B");
+                            Color_of_B.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            L.AppendChild(Color_of_B);
+
+                            canvas_element.AppendChild(L);
+                        }
+
+                        else if (obj is EditableTextBlock)
+                        {
+                            EditableTextBlock thistextblock = obj as EditableTextBlock;
+                            XmlElement T = xmlDoc.CreateElement("Textblock");
+                            XmlElement x1 = xmlDoc.CreateElement("X1");
+                            x1.InnerText = Convert.ToString(Canvas.GetLeft(thistextblock));
+                            T.AppendChild(x1);
+                            XmlElement y1 = xmlDoc.CreateElement("Y1");
+                            y1.InnerText = Convert.ToString(Canvas.GetTop(thistextblock));
+                            T.AppendChild(y1);
+                            XmlElement x2 = xmlDoc.CreateElement("X2");
+                            x2.InnerText = Convert.ToString(Canvas.GetLeft(thistextblock) + thistextblock.Width);
+                            T.AppendChild(x2);
+                            XmlElement y2 = xmlDoc.CreateElement("Y2");
+                            y2.InnerText = Convert.ToString(Canvas.GetTop(thistextblock) + thistextblock.Height);
+                            T.AppendChild(y2);
+
+                            XmlElement text = xmlDoc.CreateElement("Text");
+                            text.InnerText = thistextblock.Text;
+                            T.AppendChild(text);
+                            XmlElement fontsize = xmlDoc.CreateElement("FontSize");
+                            fontsize.InnerText = Convert.ToString(thistextblock.FontSize);
+                            T.AppendChild(fontsize);
+
+                            Brush brush = thistextblock.Background;
+                            XmlElement Color_of_A = xmlDoc.CreateElement("Color_A");//((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                            Color_of_A.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            T.AppendChild(Color_of_A);
+                            XmlElement Color_of_G = xmlDoc.CreateElement("Color_G");
+                            Color_of_G.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            T.AppendChild(Color_of_G);
+                            XmlElement Color_of_R = xmlDoc.CreateElement("Color_R");
+                            Color_of_R.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            T.AppendChild(Color_of_R);
+                            XmlElement Color_of_B = xmlDoc.CreateElement("Color_B");
+                            Color_of_B.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            T.AppendChild(Color_of_B);
+
+                            canvas_element.AppendChild(T);
+                        }
+
+                        else if (obj is Rectangle)
+                        {
+                            Rectangle thisrectangle = obj as Rectangle;
+
+                            XmlElement R = xmlDoc.CreateElement("Rectangle");
+                            XmlElement rectangle_left = xmlDoc.CreateElement("X");
+                            rectangle_left.InnerText = Convert.ToString(Canvas.GetLeft(thisrectangle));
+                            R.AppendChild(rectangle_left);
+                            XmlElement rectangle_top = xmlDoc.CreateElement("Y");
+                            rectangle_top.InnerText = Convert.ToString(Canvas.GetTop(thisrectangle));
+                            R.AppendChild(rectangle_top);
+
+                            XmlElement rectangle_width = xmlDoc.CreateElement("Width");
+                            rectangle_width.InnerText = Convert.ToString(thisrectangle.Width);
+                            R.AppendChild(rectangle_width);
+                            XmlElement rectangle_height = xmlDoc.CreateElement("Height");
+                            rectangle_height.InnerText = Convert.ToString(thisrectangle.Height);
+                            R.AppendChild(rectangle_height);
+
+                            Brush stroke_Brush = thisrectangle.Stroke;
+                            XmlElement stroke_Color_Of_A = xmlDoc.CreateElement("Stroke_Color_A");//((Color)stroke_Brush.GetValue(SolidColorstroke_Brush.ColorProperty)).A;
+                            stroke_Color_Of_A.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            R.AppendChild(stroke_Color_Of_A);
+                            XmlElement stroke_Color_Of_R = xmlDoc.CreateElement("Stroke_Color_R");
+                            stroke_Color_Of_R.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            R.AppendChild(stroke_Color_Of_R);
+                            XmlElement stroke_Color_Of_G = xmlDoc.CreateElement("Stroke_Color_G");
+                            stroke_Color_Of_G.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            R.AppendChild(stroke_Color_Of_G);
+                            XmlElement stroke_Color_Of_B = xmlDoc.CreateElement("Stroke_Color_B");
+                            stroke_Color_Of_B.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            R.AppendChild(stroke_Color_Of_B);
+
+                            if (thisrectangle.Fill != null)
+                            {
+                                Brush fill_Brush = thisrectangle.Fill;
+                                XmlElement fill_Color_Of_A = xmlDoc.CreateElement("Fill_Color_A");//((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                                fill_Color_Of_A.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                                R.AppendChild(fill_Color_Of_A);
+                                XmlElement fill_Color_Of_R = xmlDoc.CreateElement("Fill_Color_R");
+                                fill_Color_Of_R.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                                R.AppendChild(fill_Color_Of_R);
+                                XmlElement fill_Color_Of_G = xmlDoc.CreateElement("Fill_Color_G");
+                                fill_Color_Of_G.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                                R.AppendChild(fill_Color_Of_G);
+                                XmlElement fill_Color_Of_B = xmlDoc.CreateElement("Fill_Color_B");
+                                fill_Color_Of_B.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                                R.AppendChild(fill_Color_Of_B);
+                            }
+
+                            canvas_element.AppendChild(R);
+                        }
+
+                        else if (obj is Ellipse)
+                        {
+                            Ellipse thisellipse = obj as Ellipse;
+
+                            XmlElement E = xmlDoc.CreateElement("Ellipse");
+                            XmlElement ellipse_left = xmlDoc.CreateElement("X");
+                            ellipse_left.InnerText = Convert.ToString(Canvas.GetLeft(thisellipse));
+                            E.AppendChild(ellipse_left);
+                            XmlElement ellipse_top = xmlDoc.CreateElement("Y");
+                            ellipse_top.InnerText = Convert.ToString(Canvas.GetTop(thisellipse));
+                            E.AppendChild(ellipse_top);
+
+                            Brush stroke_Brush = thisellipse.Stroke;
+                            XmlElement stroke_Color_Of_A = xmlDoc.CreateElement("Stroke_Color_A");//((Color)stroke_Brush.GetValue(SolidColorstroke_Brush.ColorProperty)).A;
+                            stroke_Color_Of_A.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            E.AppendChild(stroke_Color_Of_A);
+                            XmlElement stroke_Color_Of_R = xmlDoc.CreateElement("Stroke_Color_R");
+                            stroke_Color_Of_R.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            E.AppendChild(stroke_Color_Of_R);
+                            XmlElement stroke_Color_Of_G = xmlDoc.CreateElement("Stroke_Color_G");
+                            stroke_Color_Of_G.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            E.AppendChild(stroke_Color_Of_G);
+                            XmlElement stroke_Color_Of_B = xmlDoc.CreateElement("Stroke_Color_B");
+                            stroke_Color_Of_B.InnerText = Convert.ToString(((Color)stroke_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            E.AppendChild(stroke_Color_Of_B);
+
+                            Brush fill_Brush = thisellipse.Fill;
+                            XmlElement fill_Color_Of_A = xmlDoc.CreateElement("Fill_Color_A");//((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                            fill_Color_Of_A.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            E.AppendChild(fill_Color_Of_A);
+                            XmlElement fill_Color_Of_R = xmlDoc.CreateElement("Fill_Color_R");
+                            fill_Color_Of_R.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            E.AppendChild(fill_Color_Of_R);
+                            XmlElement fill_Color_Of_G = xmlDoc.CreateElement("Fill_Color_G");
+                            fill_Color_Of_G.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            E.AppendChild(fill_Color_Of_G);
+                            XmlElement fill_Color_Of_B = xmlDoc.CreateElement("Fill_Color_B");
+                            fill_Color_Of_B.InnerText = Convert.ToString(((Color)fill_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            E.AppendChild(fill_Color_Of_B);
+
+                            canvas_element.AppendChild(E);
+                        }
+
+                        else if (obj is Image)
+                        {
+                            Image thisimage = obj as Image;
+                            XmlElement I = xmlDoc.CreateElement("Image");
+                            XmlElement x1 = xmlDoc.CreateElement("X1");
+                            x1.InnerText = Convert.ToString(Canvas.GetLeft(thisimage));
+                            I.AppendChild(x1);
+                            XmlElement y1 = xmlDoc.CreateElement("Y1");
+                            y1.InnerText = Convert.ToString(Canvas.GetTop(thisimage));
+                            I.AppendChild(y1);
+                            XmlElement x2 = xmlDoc.CreateElement("X2");
+                            x2.InnerText = Convert.ToString(Canvas.GetLeft(thisimage) + thisimage.Width);
+                            I.AppendChild(x2);
+                            XmlElement y2 = xmlDoc.CreateElement("Y2");
+                            y2.InnerText = Convert.ToString(Canvas.GetTop(thisimage) + thisimage.Height);
+                            I.AppendChild(y2);
+
+                            RenderTargetBitmap renderBitmap = new RenderTargetBitmap(
+                                (int)thisimage.Width,
+                                (int)thisimage.Height,
+                                96d,
+                                96d,
+                                PixelFormats.Default);
+                            renderBitmap.Render(thisimage);
+
+                            FileStream fs;
+                            string filepath = param_path + param_name + "_Image_" + Convert.ToString(i) + "_" + Convert.ToString(j++) + ".png"; // filename_Image_(Canvas#)_(Image#).png
+                            // Create a file stream for saving image
+                            fs = System.IO.File.OpenWrite(param_path + param_name + "_Image" + Convert.ToString(j++) + ".png");
+                            // Use png encoder for our data
+                            PngBitmapEncoder encoder = new PngBitmapEncoder();
+                            // push the rendered bitmap to it
+                            encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+                            // save the data to the stream
+                            encoder.Save(fs);
+                            //fs.Dispose();
+                            fs.Close();
+
+                            XmlElement image_path = xmlDoc.CreateElement("Path");
+                            image_path.InnerText = filepath;
+                            I.AppendChild(image_path);
+
+                            canvas_element.AppendChild(I);
+                        }
+                    }
+                    file.AppendChild(canvas_element);
+                    i++;
+                }
+                file.WriteTo(xmlFile);
+                xmlDoc.Save(xmlFile);
+                xmlFile.Close();
+            }
+        }
+
+        private void Save_Slides(string param_filename, string param_path)
+        {
+            int i = 1;
+            foreach (KEAPCanvas canvas in canvas_List)
+            {
+                Transform transform = canvas.LayoutTransform;
+                // reset current transform (in case it is scaled or rotated)
+                canvas.LayoutTransform = null;
+
+                // Get the size of canvas
+                Size size = new Size(canvas.RenderSize.Width, canvas.RenderSize.Height);
+                // Measure and arrange the surface
+                // VERY IMPORTANT
+                canvas.Measure(size);
+                canvas.Arrange(new Rect(size));
+
+                // Create a render bitmap and push the surface to it
+                RenderTargetBitmap renderBitmap =
+                  new RenderTargetBitmap(
+                    (int)canvas.Width + 200,
+                    (int)canvas.Height + 200,
+                    96d,
+                    96d,
+                    PixelFormats.Default);
+                renderBitmap.Render(canvas);
+
+                // Create a file stream for saving image
+                using (var fs = System.IO.File.OpenWrite(param_path + param_filename + "_Slide" + Convert.ToString(i++) + ".png"))
+                {
+                    // Use png encoder for our data
+                    PngBitmapEncoder encoder = new PngBitmapEncoder();
+                    // push the rendered bitmap to it
+                    encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+                    // save the data to the stream
+                    encoder.Save(fs);
+                    //fs.Dispose();
+                    fs.Close();
+                }
+
+                
+                // Restore previously saved layout
+                canvas.LayoutTransform = transform;
+            }
         }
     }
 }
