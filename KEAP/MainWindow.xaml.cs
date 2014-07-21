@@ -2025,5 +2025,43 @@ namespace KEAP
             WaterFall.MakeWaterFallAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
         }
         #endregion
+
+        private void Slide_Show_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (System.Windows.Forms.Screen.AllScreens.Length > 1) // if dual monitor
+            {
+                // create Window with second monitor
+                FullWindowForAudience Audience = new FullWindowForAudience(true);
+                Audience.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
+                System.Drawing.Rectangle working_Area = System.Windows.Forms.Screen.AllScreens[1].WorkingArea;
+                Audience.Left = working_Area.Left;
+                Audience.Top = working_Area.Top;
+                Audience.Width = working_Area.Width;
+                Audience.Height = working_Area.Height;
+                Audience.WindowState = WindowState.Maximized;
+                Audience.WindowStyle = WindowStyle.None;
+                Audience.Topmost = true;
+                Audience.Show();
+            }
+            else if (System.Windows.Forms.Screen.AllScreens.Length == 1) // no dual monitor
+            {
+                FullWindowForAudience Audience = new FullWindowForAudience(false);
+                Audience.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
+                System.Drawing.Rectangle working_Area = System.Windows.Forms.Screen.AllScreens[0].WorkingArea;
+                Audience.Left = working_Area.Left;
+                Audience.Top = working_Area.Top;
+                Audience.Width = working_Area.Width;
+                Audience.Height = working_Area.Height;
+                Audience.WindowState = WindowState.Maximized;
+                Audience.WindowStyle = WindowStyle.None;
+                Audience.Topmost = true;
+                Audience.Show();
+            }
+            else
+            {
+                // elert
+            }
+        }
     }
 }

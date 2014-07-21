@@ -52,8 +52,10 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -79,9 +81,23 @@
     <Compile Include="Animations\WaterFallAnimation.cs" />
     <Compile Include="EditableTextBlock.cs" />
     <Compile Include="EditableTextBlockAdorner.cs" />
+    <Compile Include="FullWindowForAudience.xaml.cs">
+      <DependentUpon>FullWindowForAudience.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FullWindowForPresentor.xaml.cs">
+      <DependentUpon>FullWindowForPresentor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PresentationListItem.cs" />
     <Compile Include="TemplateListItem.cs" />
     <Compile Include="WindowSettings.cs" />
+    <Page Include="FullWindowForAudience.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FullWindowForPresentor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
