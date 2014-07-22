@@ -91,7 +91,7 @@ namespace KEAP
                 MainCanvas.Height = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 50;
                 MainCanvas.Width = MainCanvas.Height * 16 / 9;
             }*/
-            if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * 16 / 9))
+            if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
             {
                 MainCanvas.Width = (WindowSettings.resolution_Width * 3.75 / 4.45) - 50;
                 MainCanvas.Height = (MainCanvas.Height * (WindowSettings.resolution_Width / WindowSettings.resolution_Height));
@@ -141,12 +141,12 @@ namespace KEAP
                 MainCanvas.Height = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 50; 
                 MainCanvas.Width = MainCanvas.Height * 16 / 9;
             }*/
-            if (this.WindowState == WindowState.Maximized)
+            /*if (this.WindowState == WindowState.Maximized)
             {
                 MainCanvas.Height = (WindowSettings.current_Height - 92) * (3 / 3.8) - 50;
                 MainCanvas.Width = (MainCanvas.Height * (WindowSettings.resolution_Width / WindowSettings.resolution_Height));
-            }
-            else if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * 16 / 9))
+            }*/
+            if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
             {
                 MainCanvas.Width = (WindowSettings.current_Width * 3.75 / 4.45) - 50;
                 MainCanvas.Height = (MainCanvas.Width * (WindowSettings.resolution_Height / WindowSettings.resolution_Width));
@@ -995,19 +995,8 @@ namespace KEAP
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                 Background = new SolidColorBrush(Colors.White)
             };
-            /*
-            if (((this.Width - this.Width * (92 / 876)) / (this.Height - 92)) < 1.6)
-            {
-
-                new_Canvas.Width = ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 50; //= ((WindowSettings.resolution_Width - WindowSettings.resolution_Width * (92 / 876)) * 3.75 / 4.45) - 15*2
-                new_Canvas.Height = new_Canvas.Width * 0.5625;
-            }
-            else
-            {
-                new_Canvas.Height = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 50; // = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 15*2;
-                new_Canvas.Width = new_Canvas.Height * 16 / 9;
-            }*/
-            if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * 16 / 9))
+            
+            if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
             {
                 new_Canvas.Width = (WindowSettings.current_Width * 3.75 / 4.45) - 50;
                 new_Canvas.Height = (new_Canvas.Height * (WindowSettings.resolution_Height / WindowSettings.resolution_Width));
@@ -1051,6 +1040,8 @@ namespace KEAP
             public string Number { get; set; }
             public double Image_Width { get; set; }
             public double Image_Height { get; set; }
+            public double Slide_Width { get; set; }
+            public double Slide_Height { get; set; }
         }
 
         private Image RenderCanvas(KEAPCanvas param_Canvas)
@@ -1072,8 +1063,10 @@ namespace KEAP
                 {
                     Source = image.Source,
                     Number = Convert.ToString(num),
-                    Image_Width = (MainCanvas.Width * 0.75 / 4.45) - 15 + 200,
-                    Image_Height = (((MainCanvas.Width * 0.75 / 4.45) - 15) * (MainCanvas.Height / MainCanvas.Width)) + 100
+                    Image_Width = (Main_Border.ActualWidth * 0.75 / 3.75) - 35,
+                    Image_Height = (Main_Border.ActualHeight * 0.75 / 3),
+                    Slide_Width = (Main_Border.ActualWidth * 0.75 / 3.75),
+                    Slide_Height = ((Main_Border.ActualHeight * 0.75 / 3) - (35 * (3*3.75)))
                 });
             }
             else
@@ -1082,8 +1075,10 @@ namespace KEAP
                 {
                     Source = image.Source,
                     Number = Convert.ToString(canvas_List.Count),
-                    Image_Width = (MainCanvas.Width * 0.75 / 4.45) - 15 + 200,
-                    Image_Height = (((MainCanvas.Width * 0.75 / 4.45) - 15) * (MainCanvas.Height / MainCanvas.Width)) + 100
+                    Image_Width = (Main_Border.ActualWidth * 0.75 / 3.75) - 35,
+                    Image_Height = (Main_Border.ActualHeight * 0.75 / 3),
+                    Slide_Width = (Main_Border.ActualWidth * 0.75 / 3.75),
+                    Slide_Height = ((Main_Border.ActualHeight * 0.75 / 3) - (35 * (3*3.75)))
                 });
             }
 
@@ -1114,8 +1109,10 @@ namespace KEAP
             {
                 Source = image.Source,
                 Number = Convert.ToString(param_Number+1),
-                Image_Width = (MainCanvas.Width * 0.75 / 4.45) - 15,
-                Image_Height = ((MainCanvas.Width * 0.75 / 4.45) - 15) * (MainCanvas.Height / MainCanvas.Width)
+                Image_Width = (Main_Border.ActualWidth * 0.75 / 3.75) - 35,
+                Image_Height = (Main_Border.ActualHeight * 0.75 / 3),
+                Slide_Width = (Main_Border.ActualWidth * 0.75 / 3.75),
+                Slide_Height = ((Main_Border.ActualHeight * 0.75 / 3) - (35 * (3 * 3.75)))
             });
             Slide_ListView.SelectedIndex = param_Number;
             Slides_List.RemoveAt(param_Number + 1);

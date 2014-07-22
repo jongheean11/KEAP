@@ -19,11 +19,18 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <!--DEBUG-->
-                    <StackPanel x:Name="Slide_ItemStackPanel" Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="{Binding Path=Image_Height}">
-                        <TextBlock Name="Item_Number" HorizontalAlignment="Left" Text="{Binding Path=Number}" Margin="5,0,0,0" Width="Auto" Height="{Binding Path=Image_Height}" TextTrimming="WordEllipsis" FontSize="12"/>
-                        <Border VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="LightGray" Height="{Binding Path=Image_Height}">
-                            <Image Source="{Binding Path=Source}" Stretch="Uniform" Width="{Binding Path=Image_Width}" Height="{Binding Path=Image_Height}"/>
-                        </Border>
+                    <StackPanel x:Name="Slide_ItemStackPanel" Orientation="Horizontal" VerticalAlignment="Center"  HorizontalAlignment="Center" Height="{Binding Path=Slide_Height}"> <!--Width="{Binding Path=Slide_Width}">-->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="25"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Name="Item_Number" HorizontalAlignment="Left" Text="{Binding Path=Number}" Margin="5,0,5,0" Width="15" TextTrimming="WordEllipsis" FontSize="12" Grid.Column="0"/>
+                            <!--Height="{Binding Path=Image_Height}"-->
+                            <Border Margin="5,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" BorderBrush="LightGray" Grid.Column="1">
+                                <Image Source="{Binding Path=Source}" VerticalAlignment="Center" Stretch="Fill" Width="{Binding Path=Image_Width}" Height="{Binding Path=Image_Height}"/>
+                            </Border>
+                        </Grid>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
