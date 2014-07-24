@@ -2607,8 +2607,9 @@ namespace KEAP
 
         private void ItalicButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-        	// TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
- 
+            // TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
+        }
+
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             base.OnClosing(e);
