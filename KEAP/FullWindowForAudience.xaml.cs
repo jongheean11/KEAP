@@ -39,5 +39,17 @@ namespace KEAP
             sub_Monitor.Text = data;
             //           sub_Monitor.Text = zzz;
         }
+
+        public void getRightGripFromKinect(string data)
+        {
+            grip_right.Text = data;
+            //           sub_Monitor.Text = zzz;
+        }
+
+        public void getLeftGripFromKinect(string data)
+        {
+            grip_left.Text = data;
+            //           sub_Monitor.Text = zzz;
+        }
     }
 }

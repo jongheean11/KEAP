@@ -52,8 +52,6 @@ namespace Fizbin.Kinect.Gestures.Segments
 
                             )
                         {
-                                 Console.WriteLine("HI" + Math.Atan2(Convert.ToDouble(skeleton.Joints[JointType.HandLeft].Position.Y - skeleton.Joints[JointType.ShoulderLeft].Position.Y),
-                        Convert.ToDouble(skeleton.Joints[JointType.ShoulderLeft].Position.Z - skeleton.Joints[JointType.HandLeft].Position.Z)) + "\n\n\n\n");
                             return_value = GesturePartResult.Succeed;
                         }
                         else return_value = GesturePartResult.Pausing;

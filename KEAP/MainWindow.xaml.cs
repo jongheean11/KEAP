@@ -2050,20 +2050,20 @@ namespace KEAP
             if (System.Windows.Forms.Screen.AllScreens.Length > 1) // if dual monitor
             {
                 // create Window with second monitor
-//                FullWindowForAudience Audience = new FullWindowForAudience();
-//                Audience.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
-//                System.Drawing.Rectangle working_Area = System.Windows.Forms.Screen.AllScreens[1].WorkingArea;
-//                Audience.Left = working_Area.Left;
-//                Audience.Top = working_Area.Top;
-//                Audience.Width = working_Area.Width;
-//                Audience.Height = working_Area.Height;
-////                Audience.WindowState = WindowState.Maximized;
-//                Audience.WindowStyle = WindowStyle.None;
-//                Audience.Topmost = true;
-//                Audience.Show();
+                FullWindowForAudience Audience = new FullWindowForAudience();
+                Audience.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
+                System.Drawing.Rectangle working_Area = System.Windows.Forms.Screen.AllScreens[1].WorkingArea;
+                Audience.Left = working_Area.Left;
+                Audience.Top = working_Area.Top;
+                Audience.Width = working_Area.Width;
+                Audience.Height = working_Area.Height;
+                //                Audience.WindowState = WindowState.Maximized;
+                Audience.WindowStyle = WindowStyle.None;
+                Audience.Topmost = true;
+                Audience.Show();
 
-//                FullWindowForPresentor Presentor = new FullWindowForPresentor(Audience);
-                FullWindowForPresentor Presentor = new FullWindowForPresentor();
+                FullWindowForPresentor Presentor = new FullWindowForPresentor(Audience);
+//                FullWindowForPresentor Presentor = new FullWindowForPresentor();
                 Presentor.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
                 System.Drawing.Rectangle working_Area2 = System.Windows.Forms.Screen.AllScreens[0].WorkingArea;
                 Presentor.Left = working_Area2.Left;

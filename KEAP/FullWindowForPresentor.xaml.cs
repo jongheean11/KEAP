@@ -67,7 +67,7 @@ namespace KEAP
 
 
 
-        public FullWindowForPresentor()
+        private FullWindowForPresentor()
         {
             //@grip by minsu
             this.Closing += new System.ComponentModel.CancelEventHandler(Window_Closing);
@@ -105,6 +105,45 @@ namespace KEAP
 
         }
 
+        public FullWindowForPresentor(FullWindowForAudience audience)
+        {
+            aud_View = audience;
+            //@grip by minsu
+            this.Closing += new System.ComponentModel.CancelEventHandler(Window_Closing);
+            this.Loaded += new RoutedEventHandler(Window_Loaded);
+
+
+            InitializeComponent();
+
+
+
+            DataContext = this;
+            InitializeComponent();
+
+            // initialize the Kinect sensor manager
+            KinectSensorManager = new KinectSensorManager();
+            KinectSensorManager.KinectSensorChanged += this.KinectSensorChanged;
+
+
+            //@grip by minsu
+            _userInfos = new UserInfo[InteractionFrame.UserInfoArrayLength];
+
+
+            // locate an available sensor
+            sensorChooser.Start();
+
+            // bind chooser's sensor value to the local sensor manager
+            var kinectSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
+            BindingOperations.SetBinding(this.KinectSensorManager, KinectSensorManager.KinectSensorProperty, kinectSensorBinding);
+
+
+
+            // add timer for clearing last detected gesture
+            _clearTimer = new Timer(2000);
+            _clearTimer.Elapsed += new ElapsedEventHandler(clearTimer_Elapsed);
+
+
+        }
 
         private bool leftHandGrip = false;
         private bool rightHandGrip = false;
@@ -134,37 +173,21 @@ namespace KEAP
                         {
                             if (hand.HandType == InteractionHandType.Right)
                             {
-                                //if (!rightHandPress && hand.IsPressed)
-                                //    rightHandPress = true;
-
-                                //if (hand.HandEventType != InteractionHandEventType.None)
-                                //{
-                                //    Console.WriteLine("hand.HandEventType :  " + hand.HandEventType + "");
-                                //    Console.WriteLine("rightHandGrip :  " + rightHandGrip + "");
-                                //}
-                                //if (!rightHandGrip && hand.HandEventType == InteractionHandEventType.Grip)
-                                //{ 
-                                //    rightHandGrip = true;
-                                //}
-                                //if (!rightHandRelease && hand.HandEventType == InteractionHandEventType.GripRelease)
-                                //    rightHandRelease = true;
-
                                 if (!rightHandPress && hand.IsPressed)
                                     rightHandPress = true;
-
-
-                                Console.WriteLine("hand.HandEventType :  " + hand.HandEventType + "");
-                                Console.WriteLine("rightHandGrip :  " + rightHandGrip + "");
 
                                 if (hand.HandType == InteractionHandType.Right && hand.HandEventType == InteractionHandEventType.Grip)
                                 {
                                     rightHandRelease = false;
                                     rightHandGrip = true;
+                                    aud_View.getRightGripFromKinect("Gripped");
+
                                 }
                                 else if (hand.HandType == InteractionHandType.Right && hand.HandEventType == InteractionHandEventType.GripRelease)
                                 {
                                     rightHandGrip = false;
                                     rightHandRelease = true;
+                                    aud_View.getRightGripFromKinect("Release");
                                 }
 
 
@@ -176,31 +199,20 @@ namespace KEAP
                                 {
                                     leftHandRelease = false;
                                     leftHandGrip = true;
+                                    aud_View.getLeftGripFromKinect("Gripped");
                                 }
                                 else if (hand.HandType == InteractionHandType.Left && hand.HandEventType == InteractionHandEventType.GripRelease)
                                 {
                                     leftHandGrip = false;
                                     leftHandRelease = true;
+                                    aud_View.getLeftGripFromKinect("Release");
                                 }
                             }
                         }
                     }
                     AnalyzePresses(rightHandPress, leftHandPress);
-                    //AnalyzeGrips(rightHandGrip, rightHandRelease, leftHandGrip, leftHandRelease);                    
                 }
 
-                /*
-                if (IsLeftGripped && IsRightGripped)
-                {
-                    if (!IsDoubleGripped)
-                    {
-                        IsDoubleGripped = true;
-                        //DoubleGripped!
-                        Gesture = "DoubleGripped!";
-                    }
-                }
-                else
-                {*/
                 if (IsLeftGripped)
                 {
 
@@ -242,35 +254,6 @@ namespace KEAP
                 IsLeftPressed = true;
             }
         }
-
-        //private static void AnalyzeGrips(bool rightHandGrip, bool rightHandRelease, bool leftHandGrip, bool leftHandRelease)
-        //{
-        //    if (!rightHandGrip)
-        //    {
-
-        //        if (rightHandRelease)
-        //        {
-        //            IsRightGripped = false;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        IsRightGripped = true;
-        //    }
-
-        //    if (!leftHandGrip)
-        //    {
-        //        if (leftHandRelease)
-        //        {
-        //            IsLeftGripped = false;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        IsLeftGripped = true;
-        //    }
-        //}
-
 
 
         #region properties
@@ -368,7 +351,6 @@ namespace KEAP
 
             if (sensor == null)
                 return;
-
 
             // Application should enable all streams first.
             // configure the color stream
@@ -574,30 +556,6 @@ namespace KEAP
             gestureController.AddGesture("TurnSegments", TurnSegments);
 
 
-
-            /*
-            IRelativeGestureSegment[] waveRightSegments = new IRelativeGestureSegment[6];
-            WaveRightSegment1 waveRightSegment1 = new WaveRightSegment1();
-            WaveRightSegment2 waveRightSegment2 = new WaveRightSegment2();
-            waveRightSegments[0] = waveRightSegment1;
-            waveRightSegments[1] = waveRightSegment2;
-            waveRightSegments[2] = waveRightSegment1;
-            waveRightSegments[3] = waveRightSegment2;
-            waveRightSegments[4] = waveRightSegment1;
-            waveRightSegments[5] = waveRightSegment2;
-            gestureController.AddGesture("WaveRight", waveRightSegments);
-                        
-            IRelativeGestureSegment[] waveLeftSegments = new IRelativeGestureSegment[6];
-            WaveLeftSegment1 waveLeftSegment1 = new WaveLeftSegment1();
-            WaveLeftSegment2 waveLeftSegment2 = new WaveLeftSegment2();
-            waveLeftSegments[0] = waveLeftSegment1;
-            waveLeftSegments[1] = waveLeftSegment2;
-            waveLeftSegments[2] = waveLeftSegment1;
-            waveLeftSegments[3] = waveLeftSegment2;
-            waveLeftSegments[4] = waveLeftSegment1;
-            waveLeftSegments[5] = waveLeftSegment2;
-            gestureController.AddGesture("WaveLeft", waveLeftSegments);
-            */
             IRelativeGestureSegment[] zoomInSegments = new IRelativeGestureSegment[3];
             zoomInSegments[0] = new ZoomSegment1();
             zoomInSegments[1] = new ZoomSegment2();
@@ -616,12 +574,6 @@ namespace KEAP
             swipeUpSegments[2] = new SwipeUpSegment3();
             gestureController.AddGesture("SwipeUp", swipeUpSegments);
 
-            /*
-            IRelativeGestureSegment[] swipeDownSegments = new IRelativeGestureSegment[3];
-            swipeDownSegments[0] = new SwipeDownSegment1();
-            swipeDownSegments[1] = new SwipeDownSegment2();
-            swipeDownSegments[2] = new SwipeDownSegment3();
-            gestureController.AddGesture("SwipeDown", swipeDownSegments);*/
         }
 
 
@@ -703,17 +655,13 @@ namespace KEAP
         /// <param name="e">Gesture event arguments.</param>
         private void OnGestureRecognized(object sender, GestureEventArgs e)
         {
-
-
-
-
-
             if (start == false)
             {
                 if (e.GestureName == "Menu")
                 {
-
+                    //SendMsg
                     Gesture = "Start";
+                    aud_View.getDataFromKinect("Start");
                     start = true;
                 }
             }
@@ -724,6 +672,7 @@ namespace KEAP
                     if (e.GestureName == "ZoomIn")
                     {
                         Gesture = "ZoomIn\n";
+                        aud_View.getDataFromKinect("ZoomIn");
                         zoom = true;
                     }
                 }
@@ -732,6 +681,7 @@ namespace KEAP
                     if (e.GestureName == "ZoomOut")
                     {
                         Gesture = "ZoomOut\n";
+                        aud_View.getDataFromKinect("ZoomOut");
                         zoom = false;
                     }
                 }
@@ -740,76 +690,64 @@ namespace KEAP
                 {
                     case "TurnSegments":
                         Gesture = "Pause";
+                        aud_View.getDataFromKinect("Pause");
                         start = false;
                         break;
                     case "RightDown":
                         Gesture = "RightDown";
+                        aud_View.getDataFromKinect("RightDown");
                         break;
                     case "Down":
                         Gesture = "Down";
+                        aud_View.getDataFromKinect("Down");
                         break;
                     case "RightUp":
                         Gesture = "RightUp";
+                        aud_View.getDataFromKinect("RightUp");
                         break;
                     case "LeftDown":
                         Gesture = "LeftDown";
+                        aud_View.getDataFromKinect("LeftDown");
                         break;
                     case "LeftUp":
                         Gesture = "LeftUp";
+                        aud_View.getDataFromKinect("LeftUp");
                         break;
                     case "Left":
                         Gesture = "Left";
+                        aud_View.getDataFromKinect("Left");
                         break;
                     case "Right":
                         Gesture = "Right";
+                        aud_View.getDataFromKinect("Right");
                         break;
                     case "Up":
                         Gesture = "Up";
+                        aud_View.getDataFromKinect("Up");
                         break;
                     case "Push":
                         Gesture = "Push";
+                        aud_View.getDataFromKinect("Push");
                         break;
                     case "strechedHands":
                         Gesture = "strechedHands\n";
+                        aud_View.getDataFromKinect("strechedHands");
                         break;
-                    //        case "JoinedHands":
-                    //           Gesture = "JoinedHands\n";
-                    //          break;
                     case "SwipeLeft":
                         Gesture = "Swipe Left\n";
+                        aud_View.getDataFromKinect("SwipeLeft");
                         break;
                     case "SwipeRight":
                         Gesture = "Swipe Right\n";
+                        aud_View.getDataFromKinect("SwipeRight");
                         break;
                     case "SwipeUp":
                         Gesture = "Swipe Up\n";
+                        aud_View.getDataFromKinect("SwipeUp");
                         break;
-                    //            case "SwipeDown":
-                    //             Gesture = "Swipe Down\n";
-                    //               break;
                     default:
                         break;
                 }
-                /*   if (leftHandGrip == true)
-            {
-                if (rightHandGrip == true)
-                {
-                    //Gesture = "BothHandgrip";
-                    Console.WriteLine("The Both Hand Grip : " + rightHandGrip + "\n\n");
-                }
-                else
-                {
-                    //Gesture = "leftHandgrip";
-                    Console.WriteLine("The left Hand Grip : " + leftHandGrip + "\n\n");
-                }
-            }
-            else if (rightHandGrip == true)
-            {
-                //Gesture = "rightHandgrip";
-                Console.WriteLine("The right Hand Grip : " + rightHandGrip + "\n\n");
-            }//출력검사
-*/
-
             }
 
             _clearTimer.Start();
@@ -967,21 +905,12 @@ namespace KEAP
             }
         }
 
-
-
-
-
         // not using. this maximized code will be in the "Window_Loaded" method
         private void Presentor_Loaded(object sender, RoutedEventArgs e)
         {
             this.WindowState = System.Windows.WindowState.Maximized;
         }
 
-        public FullWindowForPresentor(FullWindowForAudience audience)
-        {
-            aud_View = audience;
-            InitializeComponent();
-        }
 
         private void Btn_Click(object sender, RoutedEventArgs e)
         {

@@ -147,7 +147,7 @@ namespace Fizbin.Kinect.Gestures.Demo
 
 //@grip by minsu
 
-       private bool leftHandGrip = false;
+        private bool leftHandGrip = false;
         private bool rightHandGrip = false;
 
         public static bool rightHandRelease = false;
