@@ -172,7 +172,7 @@
                     <Image DockPanel.Dock="Bottom" Source="Images/Button/italic.png"/>
                 </DockPanel>
             </Button>
-            <Button x:Name="UnderlineButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="65,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+            <Button x:Name="UnderlineButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="65,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="UnderlineButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -185,7 +185,7 @@
                     <Image DockPanel.Dock="Bottom" Source="Images/Button/underline.png"/>
                 </DockPanel>
             </Button>
-            <Button x:Name="ShadowButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="95,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+            <Button x:Name="ShadowButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="95,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="ShadowButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -222,7 +222,7 @@
                     <Label HorizontalContentAlignment="Left" DockPanel.Dock="Right" FontSize="10">텍스트 맞춤</Label>
                 </DockPanel>
             </Button>
-            <Button x:Name="NormalButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,15" Background="{x:Null}" Grid.Column="8" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+            <Button x:Name="NormalButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,15" Background="{x:Null}" Grid.Column="8" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="NormalButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -235,7 +235,7 @@
                     <Image DockPanel.Dock="Bottom" Source="Images/Button/normalalignment.png"/>
                 </DockPanel>
             </Button>
-            <Button x:Name="LeftButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="55,0,0,15" Background="{x:Null}" Grid.Column="8" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+            <Button x:Name="LeftButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="55,0,0,15" Background="{x:Null}" Grid.Column="8" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="LeftButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -248,7 +248,7 @@
                     <Image DockPanel.Dock="Bottom" Source="Images/Button/leftalignment.png"/>
                 </DockPanel>
             </Button>
-            <Button x:Name="CenterButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="95,0,0,15" Background="{x:Null}" Grid.Column="8" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+            <Button x:Name="CenterButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="95,0,0,15" Background="{x:Null}" Grid.Column="8" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="CenterButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -261,7 +261,7 @@
                     <Image DockPanel.Dock="Bottom" Source="Images/Button/centeralignment.png"/>
                 </DockPanel>
             </Button>
-            <Button x:Name="RightButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="135,0,0,15" Background="{x:Null}" Grid.Column="8" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+            <Button x:Name="RightButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="135,0,0,15" Background="{x:Null}" Grid.Column="8" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="RightButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -296,8 +296,8 @@
                 </local:Colorpicker.ToolTip>
             </local:Colorpicker>
             <Rectangle Grid.Column="11" Grid.RowSpan="3" Fill="Gray"/>
-<!-- slide_show btn by JiHyun -->
-            <Button x:Name="Slide_Show" Grid.ColumnSpan="2" Content="슬라이드 쇼" Grid.Column="10" HorizontalAlignment="Left" Margin="38,3,0,0" Grid.Row="2" VerticalAlignment="Top" Width="75" Click="Slide_Show_Click"/>
+            <!-- slide_show btn by JiHyun -->
+            <Button x:Name="Slide_Show" Content="슬라이드 쇼" Grid.Column="10" HorizontalAlignment="Left" Margin="112.667,21,0,0" VerticalAlignment="Top" Width="75" Click="Slide_Show_Click" Grid.RowSpan="2"/>
         </Grid>
         <Grid x:Name="InsertMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
@@ -362,7 +362,7 @@
         <Grid x:Name="ConvertMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Collapsed"></Grid>
         <Grid x:Name="StyleMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Collapsed"></Grid>
 
-        
+
         <Button x:Name="PenButton" Content="펜" HorizontalAlignment="Left" Margin="530,3,0,0" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Pen_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Pen_PreviewMouseLeftButtonUp" RenderTransformOrigin="-0.82,-1.137" Grid.Column="1" Grid.RowSpan="2"/>
         <Button x:Name="TextButton" Content="텍스트" Grid.Column="1" HorizontalAlignment="Left" Margin="378,3,0,0" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Text_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Text_PreviewMouseLeftButtonUp" Grid.RowSpan="2"/>
         <Button x:Name="LineButton" Content="선" Grid.Column="1" HorizontalAlignment="Left" Margin="466,3,0,0" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Line_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Line_PreviewMouseLeftButtonUp" Grid.RowSpan="2"/>

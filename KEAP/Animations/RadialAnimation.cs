@@ -177,12 +177,7 @@ namespace KEAP.Animations
                     AnimationCompleted();
                 }
             }
-
         }
-
-
     }
-
-
 }
 
