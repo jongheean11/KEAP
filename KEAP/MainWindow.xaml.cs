@@ -919,7 +919,7 @@ namespace KEAP
 
                     if (End_Point.Y < Start_Point_Shape.Y)
                         m_top = 0;
-                    else if (MainCanvas.Height - End_Point.Y < selected_Text.Height - Start_Point_Shape.Y)
+                    else if (MainCanvas.Height - End_Point.Y > selected_Text.Height - Start_Point_Shape.Y)
                         m_top = (End_Point.Y - Start_Point_Shape.Y);
                     else
                         m_top = MainCanvas.ActualHeight - selected_Text.Height;
@@ -938,7 +938,7 @@ namespace KEAP
 
                     if (End_Point.Y < Start_Point_Shape.Y)
                         m_top = 0;
-                    else if (MainCanvas.Height - End_Point.Y < selected_Polygon.Height - Start_Point_Shape.Y)
+                    else if (MainCanvas.Height - End_Point.Y > selected_Polygon.Height - Start_Point_Shape.Y)
                         m_top = (End_Point.Y - Start_Point_Shape.Y);
                     else
                         m_top = MainCanvas.ActualHeight - selected_Polygon.Height;
@@ -957,7 +957,7 @@ namespace KEAP
 
                     if (End_Point.Y < Start_Point_Shape.Y)
                         m_top = 0;
-                    else if (MainCanvas.Height - End_Point.Y < selected_Line.Height - Start_Point_Shape.Y)
+                    else if (MainCanvas.Height - End_Point.Y > selected_Line.Height - Start_Point_Shape.Y)
                         m_top = (End_Point.X - Start_Point_Shape.Y);
                     else
                         m_top = MainCanvas.ActualHeight - selected_Line.Height;
@@ -976,7 +976,7 @@ namespace KEAP
 
                     if (End_Point.Y < Start_Point_Shape.Y)
                         m_top = 0;
-                    else if (MainCanvas.Height - End_Point.Y < selected_Image.Height - Start_Point_Shape.Y)
+                    else if (MainCanvas.Height - End_Point.Y > selected_Image.Height - Start_Point_Shape.Y)
                         m_top = (End_Point.Y - Start_Point_Shape.Y);
                     else
                         m_top = MainCanvas.ActualHeight - selected_Image.Height;
@@ -995,7 +995,7 @@ namespace KEAP
 
                     if (End_Point.Y < Start_Point_Shape.Y)
                         m_top = 0;
-                    else if (MainCanvas.Height - End_Point.Y < selected_Shape.Height - Start_Point_Shape.Y)
+                    else if (MainCanvas.Height - End_Point.Y > selected_Shape.Height - Start_Point_Shape.Y)
                         m_top = (End_Point.Y - Start_Point_Shape.Y);
                     else
                         m_top = MainCanvas.ActualHeight - selected_Shape.Height;
