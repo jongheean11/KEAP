@@ -30,12 +30,12 @@ namespace KEAP
     {
         private FullWindowForAudience Audience = null;
         private FullWindowForPresentor Presentor = null;
-        private List<KEAPCanvas> canvas_List = new List<KEAPCanvas>();
-        private ObservableCollection<SlideInfo> Slides_List = new ObservableCollection<SlideInfo>();
-        private Dictionary<int, List<BitmapFrame>> bitmapFrame_Dictionary = new Dictionary<int, List<BitmapFrame>>();
+        public List<KEAPCanvas> canvas_List = new List<KEAPCanvas>();
+        public ObservableCollection<SlideInfo> Slides_List = new ObservableCollection<SlideInfo>();
+        public Dictionary<int, List<BitmapFrame>> bitmapFrame_Dictionary = new Dictionary<int, List<BitmapFrame>>();
 
-        private List<Dictionary<int, string>> animation_List = new List<Dictionary<int, string>>();
-        private Dictionary<int, List<Dictionary<int, string>>> animation_Dictionary = new Dictionary<int, List<Dictionary<int, string>>>();
+        public List<Dictionary<int, string>> animation_List = new List<Dictionary<int, string>>();
+        public Dictionary<int, List<Dictionary<int, string>>> animation_Dictionary = new Dictionary<int, List<Dictionary<int, string>>>();
 
         private Shape target_Shape;
 

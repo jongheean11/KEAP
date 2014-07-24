@@ -29,6 +29,7 @@ namespace KEAP
             AddKeyBindings();
 
             InitializeComponent();
+            
         }
 
         public FullWindowForAudience()
