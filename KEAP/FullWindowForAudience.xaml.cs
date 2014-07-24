@@ -22,6 +22,9 @@ namespace KEAP
         FullWindowForPresentor pre_View = null;
         MainWindow main_View = null;
 
+        KEAPCanvas[] canvas_arr;
+        Dictionary<int, Dictionary<int, string>[]> animations = new Dictionary<int, Dictionary<int, string>[]>();
+        int canvas_index = 0, animation_index = 0;
         public FullWindowForAudience(MainWindow main, FullWindowForPresentor pre)
         {
             main_View = main;
@@ -29,7 +32,8 @@ namespace KEAP
             AddKeyBindings();
 
             InitializeComponent();
-            
+
+            main.canvas_List.CopyTo(canvas_arr);
         }
 
         public FullWindowForAudience()
