@@ -2026,27 +2026,61 @@ namespace KEAP
         }
         #endregion
 
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+        }
+
+        private void AddEscapeKeys()
+        {
+            // escape
+            RoutedCommand key_Close = new RoutedCommand();
+            key_Close.InputGestures.Add(new KeyGesture(Key.Escape));
+            CommandBindings.Add(new CommandBinding(key_Close, Close_KeyEventHandler));
+        }
+
+        private void Close_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            Close();
+        }
+
         private void Slide_Show_Click(object sender, RoutedEventArgs e)
         {
 
             if (System.Windows.Forms.Screen.AllScreens.Length > 1) // if dual monitor
             {
                 // create Window with second monitor
-                FullWindowForAudience Audience = new FullWindowForAudience(true);
-                Audience.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
-                System.Drawing.Rectangle working_Area = System.Windows.Forms.Screen.AllScreens[1].WorkingArea;
-                Audience.Left = working_Area.Left;
-                Audience.Top = working_Area.Top;
-                Audience.Width = working_Area.Width;
-                Audience.Height = working_Area.Height;
-                Audience.WindowState = WindowState.Maximized;
-                Audience.WindowStyle = WindowStyle.None;
-                Audience.Topmost = true;
-                Audience.Show();
+//                FullWindowForAudience Audience = new FullWindowForAudience();
+//                Audience.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
+//                System.Drawing.Rectangle working_Area = System.Windows.Forms.Screen.AllScreens[1].WorkingArea;
+//                Audience.Left = working_Area.Left;
+//                Audience.Top = working_Area.Top;
+//                Audience.Width = working_Area.Width;
+//                Audience.Height = working_Area.Height;
+////                Audience.WindowState = WindowState.Maximized;
+//                Audience.WindowStyle = WindowStyle.None;
+//                Audience.Topmost = true;
+//                Audience.Show();
+
+//                FullWindowForPresentor Presentor = new FullWindowForPresentor(Audience);
+                FullWindowForPresentor Presentor = new FullWindowForPresentor();
+                Presentor.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
+                System.Drawing.Rectangle working_Area2 = System.Windows.Forms.Screen.AllScreens[0].WorkingArea;
+                Presentor.Left = working_Area2.Left;
+                Presentor.Top = working_Area2.Top;
+                //SIZE
+//                Presentor.Width = working_Area2.Width;
+//                Presentor.Height = working_Area2.Height;
+                //Presentor.WindowState = WindowState.Maximized;
+                Presentor.WindowStyle = WindowStyle.None;
+                Presentor.Topmost = true;
+                Presentor.Show();
+
+
             }
             else if (System.Windows.Forms.Screen.AllScreens.Length == 1) // no dual monitor
             {
-                FullWindowForAudience Audience = new FullWindowForAudience(false);
+                FullWindowForAudience Audience = new FullWindowForAudience();
                 Audience.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
                 System.Drawing.Rectangle working_Area = System.Windows.Forms.Screen.AllScreens[0].WorkingArea;
                 Audience.Left = working_Area.Left;
