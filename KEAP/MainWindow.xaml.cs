@@ -93,6 +93,7 @@ namespace KEAP
                 
             };
 
+
             if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
             {
                 MainCanvas.Width = (WindowSettings.resolution_Width * 3.75 / 4.45) - 50;
@@ -258,6 +259,10 @@ namespace KEAP
                         //FontStyle = Windows.UI.Text.FontStyle.Normal,
                         Foreground = font_Brush
                     };
+
+                    textblock.MouseLeftButtonDown += UIElement_MouseLeftButtonDown;
+                    textblock.MouseLeftButtonUp += UIElement_MouseLeftButtonUp;
+                    textblock.MouseMove += UIElement_MouseMove;
                     
                     Grid.SetRow(textblock, table_Entry_X);
                     Grid.SetColumn(textblock, table_Entry_Y);
@@ -2571,7 +2576,10 @@ namespace KEAP
 
         private void ComboFillColor_Loaded(object sender, RoutedEventArgs e)
         {
-            ComboFillColor.superCombo.SelectedIndex = 7;
+            if (ComboFillColor.superCombo.SelectedIndex == -1)
+                ComboFillColor.superCombo.SelectedIndex = 137;
+            else
+                ComboFillColor.superCombo.SelectedIndex = 7;
             ComboFillColor.superCombo.SelectionChanged += new SelectionChangedEventHandler(ComboFillColor_SelectionChanged);
         }
         void ComboFillColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -2590,6 +2598,16 @@ namespace KEAP
         {
             if (selected_Shape is Rectangle || selected_Shape is Ellipse || selected_Shape is Polygon || selected_Shape is Line)
                 selected_Shape.Stroke = ComboLineColor.SelectedColor;
+        }
+
+        private void BoldButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+        	// TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
+        }
+
+        private void ItalicButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+        	// TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
         }
     }
 }

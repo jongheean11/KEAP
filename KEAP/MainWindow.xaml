@@ -146,7 +146,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
             <ComboBox x:Name="FontSize_ComboBox" ItemsSource="{Binding Source={x:Static SystemFonts.IconFontStyleKey}}" Grid.Column="6" HorizontalAlignment="Right" Width="50" Margin="5,15,10,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="LightGray" Height="25" Grid.RowSpan="3"/>
-            <Button x:Name="BoldButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+            <Button x:Name="BoldButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="BoldButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -159,7 +159,7 @@
                     <Image DockPanel.Dock="Bottom" Source="Images/Button/bold.png"/>
                 </DockPanel>
             </Button>
-            <Button x:Name="ItalicButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="35,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25">
+            <Button x:Name="ItalicButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="35,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="ItalicButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
