@@ -19,6 +19,18 @@ namespace KEAP
     /// </summary>
     public partial class FullWindowForAudience : Window
     {
+        FullWindowForPresentor pre_View = null;
+        MainWindow main_View = null;
+
+        public FullWindowForAudience(MainWindow main, FullWindowForPresentor pre)
+        {
+            main_View = main;
+            pre_View = pre;
+            AddKeyBindings();
+
+            InitializeComponent();
+        }
+
         public FullWindowForAudience()
         {
             InitializeComponent();
@@ -27,7 +39,33 @@ namespace KEAP
         private void Audience_Loaded(object sender, RoutedEventArgs e)
         {
             this.WindowState = System.Windows.WindowState.Maximized;
+            Keyboard.Focus(this);
+
         }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            pre_View = null;
+            main_View = null;
+            base.OnClosing(e);
+        }
+
+        private void AddKeyBindings()
+        {
+            // escape
+            RoutedCommand key_Close = new RoutedCommand();
+            key_Close.InputGestures.Add(new KeyGesture(Key.Escape));
+            CommandBindings.Add(new CommandBinding(key_Close, Close_KeyEventHandler));
+        }
+
+        private void Close_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (main_View != null)
+            {
+                main_View.Close_SlideShow();
+            }
+        }
+
 
         private void Btn_Click(object sender, RoutedEventArgs e)
         {

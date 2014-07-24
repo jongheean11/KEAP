@@ -28,6 +28,8 @@ namespace KEAP
     /// </summary>
     public partial class MainWindow : Window
     {
+        private FullWindowForAudience Audience = null;
+        private FullWindowForPresentor Presentor = null;
         private List<KEAPCanvas> canvas_List = new List<KEAPCanvas>();
         private ObservableCollection<SlideInfo> Slides_List = new ObservableCollection<SlideInfo>();
         private Dictionary<int, List<BitmapFrame>> bitmapFrame_Dictionary = new Dictionary<int, List<BitmapFrame>>();
@@ -119,6 +121,7 @@ namespace KEAP
             stroke_Brush = new SolidColorBrush(Colors.Black);
             fill_Brush = new SolidColorBrush(Colors.White);
             font_Brush = new SolidColorBrush(Colors.Black);
+            AddKeyBindings();
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -2859,9 +2862,10 @@ namespace KEAP
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             base.OnClosing(e);
+            Application.Current.Shutdown();
         }
 
-        private void AddEscapeKeys()
+        private void AddKeyBindings()
         {
             // escape
             RoutedCommand key_Close = new RoutedCommand();
@@ -2871,7 +2875,26 @@ namespace KEAP
 
         private void Close_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            Close();
+            if (Audience != null)
+            {
+                Audience.Close();
+            }
+            if (Presentor != null)
+            {
+                Presentor.Close();
+            }
+        }
+
+        public void Close_SlideShow()
+        {
+            if (Audience != null)
+            {
+                Audience.Close();
+            }
+            if (Presentor != null)
+            {
+                Presentor.Close();
+            }
         }
 
         private void Slide_Show_Click(object sender, RoutedEventArgs e)
@@ -2880,7 +2903,7 @@ namespace KEAP
             if (System.Windows.Forms.Screen.AllScreens.Length > 1) // if dual monitor
             {
                 // create Window with second monitor
-                FullWindowForAudience Audience = new FullWindowForAudience();
+                Audience = new FullWindowForAudience(this, Presentor);
                 Audience.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
                 System.Drawing.Rectangle working_Area = System.Windows.Forms.Screen.AllScreens[1].WorkingArea;
                 Audience.Left = working_Area.Left;
@@ -2892,8 +2915,9 @@ namespace KEAP
                 Audience.Topmost = true;
                 Audience.Show();
 
-                FullWindowForPresentor Presentor = new FullWindowForPresentor(Audience);
-                //                FullWindowForPresentor Presentor = new FullWindowForPresentor();
+                Presentor = new FullWindowForPresentor(this, Audience);
+//                FullWindowForPresentor Presentor = new FullWindowForPresentor();
+
                 Presentor.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
                 System.Drawing.Rectangle working_Area2 = System.Windows.Forms.Screen.AllScreens[0].WorkingArea;
                 Presentor.Left = working_Area2.Left;
@@ -2910,7 +2934,7 @@ namespace KEAP
             }
             else if (System.Windows.Forms.Screen.AllScreens.Length == 1) // no dual monitor
             {
-                FullWindowForAudience Audience = new FullWindowForAudience();
+                Audience = new FullWindowForAudience();
                 Audience.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
                 System.Drawing.Rectangle working_Area = System.Windows.Forms.Screen.AllScreens[0].WorkingArea;
                 Audience.Left = working_Area.Left;

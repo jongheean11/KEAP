@@ -34,7 +34,7 @@ namespace KEAP
     public partial class FullWindowForPresentor : Window, INotifyPropertyChanged
     {
         FullWindowForAudience aud_View = null;
-
+        MainWindow main_View = null;
 
         private Boolean start = false;
         private Boolean zoom = false;
@@ -105,9 +105,11 @@ namespace KEAP
 
         }
 
-        public FullWindowForPresentor(FullWindowForAudience audience)
+        public FullWindowForPresentor(MainWindow main, FullWindowForAudience audience)
         {
+            main_View = main;
             aud_View = audience;
+            AddKeyBindings();
             //@grip by minsu
             this.Closing += new System.ComponentModel.CancelEventHandler(Window_Closing);
             this.Loaded += new RoutedEventHandler(Window_Loaded);
@@ -143,6 +145,28 @@ namespace KEAP
             _clearTimer.Elapsed += new ElapsedEventHandler(clearTimer_Elapsed);
 
 
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            aud_View = null;
+            main_View = null;
+            base.OnClosing(e);
+        }
+        private void AddKeyBindings()
+        {
+            // escape
+            RoutedCommand key_Close = new RoutedCommand();
+            key_Close.InputGestures.Add(new KeyGesture(Key.Escape));
+            CommandBindings.Add(new CommandBinding(key_Close, Close_KeyEventHandler));
+        }
+
+        private void Close_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (main_View != null)
+            {
+                main_View.Close_SlideShow();
+            }
         }
 
         private bool leftHandGrip = false;
@@ -808,7 +832,6 @@ namespace KEAP
 
             // maximized
             this.WindowState = System.Windows.WindowState.Maximized;
-
         }
 
 
