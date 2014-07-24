@@ -94,7 +94,7 @@ namespace KEAP
             double ratio_X = arrangeSize.Width / initialSize.Width;
             double ratio_Y = arrangeSize.Height / initialSize.Height;
             //for (int index = 0; index < this.InternalChildren.Count; index++)
-            Rect final_Rect = new Rect();
+            
             foreach (UIElement child in InternalChildren)
             {
                 //FrameworkElement child = this.InternalChildren[index];

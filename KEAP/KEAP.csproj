@@ -77,11 +77,18 @@
     <Compile Include="Animations\InterlacedAnimation.cs" />
     <Compile Include="Animations\RadialAnimation.cs" />
     <Compile Include="Animations\WaterFallAnimation.cs" />
+    <Compile Include="Colorpicker.xaml.cs">
+      <DependentUpon>Colorpicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditableTextBlock.cs" />
     <Compile Include="EditableTextBlockAdorner.cs" />
     <Compile Include="PresentationListItem.cs" />
     <Compile Include="TemplateListItem.cs" />
     <Compile Include="WindowSettings.cs" />
+    <Page Include="Colorpicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

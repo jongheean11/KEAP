@@ -60,7 +60,7 @@ namespace KEAP
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            _textBox.Arrange(new Rect(0, 0, _textBlock.DesiredSize.Width + 50, _textBlock.DesiredSize.Height * 1.5));
+            _textBox.Arrange(new Rect(0, 0, _textBlock.DesiredSize.Width, _textBlock.DesiredSize.Height));
             _textBox.Focus();
             return finalSize;
         }
@@ -71,7 +71,7 @@ namespace KEAP
                                                    {
                 Brush = Brushes.Gold,
                 Thickness = 2
-            }, new Rect(0, 0, _textBlock.DesiredSize.Width + 50, _textBlock.DesiredSize.Height * 1.5));
+            }, new Rect(0, 0, _textBlock.DesiredSize.Width, _textBlock.DesiredSize.Height));
         }
 
         public event RoutedEventHandler TextBoxLostFocus
