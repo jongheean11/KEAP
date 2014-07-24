@@ -62,43 +62,15 @@ namespace KEAP
         
         protected override Size ArrangeOverride(Size arrangeSize)
         {
-            
-         /*   double ratio_Width=final_Rect.Width / previous_Size.Width,
-                ratio_Height=final_Rect.Height / previous_Size.Height;
-           /*
-            foreach (FrameworkElement child in InternalChildren)
-            {
-   //             child.Width = child.Width * ratio_Width;
-     //           child.Height = child.Height * ratio_Height;
-             //   child.Arrange(final_Rect);
-            }
-
-            previous_Size = arrangeSize;
-           /return arrangeSize;
-        }*/
-            foreach (FrameworkElement child in InternalChildren)
-           /* {
-                double left = Canvas.GetLeft(child);
-                double top = Canvas.GetTop(child);
-                Point canvasPoint = new Point(left * ratio_Width, top * ratio_Height);
-                child.Arrange(new Rect(canvasPoint.X, canvasPoint.Y, 
-                    (child.DesiredSize.Width * ratio_Width),// + canvasPoint.X, 
-                    (child.DesiredSize.Height * ratio_Height))); //+ canvasPoint.Y));
-            }
-            previous_Size = arrangeSize;
-            return arrangeSize;*/
             if (initialSize.Height == 0)
             {
                 initialSize = arrangeSize;
             }
             double ratio_X = arrangeSize.Width / initialSize.Width;
             double ratio_Y = arrangeSize.Height / initialSize.Height;
-            //for (int index = 0; index < this.InternalChildren.Count; index++)
             
             foreach (UIElement child in InternalChildren)
             {
-                //FrameworkElement child = this.InternalChildren[index];
-
                 double X;
                 double Y;
                 X = Canvas.GetLeft(child);
@@ -112,7 +84,28 @@ namespace KEAP
                 {
                     init_Point.Y = ratio_Y * Y - Y;
                 }
-                if (child is Line)
+                
+                if (child is EditableTextBlock)
+                {
+                    Canvas.SetLeft((child), X * ratio_X);
+                    Canvas.SetTop((child), Y * ratio_Y);
+                    ((EditableTextBlock)child).Width = ((EditableTextBlock)child).Width * ratio_X;
+                    ((EditableTextBlock)child).Height = ((EditableTextBlock)child).Height * ratio_Y;
+                    child.Arrange(new Rect(init_Point, new Size(child.DesiredSize.Width * ratio_X, child.DesiredSize.Height * ratio_Y)));
+                }
+                else if (child is Polygon)
+                {
+                    //Canvas.SetLeft((child), X * ratio_X);
+                    //Canvas.SetTop((child), Y * ratio_Y);
+                    for (int i = 0; i < ((Polygon)child).Points.Count; i++)
+                    {
+                        ((Polygon)child).Points[i] = new Point(((Polygon)child).Points[i].X * ratio_X, ((Polygon)child).Points[i].Y * ratio_Y);
+                    }
+                    //   ((Line)child).Width = ((Line)child).Width * ratio_X;
+                    // ((Line)child).Height = ((Line)child).Height * ratio_Y;
+                    child.Arrange(new Rect(0, 0, arrangeSize.Width, arrangeSize.Height));
+                }
+                else if (child is Line)
                 {
                     //Canvas.SetLeft((child), X * ratio_X);
                     //Canvas.SetTop((child), Y * ratio_Y);
@@ -120,16 +113,16 @@ namespace KEAP
                     ((Line)child).Y1 = ((Line)child).Y1 * ratio_Y;
                     ((Line)child).X2 = ((Line)child).X2 * ratio_X;
                     ((Line)child).Y2 = ((Line)child).Y2 * ratio_Y;
-                 //   ((Line)child).Width = ((Line)child).Width * ratio_X;
-                   // ((Line)child).Height = ((Line)child).Height * ratio_Y;
+                    //   ((Line)child).Width = ((Line)child).Width * ratio_X;
+                    // ((Line)child).Height = ((Line)child).Height * ratio_Y;
                     child.Arrange(new Rect(0, 0, arrangeSize.Width, arrangeSize.Height));
                 }
-                else if (child is EditableTextBlock)
+                else if (child is Image)
                 {
                     Canvas.SetLeft((child), X * ratio_X);
                     Canvas.SetTop((child), Y * ratio_Y);
-                    ((EditableTextBlock)child).Width = ((EditableTextBlock)child).Width * ratio_X;
-                    ((EditableTextBlock)child).Height = ((EditableTextBlock)child).Height * ratio_Y;
+                    ((Image)child).Width = ((Image)child).Width * ratio_X;
+                    ((Image)child).Height = ((Image)child).Height * ratio_Y;
                     child.Arrange(new Rect(init_Point, new Size(child.DesiredSize.Width * ratio_X, child.DesiredSize.Height * ratio_Y)));
                 }
                 else if (child is Rectangle)
@@ -148,14 +141,7 @@ namespace KEAP
                     ((Ellipse)child).Height = ((Ellipse)child).Height * ratio_Y;
                     child.Arrange(new Rect(init_Point, new Size(child.DesiredSize.Width * ratio_X, child.DesiredSize.Height * ratio_Y)));
                 }
-                else if (child is Image)
-                {
-                    Canvas.SetLeft((child), X * ratio_X);
-                    Canvas.SetTop((child), Y * ratio_Y);
-                    ((Image)child).Width = ((Image)child).Width * ratio_X;
-                    ((Image)child).Height = ((Image)child).Height * ratio_Y;
-                    child.Arrange(new Rect(init_Point, new Size(child.DesiredSize.Width * ratio_X, child.DesiredSize.Height * ratio_Y)));
-                }
+                
                 //final_Rect = new Rect(X*ratio_X, Y*ratio_Y, arrangeSize.Width * ratio_X, arrangeSize.Height * ratio_Y);
                 //child.Arrange(final_Rect);
                 //Size returnSize = new Size(child.DesiredSize.Width * ratio_X, child.DesiredSize.Height * ratio_Y);

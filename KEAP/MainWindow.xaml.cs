@@ -2784,23 +2784,30 @@ namespace KEAP
 
             Dictionary<int, string> temp_dic = new Dictionary<int, string>();
             bool found = false;
+            FrameworkElement ele = null;
+            if (selected_Text != null) ele = selected_Text;
+            else if (selected_Polygon != null) ele = selected_Polygon;
+            else if (selected_Line != null) ele = selected_Line;
+            else if (selected_Image != null) ele = selected_Image;
+            else if (selected_Shape != null) ele = selected_Shape;
+            else return;
             foreach (Dictionary<int, string> dic in ani_List)
             {
-                if (dic.Keys.Contains(MainCanvas.Children.IndexOf(selected_Shape)))
+                if (dic.Keys.Contains(MainCanvas.Children.IndexOf(ele)))
                 {
                     found = true;
-                    if (dic[MainCanvas.Children.IndexOf(selected_Shape)] == anitype)
+                    if (dic[MainCanvas.Children.IndexOf(ele)] == anitype)
                         break;
                     else
                     {
-                        string temp = dic[MainCanvas.Children.IndexOf(selected_Shape)];
+                        string temp = dic[MainCanvas.Children.IndexOf(ele)];
                         temp = temp + "/" + anitype;
                     }
                 }
             }
             if (!found)
             {
-                temp_dic.Add(MainCanvas.Children.IndexOf(selected_Shape), anitype);
+                temp_dic.Add(MainCanvas.Children.IndexOf(ele), anitype);
                 ani_List.Add(temp_dic);
                 animation_Dictionary[canvas_List.IndexOf(MainCanvas)] = ani_List;
             }
@@ -2899,7 +2906,8 @@ namespace KEAP
 
         private void Slide_Show_Click(object sender, RoutedEventArgs e)
         {
-
+            SetAllModeFalse();
+            SetAllMoveModeFalse();
             if (System.Windows.Forms.Screen.AllScreens.Length > 1) // if dual monitor
             {
                 // create Window with second monitor
@@ -2914,7 +2922,7 @@ namespace KEAP
                 Audience.WindowStyle = WindowStyle.None;
                 Audience.Topmost = true;
                 Audience.Show();
-
+                /*
                 Presentor = new FullWindowForPresentor(this, Audience);
 //                FullWindowForPresentor Presentor = new FullWindowForPresentor();
 
@@ -2928,10 +2936,10 @@ namespace KEAP
                 //Presentor.WindowState = WindowState.Maximized;
                 Presentor.WindowStyle = WindowStyle.None;
                 Presentor.Topmost = true;
-                Presentor.Show();
+                Presentor.Show();*/
 
 
-            }
+             }
             else if (System.Windows.Forms.Screen.AllScreens.Length == 1) // no dual monitor
             {
                 Audience = new FullWindowForAudience();
