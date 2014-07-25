@@ -40,17 +40,22 @@ namespace KEAP
             int i = 0;
             
             canvas_arr = new List<KEAPCanvas>();
-            animations = main.animation_Dictionary;
+            bool ani_null = false;
+            if (main.animation_Dictionary.Count == 0) ani_null = true;
+            else animations = main.animation_Dictionary;
             
             foreach (KEAPCanvas canvas in main.canvas_List)
             {
-
                 List<Dictionary<int, string>> anilist;
-                if (animations[i] == null)
+                if (ani_null)
                     anilist = null;
                 else
-                    anilist = animations[i];
-
+                {
+                    if (i <= animations.Count)
+                        anilist = animations[i];
+                    else
+                        anilist = null;
+                }
                 canvas_arr.Add(new KEAPCanvas());
                 canvas_arr[i].Width = canvas.Width;
                 canvas_arr[i].Height = canvas.Height;
@@ -198,11 +203,17 @@ namespace KEAP
             AudienceCanvas.PreviewMouseRightButtonDown += AudienceCanvas_PreviewMouseRightButtonDown;
             AudienceGrid.Children.Add(AudienceCanvas);
 
-            List<Dictionary<int,string>> anilist = animations[canvas_index];
-            
-            foreach (Dictionary<int, string> dic in anilist)
+            List<Dictionary<int, string>> anilist;
+            if(canvas_index<animations.Count)
+                anilist = animations[canvas_index];
+            else
+                anilist = null;
+            if (anilist != null)
             {
-                animation_indexes.Add(dic.Keys.First());
+                foreach (Dictionary<int, string> dic in anilist)
+                {
+                    animation_indexes.Add(dic.Keys.First());
+                }
             }
             //AudienceCanvas.Arrange(Rec)
         }
@@ -227,11 +238,17 @@ namespace KEAP
             AudienceCanvas.PreviewMouseRightButtonDown += AudienceCanvas_PreviewMouseRightButtonDown;
             AudienceGrid.Children.Add(AudienceCanvas);
 
-            List<Dictionary<int, string>> anilist = animations[canvas_index];
-            animation_indexes = new List<int>();
-            foreach (Dictionary<int, string> dic in anilist)
+            List<Dictionary<int, string>> anilist;
+            if (canvas_index < animations.Count)
+                anilist = animations[canvas_index];
+            else
+                anilist = null;
+            if (anilist != null)
             {
-                animation_indexes.Add(dic.Keys.First());
+                foreach (Dictionary<int, string> dic in anilist)
+                {
+                    animation_indexes.Add(dic.Keys.First());
+                }
             }
             animation_index = 0;
         }
@@ -333,6 +350,96 @@ namespace KEAP
             RoutedCommand key_Close = new RoutedCommand();
             key_Close.InputGestures.Add(new KeyGesture(Key.Escape));
             CommandBindings.Add(new CommandBinding(key_Close, Close_KeyEventHandler));
+
+            // right arrow button
+            RoutedCommand key_Right_Arrow = new RoutedCommand();
+            key_Right_Arrow.InputGestures.Add(new KeyGesture(Key.Right));
+            CommandBindings.Add(new CommandBinding(key_Right_Arrow, Right_Arrow_KeyEventHandler));
+
+            // left arrow button
+            RoutedCommand key_Left_Arrow = new RoutedCommand();
+            key_Left_Arrow.InputGestures.Add(new KeyGesture(Key.Left));
+            CommandBindings.Add(new CommandBinding(key_Left_Arrow, Left_Arrow_KeyEventHandler));
+
+            // up arrow button
+            RoutedCommand key_Up_Arrow = new RoutedCommand();
+            key_Up_Arrow.InputGestures.Add(new KeyGesture(Key.Up));
+            CommandBindings.Add(new CommandBinding(key_Up_Arrow, Up_Arrow_KeyEventHandler));
+
+            // down arrow button
+            RoutedCommand key_Down_Arrow = new RoutedCommand();
+            key_Down_Arrow.InputGestures.Add(new KeyGesture(Key.Down));
+            CommandBindings.Add(new CommandBinding(key_Down_Arrow, Down_Arrow_KeyEventHandler));
+
+            // plus button
+            RoutedCommand key_Plus = new RoutedCommand();
+            key_Plus.InputGestures.Add(new KeyGesture(Key.OemPlus));
+            CommandBindings.Add(new CommandBinding(key_Plus, Plus_KeyEventHandler));
+
+            // minus button
+            RoutedCommand key_Minus = new RoutedCommand();
+            key_Minus.InputGestures.Add(new KeyGesture(Key.OemMinus));
+            CommandBindings.Add(new CommandBinding(key_Minus, Minus_KeyEventHandler));
+
+            // enter button
+            RoutedCommand key_Enter = new RoutedCommand();
+            key_Enter.InputGestures.Add(new KeyGesture(Key.Enter));
+            CommandBindings.Add(new CommandBinding(key_Enter, Enter_KeyEventHandler));
+
+        }
+
+        public void Enter_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // Same with Right Arrow Button
+            // move to next slide or next animation
+            sub_Monitor.Text = "Enter_KeyEventHandler";
+            //throw new NotImplementedException();
+        }
+
+        public void Minus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // ZoomIn action
+            // Keyboard Arrow's action change
+            sub_Monitor.Text = "Minus_KeyEventHandler";
+            //throw new NotImplementedException();
+        }
+
+        public void Plus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // ZoomOut action
+            // Keyboard Arrow's action change
+            sub_Monitor.Text = "Plus_KeyEventHandler";
+            //throw new NotImplementedException();
+        }
+
+        public void Down_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // if(ZoomIn) Move Down ;
+            sub_Monitor.Text = "Down_Arrow_KeyEventHandler";
+            //throw new NotImplementedException();
+        }
+
+        public void Up_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // if(ZoomIn) Move Up ; 
+            sub_Monitor.Text = "Up_Arrow_KeyEventHandler";
+            //throw new NotImplementedException();
+        }
+
+        public void Left_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // if(ZoomIn) Move Left;
+            // else move to before slide or animation;
+            sub_Monitor.Text = "Left_Arrow_KeyEventHandler";
+            //throw new NotImplementedException();
+        }
+
+        public void Right_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // if(ZoomIn) Move Right;
+            // else move to next slide or animation
+            sub_Monitor.Text = "Right_Arrow_KeyEventHandler";
+            //throw new NotImplementedException();
         }
 
         private void Close_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
@@ -349,6 +456,103 @@ namespace KEAP
             //            ptr.SendMsgToMain(message.Text);
         }
 
+        public void get_SwipeRight_From_Kinect()
+        {
+            sub_Monitor.Text = "get_SwipeRight_From_Kinect";
+        }
+
+        public void get_SwipeLeft_From_Kinect()
+        {
+            sub_Monitor.Text = "get_SwipeLeft_From_Kinect";
+        }
+
+        public void get_SwipeUp_From_Kinect()
+        {
+            sub_Monitor.Text = "get_SwipeUp_From_Kinect";
+        }
+        //
+        public void get_Start_From_Kinect()
+        {
+            sub_Monitor.Text = "get_Start_From_Kinect";
+        }
+
+        public void get_ZoomIn_From_Kinect()
+        {
+            sub_Monitor.Text = "get_ZoomIn_From_Kinect";
+        }
+
+        public void get_ZoomOut_From_Kinect()
+        {
+            sub_Monitor.Text = "get_ZoomOut_From_Kinect";
+        }
+
+        public void get_Pause_From_Kinect()
+        {
+            sub_Monitor.Text = "get_Pause_From_Kinect";
+        }
+
+        public void get_RightDown_From_Kinect()
+        {
+            sub_Monitor.Text = "get_RightDown_From_Kinect";
+        }
+
+        public void get_Down_From_Kinect()
+        {
+            sub_Monitor.Text = "get_Down_From_Kinect";
+        }
+
+        public void get_RightUp_From_Kinect()
+        {
+            sub_Monitor.Text = "get_RightUp_From_Kinect";
+        }
+
+        public void get_LeftDown_From_Kinect()
+        {
+            sub_Monitor.Text = "get_LeftDown_From_Kinect";
+        }
+
+        public void get_LeftUp_From_Kinect()
+        {
+            sub_Monitor.Text = "get_LeftUp_From_Kinect";
+        }
+
+        public void get_Left_From_Kinect()
+        {
+            sub_Monitor.Text = "get_Left_From_Kinect";
+        }
+
+        public void get_Right_From_Kinect()
+        {
+            sub_Monitor.Text = "get_Right_From_Kinect";
+        }
+
+        public void get_Up_From_Kinect()
+        {
+            sub_Monitor.Text = "get_Up_From_Kinect";
+        }
+
+        public void get_Push_From_Kinect()
+        {
+            sub_Monitor.Text = "get_Push_From_Kinect";
+        }
+
+        public void get_StrechedHands_From_Kinect()
+        {
+            sub_Monitor.Text = "get_StrechedHands_From_Kinect";
+        }
+
+
+        //debugging
+        public void get_Grip_From_Kinect()
+        {
+            //sub_Monitor.Text = "get_Grip_From_Kinect";
+        }
+
+        public void get_Release_From_Kinect()
+        {
+            //sub_Monitor.Text = "get_Release_From_Kinect";
+        }
+
         public void getDataFromKinect(string data)
         {
           //  sub_Monitor.Text = data;
@@ -357,13 +561,13 @@ namespace KEAP
 
         public void getRightGripFromKinect(string data)
         {
-       //     grip_right.Text = data;
+            grip_right.Text = data;
             //           sub_Monitor.Text = zzz;
         }
 
         public void getLeftGripFromKinect(string data)
         {
-        //    grip_left.Text = data;
+            grip_left.Text = data;
             //           sub_Monitor.Text = zzz;
         }
 
