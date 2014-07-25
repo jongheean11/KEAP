@@ -153,12 +153,84 @@ namespace KEAP
             main_View = null;
             base.OnClosing(e);
         }
+
         private void AddKeyBindings()
         {
             // escape
             RoutedCommand key_Close = new RoutedCommand();
             key_Close.InputGestures.Add(new KeyGesture(Key.Escape));
             CommandBindings.Add(new CommandBinding(key_Close, Close_KeyEventHandler));
+
+            // right arrow button
+            RoutedCommand key_Right_Arrow = new RoutedCommand();
+            key_Right_Arrow.InputGestures.Add(new KeyGesture(Key.Right));
+            CommandBindings.Add(new CommandBinding(key_Right_Arrow, Right_Arrow_KeyEventHandler));
+
+            // left arrow button
+            RoutedCommand key_Left_Arrow = new RoutedCommand();
+            key_Left_Arrow.InputGestures.Add(new KeyGesture(Key.Left));
+            CommandBindings.Add(new CommandBinding(key_Left_Arrow, Left_Arrow_KeyEventHandler));
+
+            // up arrow button
+            RoutedCommand key_Up_Arrow = new RoutedCommand();
+            key_Up_Arrow.InputGestures.Add(new KeyGesture(Key.Up));
+            CommandBindings.Add(new CommandBinding(key_Up_Arrow, Up_Arrow_KeyEventHandler));
+
+            // down arrow button
+            RoutedCommand key_Down_Arrow = new RoutedCommand();
+            key_Down_Arrow.InputGestures.Add(new KeyGesture(Key.Down));
+            CommandBindings.Add(new CommandBinding(key_Down_Arrow, Down_Arrow_KeyEventHandler));
+
+            // plus button
+            RoutedCommand key_Plus = new RoutedCommand();
+            key_Plus.InputGestures.Add(new KeyGesture(Key.OemPlus));
+            CommandBindings.Add(new CommandBinding(key_Plus, Plus_KeyEventHandler));
+
+            // minus button
+            RoutedCommand key_Minus = new RoutedCommand();
+            key_Minus.InputGestures.Add(new KeyGesture(Key.OemMinus));
+            CommandBindings.Add(new CommandBinding(key_Minus, Minus_KeyEventHandler));
+
+            // enter button
+            RoutedCommand key_Enter = new RoutedCommand();
+            key_Enter.InputGestures.Add(new KeyGesture(Key.Enter));
+            CommandBindings.Add(new CommandBinding(key_Enter, Enter_KeyEventHandler));
+
+        }
+
+        private void Enter_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            aud_View.Enter_KeyEventHandler(sender, e);
+        }
+
+        private void Minus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            aud_View.Minus_KeyEventHandler(sender, e);
+        }
+
+        private void Plus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            aud_View.Plus_KeyEventHandler(sender, e);
+        }
+
+        private void Down_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            aud_View.Down_Arrow_KeyEventHandler(sender, e);
+        }
+
+        private void Up_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            aud_View.Up_Arrow_KeyEventHandler(sender, e);
+        }
+
+        private void Left_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            aud_View.Left_Arrow_KeyEventHandler(sender, e);
+        }
+
+        private void Right_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            aud_View.Right_Arrow_KeyEventHandler(sender, e);
         }
 
         private void Close_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
