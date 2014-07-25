@@ -76,7 +76,8 @@ namespace Fizbin.Kinect.Gestures.Segments
             Dictionary<GesturePartResult, float> returns;
             // //left hand in front of left ShoulderF
             //왼쪽 어깨보다 오른손이 오른족에 있다.
-            if (skeleton.Joints[JointType.ShoulderLeft].Position.X < skeleton.Joints[JointType.HandRight].Position.X && leftHandGrip == true)
+            if (skeleton.Joints[JointType.ShoulderRight].Position.X > skeleton.Joints[JointType.HandRight].Position.X && 
+                leftHandGrip == true)
             {
                 //왼쪽어깨가 오른손보다 아래 있다.
                 if (skeleton.Joints[JointType.ShoulderLeft].Position.Y < skeleton.Joints[JointType.HandRight].Position.Y)
@@ -118,7 +119,8 @@ namespace Fizbin.Kinect.Gestures.Segments
             GesturePartResult return_value;
             Dictionary<GesturePartResult, float> returns;
             //왼쪽 어깨보다 오른손이 오른족에 있다.
-            if (skeleton.Joints[JointType.ShoulderLeft].Position.X < skeleton.Joints[JointType.HandRight].Position.X && leftHandGrip == true)
+            if (skeleton.Joints[JointType.ShoulderRight].Position.X > skeleton.Joints[JointType.HandRight].Position.X && 
+                leftHandGrip == true)
             {
                 //왼쪽어깨가 오른손보다 아래 있다.
                 if (skeleton.Joints[JointType.Head].Position.Y > skeleton.Joints[JointType.HandRight].Position.Y)
