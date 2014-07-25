@@ -328,6 +328,89 @@ namespace KEAP
             RoutedCommand key_Close = new RoutedCommand();
             key_Close.InputGestures.Add(new KeyGesture(Key.Escape));
             CommandBindings.Add(new CommandBinding(key_Close, Close_KeyEventHandler));
+
+            // right arrow button
+            RoutedCommand key_Right_Arrow = new RoutedCommand();
+            key_Right_Arrow.InputGestures.Add(new KeyGesture(Key.Right));
+            CommandBindings.Add(new CommandBinding(key_Right_Arrow, Right_Arrow_KeyEventHandler));
+
+            // left arrow button
+            RoutedCommand key_Left_Arrow = new RoutedCommand();
+            key_Left_Arrow.InputGestures.Add(new KeyGesture(Key.Left));
+            CommandBindings.Add(new CommandBinding(key_Left_Arrow, Left_Arrow_KeyEventHandler));
+
+            // up arrow button
+            RoutedCommand key_Up_Arrow = new RoutedCommand();
+            key_Up_Arrow.InputGestures.Add(new KeyGesture(Key.Up));
+            CommandBindings.Add(new CommandBinding(key_Up_Arrow, Up_Arrow_KeyEventHandler));
+
+            // down arrow button
+            RoutedCommand key_Down_Arrow = new RoutedCommand();
+            key_Down_Arrow.InputGestures.Add(new KeyGesture(Key.Down));
+            CommandBindings.Add(new CommandBinding(key_Down_Arrow, Down_Arrow_KeyEventHandler));
+
+            // plus button
+            RoutedCommand key_Plus = new RoutedCommand();
+            key_Plus.InputGestures.Add(new KeyGesture(Key.OemPlus));
+            CommandBindings.Add(new CommandBinding(key_Plus, Plus_KeyEventHandler));
+
+            // minus button
+            RoutedCommand key_Minus = new RoutedCommand();
+            key_Minus.InputGestures.Add(new KeyGesture(Key.OemMinus));
+            CommandBindings.Add(new CommandBinding(key_Minus, Minus_KeyEventHandler));
+
+            // enter button
+            RoutedCommand key_Enter = new RoutedCommand();
+            key_Enter.InputGestures.Add(new KeyGesture(Key.Enter));
+            CommandBindings.Add(new CommandBinding(key_Enter, Enter_KeyEventHandler));
+
+        }
+
+        private void Enter_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // Same with Right Arrow Button
+            // move to next slide or next animation
+            throw new NotImplementedException();
+        }
+        
+        private void Minus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // ZoomIn action
+            // Keyboard Arrow's action change
+            throw new NotImplementedException();
+        }
+
+        private void Plus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // ZoomOut action
+            // Keyboard Arrow's action change
+            throw new NotImplementedException();
+        }
+
+        private void Down_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // if(ZoomIn) Move Down ;
+            throw new NotImplementedException();
+        }
+
+        private void Up_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // if(ZoomIn) Move Up ; 
+            throw new NotImplementedException();
+        }
+
+        private void Left_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // if(ZoomIn) Move Left;
+            // else move to before slide or animation;
+            throw new NotImplementedException();
+        }
+
+        private void Right_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            // if(ZoomIn) Move Right;
+            // else move to next slide or animation
+            throw new NotImplementedException();
         }
 
         private void Close_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
@@ -343,6 +426,92 @@ namespace KEAP
         {
             //            ptr.SendMsgToMain(message.Text);
         }
+
+        public void get_SwipeRight_From_Kinect()
+        {
+
+        }
+
+        public void get_SwipeLeft_From_Kinect()
+        {
+
+        }
+
+        public void get_SwipeUp_From_Kinect()
+        {
+
+        }
+        //
+        public void get_Start_From_Kinect()
+        {
+
+        }
+
+        public void get_ZoomIn_From_Kinect()
+        {
+
+        }
+
+        public void get_ZoomOut_From_Kinect()
+        {
+
+        }
+
+        public void get_Pause_From_Kinect()
+        {
+
+        }
+
+        public void get_RightDown_From_Kinect()
+        {
+
+        }
+
+        public void get_Down_From_Kinect()
+        {
+
+        }
+
+        public void get_RightUp_From_Kinect()
+        {
+
+        }
+
+        public void get_LeftDown_From_Kinect()
+        {
+
+        }
+
+        public void get_LeftUp_From_Kinect()
+        {
+
+        }
+
+        public void get_Left_From_Kinect()
+        {
+
+        }
+
+        public void get_Right_From_Kinect()
+        {
+
+        }
+
+        public void get_Up_From_Kinect()
+        {
+
+        }
+
+        public void get_Push_From_Kinect()
+        {
+
+        }
+
+        public void get_StrechedHands_From_Kinect()
+        {
+
+        }
+
 
         public void getDataFromKinect(string data)
         {

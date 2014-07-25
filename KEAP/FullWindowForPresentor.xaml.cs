@@ -686,6 +686,7 @@ namespace KEAP
                     //SendMsg
                     Gesture = "Start";
                     aud_View.getDataFromKinect("Start");
+                    aud_View.get_Start_From_Kinect();
                     start = true;
                 }
             }
@@ -697,6 +698,7 @@ namespace KEAP
                     {
                         Gesture = "ZoomIn\n";
                         aud_View.getDataFromKinect("ZoomIn");
+                        aud_View.get_ZoomIn_From_Kinect();
                         zoom = true;
                     }
                 }
@@ -706,6 +708,8 @@ namespace KEAP
                     {
                         Gesture = "ZoomOut\n";
                         aud_View.getDataFromKinect("ZoomOut");
+                        aud_View.get_ZoomOut_From_Kinect();
+
                         zoom = false;
                     }
                 }
@@ -715,59 +719,73 @@ namespace KEAP
                     case "TurnSegments":
                         Gesture = "Pause";
                         aud_View.getDataFromKinect("Pause");
+                        aud_View.get_Pause_From_Kinect();
                         start = false;
                         break;
                     case "RightDown":
                         Gesture = "RightDown";
                         aud_View.getDataFromKinect("RightDown");
+                        aud_View.get_RightDown_From_Kinect();
                         break;
                     case "Down":
                         Gesture = "Down";
                         aud_View.getDataFromKinect("Down");
+                        aud_View.get_Down_From_Kinect();
                         break;
                     case "RightUp":
                         Gesture = "RightUp";
                         aud_View.getDataFromKinect("RightUp");
+                        aud_View.get_RightUp_From_Kinect();
                         break;
                     case "LeftDown":
                         Gesture = "LeftDown";
                         aud_View.getDataFromKinect("LeftDown");
+                        aud_View.get_LeftDown_From_Kinect();
                         break;
                     case "LeftUp":
                         Gesture = "LeftUp";
                         aud_View.getDataFromKinect("LeftUp");
+                        aud_View.get_LeftUp_From_Kinect();
                         break;
                     case "Left":
                         Gesture = "Left";
                         aud_View.getDataFromKinect("Left");
+                        aud_View.get_Left_From_Kinect();
                         break;
                     case "Right":
                         Gesture = "Right";
                         aud_View.getDataFromKinect("Right");
+                        aud_View.get_Right_From_Kinect();
                         break;
                     case "Up":
                         Gesture = "Up";
                         aud_View.getDataFromKinect("Up");
+                        aud_View.get_Up_From_Kinect();
                         break;
                     case "Push":
                         Gesture = "Push";
                         aud_View.getDataFromKinect("Push");
+                        aud_View.get_Push_From_Kinect();
                         break;
                     case "strechedHands":
                         Gesture = "strechedHands\n";
                         aud_View.getDataFromKinect("strechedHands");
+                        aud_View.get_StrechedHands_From_Kinect();
                         break;
                     case "SwipeLeft":
                         Gesture = "Swipe Left\n";
                         aud_View.getDataFromKinect("SwipeLeft");
+                        aud_View.get_SwipeLeft_From_Kinect();
                         break;
                     case "SwipeRight":
                         Gesture = "Swipe Right\n";
                         aud_View.getDataFromKinect("SwipeRight");
+                        aud_View.get_SwipeRight_From_Kinect();
                         break;
                     case "SwipeUp":
                         Gesture = "Swipe Up\n";
                         aud_View.getDataFromKinect("SwipeUp");
+                        aud_View.get_SwipeUp_From_Kinect();
                         break;
                     default:
                         break;
