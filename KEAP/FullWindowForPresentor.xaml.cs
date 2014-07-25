@@ -55,8 +55,6 @@ namespace KEAP
         private readonly string PUSH_RT;
         private readonly KinectSensorChooser sensorChooser = new KinectSensorChooser();
 
-
-
         private Skeleton[] skeletons = new Skeleton[0];
 
         Timer _clearTimer;
@@ -64,19 +62,13 @@ namespace KEAP
         // skeleton gesture recognizer
         private GestureController gestureController;
 
-
-
-
         private FullWindowForPresentor()
         {
             //@grip by minsu
             this.Closing += new System.ComponentModel.CancelEventHandler(Window_Closing);
             this.Loaded += new RoutedEventHandler(Window_Loaded);
 
-
             InitializeComponent();
-
-
 
             DataContext = this;
             InitializeComponent();
@@ -85,10 +77,8 @@ namespace KEAP
             KinectSensorManager = new KinectSensorManager();
             KinectSensorManager.KinectSensorChanged += this.KinectSensorChanged;
 
-
             //@grip by minsu
             _userInfos = new UserInfo[InteractionFrame.UserInfoArrayLength];
-
 
             // locate an available sensor
             sensorChooser.Start();
@@ -97,12 +87,9 @@ namespace KEAP
             var kinectSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
             BindingOperations.SetBinding(this.KinectSensorManager, KinectSensorManager.KinectSensorProperty, kinectSensorBinding);
 
-
-
             // add timer for clearing last detected gesture
             _clearTimer = new Timer(2000);
             _clearTimer.Elapsed += new ElapsedEventHandler(clearTimer_Elapsed);
-
         }
 
         public FullWindowForPresentor(MainWindow main, FullWindowForAudience audience)
@@ -114,10 +101,7 @@ namespace KEAP
             this.Closing += new System.ComponentModel.CancelEventHandler(Window_Closing);
             this.Loaded += new RoutedEventHandler(Window_Loaded);
 
-
             InitializeComponent();
-
-
 
             DataContext = this;
             InitializeComponent();
@@ -126,10 +110,8 @@ namespace KEAP
             KinectSensorManager = new KinectSensorManager();
             KinectSensorManager.KinectSensorChanged += this.KinectSensorChanged;
 
-
             //@grip by minsu
             _userInfos = new UserInfo[InteractionFrame.UserInfoArrayLength];
-
 
             // locate an available sensor
             sensorChooser.Start();
@@ -138,13 +120,9 @@ namespace KEAP
             var kinectSensorBinding = new Binding("Kinect") { Source = this.sensorChooser };
             BindingOperations.SetBinding(this.KinectSensorManager, KinectSensorManager.KinectSensorProperty, kinectSensorBinding);
 
-
-
             // add timer for clearing last detected gesture
             _clearTimer = new Timer(2000);
             _clearTimer.Elapsed += new ElapsedEventHandler(clearTimer_Elapsed);
-
-
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -153,6 +131,7 @@ namespace KEAP
             main_View = null;
             base.OnClosing(e);
         }
+
         private void AddKeyBindings()
         {
             // escape
@@ -171,7 +150,6 @@ namespace KEAP
 
         private bool leftHandGrip = false;
         private bool rightHandGrip = false;
-
         public static bool rightHandRelease = false;
         public static bool leftHandRelease = false;
 
@@ -188,8 +166,6 @@ namespace KEAP
                     bool rightHandPress = false;
                     bool leftHandPress = false;
                     //rightHandGrip = false;
-
-
 
                     foreach (var info in _userInfos)
                     {
@@ -213,8 +189,6 @@ namespace KEAP
                                     rightHandRelease = true;
                                     aud_View.getRightGripFromKinect("Release");
                                 }
-
-
                             }
 
                             if (hand.HandType == InteractionHandType.Left)
@@ -239,7 +213,6 @@ namespace KEAP
 
                 if (IsLeftGripped)
                 {
-
                     IsLeftGripped = true;
                     //Gesture = "LeftGriped!";
                     //_clearTimer.Start();

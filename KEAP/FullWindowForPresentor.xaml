@@ -5,16 +5,10 @@
         xmlns:a="clr-namespace:KEAP"
         Title="FullWindowForPresentor" Loaded="Presentor_Loaded" Height="300" Width="300">
     <Grid>
-        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="320" Height="240">
-            <kv:KinectDepthViewer x:Name="DepthViewer" KinectSensorManager="{Binding KinectSensorManager}" Visibility="Collapsed" />
-            <a:KEAPCanvas>
-                <kv:KinectSkeletonViewer
-                                    KinectSensorManager="{Binding KinectSensorManager}"
-                                    Width="320"
-                                    Height="240"
-                                    ShowBones="True" ShowJoints="True" ShowCenter="True" ImageType="Depth" />
-            </a:KEAPCanvas>
-        </Grid>
+        <a:KEAPCanvas x:Name="PresenterCanvas" Background="WhiteSmoke">
+            <kv:KinectSkeletonViewer HorizontalAlignment="Center" VerticalAlignment="Center" KinectSensorManager="{Binding KinectSensorManager}" Width="960" Height="720" ShowBones="True" ShowJoints="True" ShowCenter="True" ImageType="Depth" />
+        </a:KEAPCanvas>
+        
 
         <TextBlock Text="{Binding Gesture}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" FontWeight="Bold" Margin="-2,0,0,100"/>
         <TextBlock Text="{Binding Values}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" FontWeight="Bold" Margin="-2,100,0,0"/>

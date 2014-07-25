@@ -44,7 +44,7 @@ namespace KEAP
 
         bool pen_Mode = false, text_Mode = false, line_Mode = false, line_Mode_Toggle = false,
             rectangle_Mode = false, polygon_Mode = false, polygon_Mode_Toggle = false, image_Mode = false,
-            table_Mode = false, ellipse_Mode = false;
+            table_Mode = false, ellipse_Mode = false, eraseforpen_Mode = false;
 
         bool select_Mode = false;
 
@@ -94,9 +94,7 @@ namespace KEAP
                 VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
                 Background = new SolidColorBrush(Colors.White)
-
             };
-
 
             if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
             {
@@ -207,6 +205,7 @@ namespace KEAP
                         MainCanvas.Children.Add(polygon);
 
                         prev_Poly_Count_Children = 0;
+                        polygon_Mode = false;
                     }
                 }
                 else
@@ -363,6 +362,8 @@ namespace KEAP
                     edit_Mode = false; //editing..
                     edit_Mode_Ready = false;
                     MainCanvas.Children.Remove(edit_Rect);
+                    
+                    selected_Polygon.StrokeDashArray = null;
                 }
             }
             else if (selected_Line != null)
@@ -404,7 +405,7 @@ namespace KEAP
 
             Image image_renew = RenderCanvas(MainCanvas);
             ((SlideInfo)(Slide_ListView.Items[Slide_ListView.SelectedIndex])).Source = image_renew.Source;
-            image_Mode = rectangle_Mode = line_Mode = line_Mode = polygon_Mode = table_Mode = false;
+            image_Mode = rectangle_Mode = line_Mode = table_Mode = false;
         }
 
         void MainCanvas_PreviewMouseMove(object sender, MouseEventArgs e)
@@ -417,9 +418,33 @@ namespace KEAP
 
             if (e.LeftButton == MouseButtonState.Pressed && canvas_LeftButton_Down)
             {
-                if (pen_Mode)
+                if(eraseforpen_Mode)
                 {
-                    if (GetDistance(x1, y1, x2, y2) > 2.0) // We need to developp this method now 
+                    bool found = false;
+                    for (int i = Convert.ToInt32(x2 - 5); i <= Convert.ToInt32(x2 + 5); i++)
+                    {
+                        for (int j = Convert.ToInt32(y2 - 5); j <= Convert.ToInt32(y2 + 5); j++)
+                        {
+                            foreach(Line line in MainCanvas.Children)
+                            {
+                                if (line.StrokeThickness==3.9)
+                                {
+                                    if (((Convert.ToInt32(line.X1) == i) && (Convert.ToInt32(line.Y1) == j)) || ((Convert.ToInt32(line.X2) == i) && (Convert.ToInt32(line.Y2) == j)))
+                                    {
+                                        MainCanvas.Children.Remove(line);
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (found) break;
+                        }
+                        if (found) break;
+                    }
+                }
+                else if (pen_Mode)
+                {
+                    if (GetDistance(x1, y1, x2, y2) > 1.7) // We need to developp this method now 
                     {
                         Line line = new Line()
                         {
@@ -427,7 +452,7 @@ namespace KEAP
                             Y1 = y1,
                             X2 = x2,
                             Y2 = y2,
-                            StrokeThickness = 4.0,
+                            StrokeThickness = 3.9,
                             Stroke = new SolidColorBrush(Colors.Black)
                         };
 
@@ -752,49 +777,103 @@ namespace KEAP
             {
                 if ((selected_Text != null) || (selected_Polygon != null) || (selected_Line != null) || (selected_Shape != null) || (selected_Image != null))
                 {
-                    //if (select_Text_Mode && selected_Text != null)
-                    if (selected_Text != null && sender == selected_Text)
+                    left = right = top = bottom = false;
+                    
+                    
+                    double resize_x1 = Canvas.GetLeft(edit_Rect),
+                        resize_y1 = Canvas.GetTop(edit_Rect),
+                        resize_x2 = Canvas.GetLeft(edit_Rect) + edit_Rect.Width,
+                        resize_y2 = Canvas.GetTop(edit_Rect) + edit_Rect.Height,
+                        resize_mouse_x = e.GetPosition(MainCanvas).X,
+                        resize_mouse_y = e.GetPosition(MainCanvas).Y;
+                    if (selected_Text != null)
                     {
-                        drag_Mode = true;
-                        selected_Text.CaptureMouse();
-                        Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as EditableTextBlock));
-                        Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as EditableTextBlock));
+                        resize_x1 = Canvas.GetLeft(selected_Text);
+                        resize_y1 = Canvas.GetTop(selected_Text);
+                        resize_x2 = Canvas.GetLeft(selected_Text) + selected_Text.Width;
+                        resize_y2 = Canvas.GetTop(selected_Text) + selected_Text.Height;
                     }
-                    //else if (select_Line_Mode && selected_Line != null)
-                    else if (selected_Polygon != null && sender == selected_Polygon)
+                    else if (selected_Image != null)
                     {
-                        drag_Mode = true;
-                        selected_Line.CaptureMouse();
-                        Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as Polygon));
-                        Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as Polygon));
+                        resize_x1 = Canvas.GetLeft(selected_Image);
+                        resize_y1 = Canvas.GetTop(selected_Image);
+                        resize_x2 = Canvas.GetLeft(selected_Image) + selected_Image.Width;
+                        resize_y2 = Canvas.GetTop(selected_Image) + selected_Image.Height;
                     }
-                    else if (selected_Line != null && sender == selected_Line)
+                    else if (selected_Shape != null)
                     {
-                        drag_Mode = true;
-                        selected_Line.CaptureMouse();
-                        Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as Line));
-                        Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as Line));
-                    }
-                    //else if (select_Shape_Mode && selected_Shape != null)
-                    else if (selected_Image != null && sender == selected_Image)
-                    {
-                        drag_Mode = true;
-                        selected_Image.CaptureMouse();
-                        Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as Image));
-                        Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as Image));
-                    }
-                    else if (selected_Shape != null && sender == selected_Shape)
-                    {
-                        drag_Mode = true;
-                        selected_Shape.CaptureMouse();
-                        Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as Shape));
-                        Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as Shape));
+                        resize_x1 = Canvas.GetLeft(selected_Shape);
+                        resize_y1 = Canvas.GetTop(selected_Shape);
+                        resize_x2 = Canvas.GetLeft(selected_Shape) + selected_Shape.Width;
+                        resize_y2 = Canvas.GetTop(selected_Shape) + selected_Shape.Height;
                     }
 
-                    else
+                    if (Math.Abs(resize_mouse_x - resize_x1) < 17)
                     {
-                        SetAllModeFalse();
-                        SetAllMoveModeFalse();
+                        left = true;
+                        drag_Mode = true;
+                    }
+                    else if (Math.Abs(resize_mouse_x - resize_x2) < 17)
+                    {
+                        right = true;
+                        drag_Mode = true;
+                    }
+                    if (Math.Abs(resize_mouse_y - resize_y1) < 17)
+                    {
+                        top = true;
+                        drag_Mode = true;
+                    }
+                    else if (Math.Abs(resize_mouse_y - resize_y2) < 17)
+                    {
+                        bottom = true;
+                        drag_Mode = true;
+                    }
+                    //if (select_Text_Mode && selected_Text != null)
+                    if (!(left || right || top || bottom))
+                    {
+                        if (selected_Text != null && sender == selected_Text)
+                        {
+                            drag_Mode = true;
+                            selected_Text.CaptureMouse();
+                            Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as EditableTextBlock));
+                            Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as EditableTextBlock));
+                        }
+                        //else if (select_Line_Mode && selected_Line != null)
+                        else if (selected_Polygon != null && sender == selected_Polygon)
+                        {
+                            drag_Mode = true;
+                            selected_Polygon.CaptureMouse();
+                            Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as Polygon));
+                            Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as Polygon));
+                        }
+                        else if (selected_Line != null && sender == selected_Line)
+                        {
+                            drag_Mode = true;
+                            selected_Line.CaptureMouse();
+                            Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as Line));
+                            Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as Line));
+                        }
+                        //else if (select_Shape_Mode && selected_Shape != null)
+                        else if (selected_Image != null && sender == selected_Image)
+                        {
+                            drag_Mode = true;
+                            selected_Image.CaptureMouse();
+                            Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as Image));
+                            Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as Image));
+                        }
+                        else if (selected_Shape != null && sender == selected_Shape)
+                        {
+                            drag_Mode = true;
+                            selected_Shape.CaptureMouse();
+                            Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as Shape));
+                            Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as Shape));
+                        }
+
+                        else
+                        {
+                            SetAllModeFalse();
+                            SetAllMoveModeFalse();
+                        }
                     }
                 }
                 else
@@ -808,13 +887,14 @@ namespace KEAP
                         if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                         edit_Rect = new Rectangle()
                         {
-                            Width = selected_Text.Width+20,
-                            Height = selected_Text.Height+20,
+                            Width = selected_Text.Width + 10,
+                            Height = selected_Text.Height + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
-                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Text) - 10);
-                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Text) - 10);
+                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Text) - 5);
+                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Text) - 5);
+                        
                         MainCanvas.Children.Add(edit_Rect);
                     }
                     else if (sender is Polygon)
@@ -838,14 +918,17 @@ namespace KEAP
                         edit_Rect = new Rectangle()
                         {
                             Width = max_x - min_x + 20,
-                            Height = max_x - min_x + 20,
-                            Stroke = new SolidColorBrush(Colors.Black),
+                            Height = max_y - min_y + 20,
+                            Stroke = new SolidColorBrush(Colors.White),
                             StrokeDashArray = dashes
                         };
                         
-                        Canvas.SetLeft(edit_Rect, min_x - 10);
-                        Canvas.SetTop(edit_Rect, max_x - 10);
+                        Canvas.SetLeft(edit_Rect, min_x - 5);
+                        Canvas.SetTop(edit_Rect, min_y - 5);
+                        
                         MainCanvas.Children.Add(edit_Rect);
+
+                        selected_Polygon.StrokeDashArray = dashes;
                     }
                     else if (sender is Line)
                     {
@@ -853,13 +936,14 @@ namespace KEAP
                         if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                         edit_Rect = new Rectangle()
                         {
-                            Width = selected_Line.Width + 20,
-                            Height = selected_Line.Height + 20,
+                            Width = selected_Line.Width + 10,
+                            Height = selected_Line.Height + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
-                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Line) - 10);
-                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Line) - 10);
+                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Line) - 5);
+                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Line) - 5);
+                        
                         MainCanvas.Children.Add(edit_Rect);
                     }
                     else if (sender is Image)
@@ -868,13 +952,14 @@ namespace KEAP
                         if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                         edit_Rect = new Rectangle()
                         {
-                            Width = selected_Image.Width + 20,
-                            Height = selected_Image.Height + 20,
+                            Width = selected_Image.Width + 10,
+                            Height = selected_Image.Height + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
-                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Image) - 10);
-                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Image) - 10);
+                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Image) - 5);
+                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Image) - 5);
+                        
                         MainCanvas.Children.Add(edit_Rect);
                     }
                     else if (sender is Shape)
@@ -883,13 +968,14 @@ namespace KEAP
                         if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                         edit_Rect = new Rectangle()
                         {
-                            Width = selected_Shape.Width + 20,
-                            Height = selected_Shape.Height + 20,
+                            Width = selected_Shape.Width + 10,
+                            Height = selected_Shape.Height + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
-                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Shape) - 10);
-                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Shape) - 10);
+                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Shape) - 5);
+                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Shape) - 5);
+                        
                         MainCanvas.Children.Add(edit_Rect);
                     }
                 }
@@ -911,13 +997,14 @@ namespace KEAP
                         if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                         edit_Rect = new Rectangle()
                         {
-                            Width = selected_Text.Width + 20,
-                            Height = selected_Text.Height + 20,
+                            Width = selected_Text.Width + 10,
+                            Height = selected_Text.Height + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
-                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Text) - 10);
-                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Text) - 10);
+                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Text) - 5);
+                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Text) - 5);
+                        
                         MainCanvas.Children.Add(edit_Rect);
                     }
                     else if (sender is Polygon)
@@ -941,15 +1028,18 @@ namespace KEAP
 
                         edit_Rect = new Rectangle()
                         {
-                            Width = max_x - min_x + 20,
-                            Height = max_x - min_x + 20,
+                            Width = max_x - min_x + 10,
+                            Height = max_y - min_y + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
 
-                        Canvas.SetLeft(edit_Rect, min_x - 10);
-                        Canvas.SetTop(edit_Rect, max_x - 10);
+                        Canvas.SetLeft(edit_Rect, min_x - 5);
+                        Canvas.SetTop(edit_Rect, min_y - 5);
+                        
                         MainCanvas.Children.Add(edit_Rect);
+
+                        selected_Polygon.StrokeDashArray = dashes;
                     }
                     else if (sender is Line)
                     {
@@ -959,13 +1049,14 @@ namespace KEAP
                         if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                         edit_Rect = new Rectangle()
                         {
-                            Width = selected_Line.Width + 20,
-                            Height = selected_Line.Height + 20,
+                            Width = selected_Line.Width + 10,
+                            Height = selected_Line.Height + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
-                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Line) - 10);
-                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Line) - 10);
+                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Line) - 5);
+                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Line) - 5);
+                        
                         MainCanvas.Children.Add(edit_Rect);
                     }
                     else if (sender is Image)
@@ -976,13 +1067,14 @@ namespace KEAP
                         if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                         edit_Rect = new Rectangle()
                         {
-                            Width = selected_Image.Width + 20,
-                            Height = selected_Image.Height + 20,
+                            Width = selected_Image.Width + 10,
+                            Height = selected_Image.Height + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
-                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Image) - 10);
-                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Image) - 10);
+                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Image) - 5);
+                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Image) - 5);
+                        
                         MainCanvas.Children.Add(edit_Rect);
                     }
                     else if (sender is Shape)
@@ -993,13 +1085,14 @@ namespace KEAP
                         if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                         edit_Rect = new Rectangle()
                         {
-                            Width = selected_Shape.Width + 20,
-                            Height = selected_Shape.Height + 20,
+                            Width = selected_Shape.Width + 10,
+                            Height = selected_Shape.Height + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
-                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Shape) - 10);
-                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Shape) - 10);
+                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Shape) - 5);
+                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Shape) - 5);
+                        
                         MainCanvas.Children.Add(edit_Rect);
                     }
                 }
@@ -1013,38 +1106,41 @@ namespace KEAP
         // 이 때 객체를 선택했는지 안했는지를 설정한다.
         private void UIElement_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            left = right = top = bottom = false;
             if (edit_Mode_Ready)
             {
                 bool found = false;
-                if (!(selected_Text == (sender as EditableTextBlock)))
+                if ((!(selected_Text == (sender as EditableTextBlock))) && selected_Text!=null)
                 {
                     selected_Text = null;
                     found = true;
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                     edit_Rect = null;
                 }
-                if (!(selected_Polygon == (sender as Polygon)))
+                if ((!(selected_Polygon == (sender as Polygon))) && selected_Polygon!=null)
                 {
                     selected_Polygon = null;
                     found = true;
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                     edit_Rect = null;
+                    
+                    selected_Polygon.StrokeDashArray = null;
                 }
-                if (!(selected_Line == (sender as Line)))
+                if ((!(selected_Line == (sender as Line))) && selected_Line!=null)
                 {
                     selected_Line = null;
                     found = true;
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                     edit_Rect = null;
                 }
-                if (!(selected_Image == (sender as Image)))
+                if ((!(selected_Image == (sender as Image))) && selected_Image!=null)
                 {
                     selected_Image = null;
                     found = true;
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                     edit_Rect = null;
                 }
-                if (!(selected_Shape == (sender as Shape)))
+                if ((!(selected_Shape == (sender as Shape))) && selected_Shape!=null)
                 {
                     selected_Shape = null;
                     found = true;
@@ -1072,13 +1168,14 @@ namespace KEAP
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                     edit_Rect = new Rectangle()
                     {
-                        Width = selected_Text.Width + 20,
-                        Height = selected_Text.Height + 20,
+                        Width = selected_Text.Width + 10,
+                        Height = selected_Text.Height + 10,
                         Stroke = new SolidColorBrush(Colors.Black),
                         StrokeDashArray = dashes
                     };
-                    Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Text) - 10);
-                    Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Text) - 10);
+                    Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Text) - 5);
+                    Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Text) - 5);
+                    
                     MainCanvas.Children.Add(edit_Rect);
                 }
                 if (selected_Polygon != null)
@@ -1104,15 +1201,18 @@ namespace KEAP
 
                     edit_Rect = new Rectangle()
                     {
-                        Width = max_x - min_x + 20,
-                        Height = max_x - min_x + 20,
+                        Width = max_x - min_x + 10,
+                        Height = max_y - min_y + 10,
                         Stroke = new SolidColorBrush(Colors.Black),
                         StrokeDashArray = dashes
                     };
 
-                    Canvas.SetLeft(edit_Rect, min_x - 10);
-                    Canvas.SetTop(edit_Rect, max_x - 10);
+                    Canvas.SetLeft(edit_Rect, min_x - 5);
+                    Canvas.SetTop(edit_Rect, min_y - 5);
+                    
                     MainCanvas.Children.Add(edit_Rect);
+
+                    selected_Polygon.StrokeDashArray = dashes;
                 }
                 //else if (select_Line_Mode && selected_Line != null)
                 else if (selected_Line != null)
@@ -1124,13 +1224,14 @@ namespace KEAP
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                     edit_Rect = new Rectangle()
                     {
-                        Width = selected_Line.Width + 20,
-                        Height = selected_Line.Height + 20,
+                        Width = selected_Line.Width + 10,
+                        Height = selected_Line.Height + 10,
                         Stroke = new SolidColorBrush(Colors.Black),
                         StrokeDashArray = dashes
                     };
-                    Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Line) - 10);
-                    Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Line) - 10);
+                    Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Line) - 5);
+                    Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Line) - 5);
+                    
                     MainCanvas.Children.Add(edit_Rect);
                 }
                 else if (selected_Image != null)
@@ -1142,13 +1243,14 @@ namespace KEAP
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                     edit_Rect = new Rectangle()
                     {
-                        Width = selected_Image.Width + 20,
-                        Height = selected_Image.Height + 20,
+                        Width = selected_Image.Width + 10,
+                        Height = selected_Image.Height + 10,
                         Stroke = new SolidColorBrush(Colors.Black),
                         StrokeDashArray = dashes
                     };
-                    Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Image) - 10);
-                    Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Image) - 10);
+                    Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Image) - 5);
+                    Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Image) - 5);
+                    
                     MainCanvas.Children.Add(edit_Rect);
                 }
 
@@ -1162,13 +1264,14 @@ namespace KEAP
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                     edit_Rect = new Rectangle()
                     {
-                        Width = selected_Shape.Width + 20,
-                        Height = selected_Shape.Height + 20,
+                        Width = selected_Shape.Width + 10,
+                        Height = selected_Shape.Height + 10,
                         Stroke = new SolidColorBrush(Colors.Black),
                         StrokeDashArray = dashes
                     };
-                    Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Shape) - 10);
-                    Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Shape) - 10);
+                    Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Shape) - 5);
+                    Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Shape) - 5);
+                    
                     MainCanvas.Children.Add(edit_Rect);
                 }
             }
@@ -1180,6 +1283,7 @@ namespace KEAP
 
         double m_left;
         double m_top;
+        bool left = false, right = false, top = false, bottom = false;
         private void UIElement_MouseMove(object sender, MouseEventArgs e)
         {
             if (!IsSelectMode() || !drag_Mode) return;
@@ -1187,6 +1291,189 @@ namespace KEAP
             if ((!edit_Mode) && edit_Mode_Ready) return;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                if (edit_Rect != null)
+                {
+                    double x1 = Canvas.GetLeft(edit_Rect),
+                        y1 = Canvas.GetTop(edit_Rect),
+                        x2 = Canvas.GetLeft(edit_Rect) + edit_Rect.Width,
+                        y2 = Canvas.GetTop(edit_Rect) + edit_Rect.Height,
+                        mouse_x = e.GetPosition(MainCanvas).X,
+                        mouse_y = e.GetPosition(MainCanvas).Y;
+                    if (selected_Text != null)
+                    {
+                        x1 = Canvas.GetLeft(selected_Text);
+                        y1 = Canvas.GetTop(selected_Text);
+                        x2 = Canvas.GetLeft(selected_Text) + selected_Text.Width;
+                        y2 = Canvas.GetTop(selected_Text) + selected_Text.Height;
+                    }
+                    else if (selected_Image!=null)
+                    {
+                        x1 = Canvas.GetLeft(selected_Image);
+                        y1 = Canvas.GetTop(selected_Image);
+                        x2 = Canvas.GetLeft(selected_Image) + selected_Image.Width;
+                        y2 = Canvas.GetTop(selected_Image) + selected_Image.Height;
+                    }
+                    else if(selected_Shape!=null)
+                    {
+                        x1 = Canvas.GetLeft(selected_Shape);
+                        y1 = Canvas.GetTop(selected_Shape);
+                        x2 = Canvas.GetLeft(selected_Shape) + selected_Shape.Width;
+                        y2 = Canvas.GetTop(selected_Shape) + selected_Shape.Height;
+                    }
+
+                    if (selected_Text != null)
+                    {
+                        if (left)
+                        {
+                            edit_Rect.Width = x2 - mouse_x + 17;
+                            selected_Text.Width = edit_Rect.Width - 10;
+                            Canvas.SetLeft(edit_Rect, mouse_x - 12);
+                            Canvas.SetLeft(selected_Text, mouse_x - 7);
+                            Canvas.SetRight(edit_Rect, x2 + 5);
+                            Canvas.SetRight(selected_Text, x2);
+                        }
+                        else if (right)
+                        {
+                            edit_Rect.Width = mouse_x - x1 + 17;
+                            selected_Text.Width = edit_Rect.Width - 10;
+                            Canvas.SetLeft(edit_Rect, x1 - 5);
+                            Canvas.SetLeft(selected_Text, x1);
+                            Canvas.SetRight(edit_Rect, mouse_x + 12);
+                            Canvas.SetRight(selected_Text, mouse_x + 7);
+                        }
+                        if (top)
+                        {
+                            edit_Rect.Height = y2 - mouse_y + 17;
+                            selected_Text.Height = edit_Rect.Height - 10;
+                            Canvas.SetTop(edit_Rect, mouse_y - 12);
+                            Canvas.SetTop(selected_Text, mouse_y - 7);
+                            Canvas.SetBottom(edit_Rect, y2 + 5);
+                            Canvas.SetBottom(selected_Text, y2);
+                        }
+                        else if (bottom)
+                        {
+                            edit_Rect.Height = mouse_y - y1 + 17;
+                            selected_Text.Height = edit_Rect.Height - 10;
+                            Canvas.SetTop(edit_Rect, y1 - 5);
+                            Canvas.SetTop(selected_Text, y1);
+                            Canvas.SetBottom(edit_Rect, mouse_y + 12);
+                            Canvas.SetBottom(selected_Text, mouse_y + 7);
+                        }
+                    }
+                    else if (selected_Polygon != null)
+                    {
+                        int i = 0;
+                        PointCollection p_collection = new PointCollection();
+                        Point[] points = new Point[selected_Polygon.Points.Count];
+                        selected_Polygon.Points.CopyTo(points, 0);
+                        bool found = false;
+                        foreach (Point p in selected_Polygon.Points)
+                        {
+                            if ((!found) && ((Math.Abs(p.X - mouse_x) + Math.Abs(p.Y - mouse_y)) < 4))
+                            {
+                                points[i].X = mouse_x;
+                                points[i].Y = mouse_y;
+                                found = true;
+                            }
+                            p_collection.Add(points[i]);
+                            i++;
+                        }
+                        selected_Polygon.Points = p_collection;
+                    }
+                    else if (selected_Line != null)
+                    {
+                        if ((Math.Abs(selected_Line.X1 - mouse_x) + Math.Abs(selected_Line.Y1 - mouse_y)) < 4)
+                        {
+                            selected_Line.X1 = mouse_x;
+                            selected_Line.Y1 = mouse_y;
+                        }
+                        else if ((Math.Abs(selected_Line.X2 - mouse_x) + Math.Abs(selected_Line.Y2 - mouse_y)) < 4)
+                        {
+                            selected_Line.X1 = mouse_x;
+                            selected_Line.Y1 = mouse_y;
+                        }
+                    }
+                    else if (selected_Image != null)
+                    {
+                        if (left)
+                        {
+                            edit_Rect.Width = x2 - mouse_x + 17;
+                            selected_Image.Width = edit_Rect.Width - 10;
+                            Canvas.SetLeft(edit_Rect, mouse_x - 12);
+                            Canvas.SetLeft(selected_Image, mouse_x - 7);
+                            Canvas.SetRight(edit_Rect, x2 + 5);
+                            Canvas.SetRight(selected_Image, x2);
+                        }
+                        else if (right)
+                        {
+                            edit_Rect.Width = mouse_x - x1 + 17;
+                            selected_Image.Width = edit_Rect.Width - 10;
+                            Canvas.SetLeft(edit_Rect, x1 - 5);
+                            Canvas.SetLeft(selected_Image, x1);
+                            Canvas.SetRight(edit_Rect, mouse_x + 12);
+                            Canvas.SetRight(selected_Image, mouse_x + 7);
+                        }
+                        if (top)
+                        {
+                            edit_Rect.Height = y2 - mouse_y + 17;
+                            selected_Image.Height = edit_Rect.Height - 10;
+                            Canvas.SetTop(edit_Rect, mouse_y - 12);
+                            Canvas.SetTop(selected_Image, mouse_y - 7);
+                            Canvas.SetBottom(edit_Rect, y2 + 5);
+                            Canvas.SetBottom(selected_Image, y2);
+                        }
+                        else if (bottom)
+                        {
+                            edit_Rect.Height = mouse_y - y1 + 17;
+                            selected_Image.Height = edit_Rect.Height - 10;
+                            Canvas.SetTop(edit_Rect, y1 - 5);
+                            Canvas.SetTop(selected_Image, y1);
+                            Canvas.SetBottom(edit_Rect, mouse_y + 12);
+                            Canvas.SetBottom(selected_Image, mouse_y + 7);
+                        }
+                    }
+                    else if (selected_Shape != null)
+                    {
+                        if (left)
+                        {
+                            edit_Rect.Width = x2 - mouse_x + 17;
+                            selected_Shape.Width = edit_Rect.Width - 10;
+                            Canvas.SetLeft(edit_Rect, mouse_x - 12);
+                            Canvas.SetLeft(selected_Shape, mouse_x - 7);
+                            Canvas.SetRight(edit_Rect, x2 + 5);
+                            Canvas.SetRight(selected_Shape, x2);
+                        }
+                        else if (right)
+                        {
+                            edit_Rect.Width = mouse_x - x1 + 17;
+                            selected_Shape.Width = edit_Rect.Width - 10;
+                            Canvas.SetLeft(edit_Rect, x1 - 5);
+                            Canvas.SetLeft(selected_Shape, x1);
+                            Canvas.SetRight(edit_Rect, mouse_x + 12);
+                            Canvas.SetRight(selected_Shape, mouse_x + 7);
+                        }
+                        if (top)
+                        {
+                            edit_Rect.Height = y2 - mouse_y + 17;
+                            selected_Shape.Height = edit_Rect.Height - 10;
+                            Canvas.SetTop(edit_Rect, mouse_y - 12);
+                            Canvas.SetTop(selected_Shape, mouse_y - 7);
+                            Canvas.SetBottom(edit_Rect, y2 + 5);
+                            Canvas.SetBottom(selected_Shape, y2);
+                        }
+                        else if (bottom)
+                        {
+                            edit_Rect.Height = mouse_y - y1 + 17;
+                            selected_Shape.Height = edit_Rect.Height - 10;
+                            Canvas.SetTop(edit_Rect, y1 - 5);
+                            Canvas.SetTop(selected_Shape, y1);
+                            Canvas.SetBottom(edit_Rect, mouse_y + 12);
+                            Canvas.SetBottom(selected_Shape, mouse_y + 7);
+                        }
+                    }
+                }
+                if (left || right || top || bottom) return;
+
                 Point End_Point = e.GetPosition(MainCanvas);
                 if (selected_Text != null)
                 {
@@ -1206,8 +1493,8 @@ namespace KEAP
 
                     Canvas.SetLeft(selected_Text, m_left);
                     Canvas.SetTop(selected_Text, m_top);
-                    Canvas.SetLeft(edit_Rect, m_left - 10);
-                    Canvas.SetTop(edit_Rect, m_top - 10);
+                    Canvas.SetLeft(edit_Rect, m_left - 5);
+                    Canvas.SetTop(edit_Rect, m_top - 5);
                 }
                 else if (selected_Polygon != null)
                 {
@@ -1240,8 +1527,8 @@ namespace KEAP
 
                     Canvas.SetLeft(selected_Polygon, m_left);
                     Canvas.SetTop(selected_Polygon, m_top);
-                    Canvas.SetLeft(edit_Rect, m_left - 10);
-                    Canvas.SetTop(edit_Rect, m_top - 10);
+                    Canvas.SetLeft(edit_Rect, m_left - 5);
+                    Canvas.SetTop(edit_Rect, m_top - 5);
                 }
                 else if (selected_Line != null)
                 {
@@ -1261,8 +1548,8 @@ namespace KEAP
 
                     Canvas.SetLeft(selected_Line, m_left);
                     Canvas.SetTop(selected_Line, m_top);
-                    Canvas.SetLeft(edit_Rect, m_left - 10);
-                    Canvas.SetTop(edit_Rect, m_top - 10);
+                    Canvas.SetLeft(edit_Rect, m_left - 5);
+                    Canvas.SetTop(edit_Rect, m_top - 5);
                 }
                 else if (selected_Image != null)
                 {
@@ -1282,8 +1569,8 @@ namespace KEAP
 
                     Canvas.SetLeft(selected_Image, m_left);
                     Canvas.SetTop(selected_Image, m_top);
-                    Canvas.SetLeft(edit_Rect, m_left - 10);
-                    Canvas.SetTop(edit_Rect, m_top - 10);
+                    Canvas.SetLeft(edit_Rect, m_left - 5);
+                    Canvas.SetTop(edit_Rect, m_top - 5);
                 }
                 else if (selected_Shape != null)
                 {
@@ -1303,8 +1590,8 @@ namespace KEAP
 
                     Canvas.SetLeft(selected_Shape, m_left);
                     Canvas.SetTop(selected_Shape, m_top);
-                    Canvas.SetLeft(edit_Rect, m_left - 10);
-                    Canvas.SetTop(edit_Rect, m_top - 10);
+                    Canvas.SetLeft(edit_Rect, m_left - 5);
+                    Canvas.SetTop(edit_Rect, m_top - 5);
                 }
             }
         }
@@ -1314,7 +1601,8 @@ namespace KEAP
         #region 버튼Boolean Settion
         void SetAllModeFalse()
         {
-            pen_Mode = text_Mode = line_Mode = rectangle_Mode = polygon_Mode = image_Mode = table_Mode = ellipse_Mode = false;
+            pen_Mode = text_Mode = line_Mode = rectangle_Mode = polygon_Mode = image_Mode = table_Mode = ellipse_Mode = eraseforpen_Mode = false;
+            if (selected_Polygon != null) selected_Polygon.StrokeDashArray = null;
             selected_Text = null;
             selected_Polygon = null;
             selected_Line = null;
@@ -1419,10 +1707,15 @@ namespace KEAP
             ellipse_Mode = true;
         }
 
+        private void ErasePen_Click(object sender, RoutedEventArgs e)
+        {
+            SetAllModeFalse();
+            eraseforpen_Mode = true;
+        }
 
         void SetAllMoveModeFalse()
         {
-            pen_Move_Mode = text_Move_Mode = line_Move_Mode = rectangle_Move_Mode = polygon_Move_Mode = image_Move_Mode = table_Move_Mode = ellipse_Move_Mode = false;
+            pen_Move_Mode = text_Move_Mode = line_Move_Mode = rectangle_Move_Mode = polygon_Move_Mode = image_Move_Mode = table_Move_Mode = ellipse_Move_Mode = eraseforpen_Mode = false;
         }
 
 
@@ -1430,7 +1723,7 @@ namespace KEAP
 
         private bool IsSelectMode()
         {
-            return !(pen_Mode || text_Mode || line_Mode || rectangle_Mode || polygon_Mode || image_Mode || table_Mode || ellipse_Mode);
+            return !(pen_Mode || text_Mode || line_Mode || rectangle_Mode || polygon_Mode || image_Mode || table_Mode || ellipse_Mode || eraseforpen_Mode);
         }
 
         private double GetDistance(double x1, double y1, double x2, double y2)
@@ -3346,6 +3639,7 @@ namespace KEAP
                     MainCanvas.Children.Add(polygon);
                     Canvas.SetLeft(edit_Rect, (MainCanvas.Width - edit_Rect.Width) / 2);
                     Canvas.SetTop(edit_Rect, (MainCanvas.Height - edit_Rect.Height) / 2);
+                    
                     MainCanvas.Children.Add(edit_Rect);
                     edit_Mode = true;
                 }
@@ -3371,6 +3665,7 @@ namespace KEAP
                     MainCanvas.Children.Add(line);
                     Canvas.SetLeft(edit_Rect, (MainCanvas.Width - edit_Rect.Width) / 2);
                     Canvas.SetTop(edit_Rect, (MainCanvas.Height - edit_Rect.Height) / 2);
+                    
                     MainCanvas.Children.Add(edit_Rect);
                     edit_Mode = true;
                 }
@@ -3395,6 +3690,7 @@ namespace KEAP
                     MainCanvas.Children.Add(image);
                     Canvas.SetLeft(edit_Rect, (MainCanvas.Width - edit_Rect.Width) / 2);
                     Canvas.SetTop(edit_Rect, (MainCanvas.Height - edit_Rect.Height) / 2);
+                    
                     MainCanvas.Children.Add(edit_Rect);
                     edit_Mode = true;
                 }
@@ -3423,6 +3719,7 @@ namespace KEAP
                         MainCanvas.Children.Add(rectangle);
                         Canvas.SetLeft(edit_Rect, (MainCanvas.Width - edit_Rect.Width) / 2);
                         Canvas.SetTop(edit_Rect, (MainCanvas.Height - edit_Rect.Height) / 2);
+                        
                         MainCanvas.Children.Add(edit_Rect);
                         edit_Mode = true;
                     }
@@ -3449,6 +3746,7 @@ namespace KEAP
                         MainCanvas.Children.Add(ellipse);
                         Canvas.SetLeft(edit_Rect, (MainCanvas.Width - edit_Rect.Width) / 2);
                         Canvas.SetTop(edit_Rect, (MainCanvas.Height - edit_Rect.Height) / 2);
+                        
                         MainCanvas.Children.Add(edit_Rect);
                         edit_Mode = true;
                     }
@@ -3474,5 +3772,38 @@ namespace KEAP
             else if (selected_Shape != null)
                 MainCanvas.Children.Remove(selected_Shape);
         }
+
+        private void SlideBackgroundSetButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetAllModeFalse();
+
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = ".jpeg"; // Default file extension
+            dlg.Filter = "JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif|BMP Files (*.bmp)|*.bmp"; // Filter files by extension
+
+            // Show open file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Process open file dialog box results
+            if (result == true)
+            {
+                image_Path = dlg.FileName;
+                image_Mode = true;
+
+                new_Bitmap_Image = new BitmapImage();
+
+                new_Bitmap_Image.BeginInit();
+                new_Bitmap_Image.UriSource = new Uri(image_Path, UriKind.Absolute);
+                new_Bitmap_Image.EndInit();
+            }
+            ImageBrush imagebrush = new ImageBrush(new_Bitmap_Image);
+            imagebrush.Stretch = Stretch.Fill;
+            (canvas_List[Slide_ListView.SelectedIndex]).Background = imagebrush;
+            MainCanvas.Background = imagebrush;
+            Image image_renew = RenderCanvas(MainCanvas);
+            ((SlideInfo)(Slide_ListView.Items[Slide_ListView.SelectedIndex])).Source = image_renew.Source;
+        }
+
+        
     }
 }
