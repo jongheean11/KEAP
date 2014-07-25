@@ -362,7 +362,7 @@ namespace KEAP
                     edit_Mode = false; //editing..
                     edit_Mode_Ready = false;
                     MainCanvas.Children.Remove(edit_Rect);
-                    
+
                     selected_Polygon.StrokeDashArray = null;
                 }
             }
@@ -407,7 +407,6 @@ namespace KEAP
             ((SlideInfo)(Slide_ListView.Items[Slide_ListView.SelectedIndex])).Source = image_renew.Source;
             image_Mode = rectangle_Mode = line_Mode = table_Mode = false;
         }
-
         void MainCanvas_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             Point End_Point = e.GetPosition(MainCanvas);
@@ -3320,7 +3319,8 @@ namespace KEAP
             {
                 Audience = new FullWindowForAudience(this, Presentor);
                 Audience.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
-                System.Drawing.Rectangle working_Area = System.Windows.Forms.Screen.AllScreens[1].WorkingArea;
+                System.Drawing.Rectangle working_Area = System.Windows.Forms.Screen.AllScreens[0
+                    ].WorkingArea;
                 Audience.Left = working_Area.Left;
                 Audience.Top = working_Area.Top;
                 Audience.Width = working_Area.Width;

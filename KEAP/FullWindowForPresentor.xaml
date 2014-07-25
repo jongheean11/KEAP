@@ -3,12 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:kv="clr-namespace:Microsoft.Samples.Kinect.WpfViewers;assembly=Microsoft.Samples.Kinect.WpfViewers"
         xmlns:a="clr-namespace:KEAP"
-        Title="FullWindowForPresentor" Loaded="Presentor_Loaded" Height="300" Width="300">
+        Title="FullWindowForPresentor" Loaded="Presentor_Loaded" Height="300" Width="300" Background="White">
     <Grid>
         <a:KEAPCanvas x:Name="PresenterCanvas" Background="WhiteSmoke">
             <kv:KinectSkeletonViewer HorizontalAlignment="Center" VerticalAlignment="Center" KinectSensorManager="{Binding KinectSensorManager}" Width="960" Height="720" ShowBones="True" ShowJoints="True" ShowCenter="True" ImageType="Depth" />
         </a:KEAPCanvas>
-        
+
 
         <TextBlock Text="{Binding Gesture}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" FontWeight="Bold" Margin="-2,0,0,100"/>
         <TextBlock Text="{Binding Values}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" FontWeight="Bold" Margin="-2,100,0,0"/>
