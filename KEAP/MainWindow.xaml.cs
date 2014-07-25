@@ -778,14 +778,13 @@ namespace KEAP
                 {
                     left = right = top = bottom = false;
                     
-                    
-                    double resize_x1 = Canvas.GetLeft(edit_Rect),
-                        resize_y1 = Canvas.GetTop(edit_Rect),
-                        resize_x2 = Canvas.GetLeft(edit_Rect) + edit_Rect.Width,
-                        resize_y2 = Canvas.GetTop(edit_Rect) + edit_Rect.Height,
+                    double resize_x1 = Canvas.GetLeft(edit_Rect) + 5,
+                        resize_y1 = Canvas.GetTop(edit_Rect) + 5,
+                        resize_x2 = Canvas.GetLeft(edit_Rect) + edit_Rect.Width - 5,
+                        resize_y2 = Canvas.GetTop(edit_Rect) + edit_Rect.Height - 5,
                         resize_mouse_x = e.GetPosition(MainCanvas).X,
                         resize_mouse_y = e.GetPosition(MainCanvas).Y;
-                    if (selected_Text != null)
+                    /*if (selected_Text != null)
                     {
                         resize_x1 = Canvas.GetLeft(selected_Text);
                         resize_y1 = Canvas.GetTop(selected_Text);
@@ -805,7 +804,7 @@ namespace KEAP
                         resize_y1 = Canvas.GetTop(selected_Shape);
                         resize_x2 = Canvas.GetLeft(selected_Shape) + selected_Shape.Width;
                         resize_y2 = Canvas.GetTop(selected_Shape) + selected_Shape.Height;
-                    }
+                    }*/
 
                     if (Math.Abs(resize_mouse_x - resize_x1) < 17)
                     {
@@ -842,8 +841,8 @@ namespace KEAP
                         {
                             drag_Mode = true;
                             selected_Polygon.CaptureMouse();
-                            Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as Polygon));
-                            Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as Polygon));
+                            Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(edit_Rect) + 5);
+                            Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(edit_Rect) + 5);
                         }
                         else if (selected_Line != null && sender == selected_Line)
                         {
@@ -1182,7 +1181,7 @@ namespace KEAP
                     drag_Mode = false;
                     select_Mode = !select_Mode;
                     selected_Polygon.ReleaseMouseCapture();
-                    selected_Polygon = sender as Polygon;
+                    if(sender!=null) selected_Polygon = sender as Polygon;
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                     
                     double min_x = 2000, min_y = 2000, max_x = 0, max_y = 0;
@@ -1292,10 +1291,10 @@ namespace KEAP
             {
                 if (edit_Rect != null)
                 {
-                    double x1 = Canvas.GetLeft(edit_Rect),
-                        y1 = Canvas.GetTop(edit_Rect),
-                        x2 = Canvas.GetLeft(edit_Rect) + edit_Rect.Width,
-                        y2 = Canvas.GetTop(edit_Rect) + edit_Rect.Height,
+                    double x1 = Canvas.GetLeft(edit_Rect) + 5,
+                        y1 = Canvas.GetTop(edit_Rect) + 5,
+                        x2 = Canvas.GetLeft(edit_Rect) + edit_Rect.Width - 5,
+                        y2 = Canvas.GetTop(edit_Rect) + edit_Rect.Height - 5,
                         mouse_x = e.GetPosition(MainCanvas).X,
                         mouse_y = e.GetPosition(MainCanvas).Y;
                     if (selected_Text != null)
@@ -1524,11 +1523,25 @@ namespace KEAP
                     else
                         m_top = MainCanvas.ActualHeight - selected_Polygon.Height;
 
-                    Canvas.SetLeft(selected_Polygon, m_left);
-                    Canvas.SetTop(selected_Polygon, m_top);
+                    double previous_x = Canvas.GetLeft(edit_Rect),
+                        previous_y = Canvas.GetTop(edit_Rect);
                     Canvas.SetLeft(edit_Rect, m_left - 5);
                     Canvas.SetTop(edit_Rect, m_top - 5);
+                    double diff_x = Canvas.GetLeft(edit_Rect) - previous_x,
+                        diff_y = Canvas.GetTop(edit_Rect) - previous_y;
+
+                    Point[] copy_points = new Point[selected_Polygon.Points.Count];
+                    PointCollection copy_collection = new PointCollection();
+                    selected_Polygon.Points.CopyTo(copy_points, 0);
+                    for (int i = 0; i < selected_Polygon.Points.Count; i++ )
+                    {
+                        copy_points[i].X = copy_points[i].X + diff_x;
+                        copy_points[i].Y = copy_points[i].Y + diff_y;
+                        copy_collection.Add(copy_points[i]);
+                    }
+                    selected_Polygon.Points = copy_collection;
                 }
+
                 else if (selected_Line != null)
                 {
                     if (End_Point.X < Start_Point_Shape.X)
