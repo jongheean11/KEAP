@@ -26,12 +26,12 @@ namespace Fizbin.Kinect.Gestures.Segments
             GesturePartResult return_value;
             Dictionary<GesturePartResult, float> returns;
             // //Left hand in front of Left shoulder
-            if (skeleton.Joints[JointType.HandLeft].Position.Z < skeleton.Joints[JointType.ShoulderLeft].Position.Z - 0.2&&rightHandGrip==true)
+            if (skeleton.Joints[JointType.HandLeft].Position.Z < skeleton.Joints[JointType.ShoulderLeft].Position.Z - 0.2&&rightHandGrip==true&&leftHandGrip==false)
             {
                 // Left hand above head
 
 
-                if (     skeleton.Joints[JointType.HandRight].Position.Y < skeleton.Joints[JointType.HipRight].Position.Y&&//오른손은 가만히                      
+                if (     //skeleton.Joints[JointType.HandRight].Position.Y < skeleton.Joints[JointType.HipRight].Position.Y&&//오른손은 가만히                      
                     Math.Atan2(Convert.ToDouble(skeleton.Joints[JointType.ShoulderLeft].Position.X - skeleton.Joints[JointType.HandLeft].Position.X),
                         Convert.ToDouble(skeleton.Joints[JointType.ShoulderLeft].Position.Y - skeleton.Joints[JointType.HandLeft].Position.Y)) < 0.3 &&
                     Math.Atan2(Convert.ToDouble(skeleton.Joints[JointType.HandLeft].Position.X - skeleton.Joints[JointType.ShoulderLeft].Position.X),

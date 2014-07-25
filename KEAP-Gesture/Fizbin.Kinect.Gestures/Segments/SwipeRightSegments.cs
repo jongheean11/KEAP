@@ -72,7 +72,7 @@ namespace Fizbin.Kinect.Gestures.Segments
             Dictionary<GesturePartResult, float> returns;
             // //Right hand in front of Right Shoulder
             if (skeleton.Joints[JointType.HandRight].Position.Z < skeleton.Joints[JointType.ElbowRight].Position.Z &&
-                skeleton.Joints[JointType.HandLeft].Position.Y < skeleton.Joints[JointType.HipLeft].Position.Y)
+                skeleton.Joints[JointType.HandLeft].Position.Y < skeleton.Joints[JointType.HipLeft].Position.Y && leftHandGrip == true)
             {
                 // Debug.WriteLine("GesturePart 1 - left hand in front of left Shoulder - PASS");
                 // //Right hand below shoulder height but above hip height
@@ -82,9 +82,9 @@ namespace Fizbin.Kinect.Gestures.Segments
                     // Debug.WriteLine("GesturePart 1 - left hand below shoulder height but above hip height - PASS");
                     // //left hand left of left Shoulder
                     if (Math.Atan2(Convert.ToDouble(skeleton.Joints[JointType.HipRight].Position.X - skeleton.Joints[JointType.HandRight].Position.X),
-            Convert.ToDouble(skeleton.Joints[JointType.HipRight].Position.Z - skeleton.Joints[JointType.HandRight].Position.Z)) < 0.25&&
+            Convert.ToDouble(skeleton.Joints[JointType.HipRight].Position.Z - skeleton.Joints[JointType.HandRight].Position.Z)) < 0.2&&
                         Math.Atan2(Convert.ToDouble(skeleton.Joints[JointType.HipRight].Position.X - skeleton.Joints[JointType.HandRight].Position.X),
-            Convert.ToDouble(skeleton.Joints[JointType.HipRight].Position.Z - skeleton.Joints[JointType.HandRight].Position.Z)) > -0.25)
+            Convert.ToDouble(skeleton.Joints[JointType.HipRight].Position.Z - skeleton.Joints[JointType.HandRight].Position.Z)) > -0.2)
                     {
                         // Debug.WriteLine("GesturePart 1 - left hand left of left Shoulder - PASS");
                       return_value =  GesturePartResult.Succeed;
@@ -123,7 +123,7 @@ namespace Fizbin.Kinect.Gestures.Segments
             Dictionary<GesturePartResult, float> returns;
             // //Right hand in front of Right Shoulder
             if (skeleton.Joints[JointType.HandRight].Position.Z < skeleton.Joints[JointType.ElbowRight].Position.Z &&
-                skeleton.Joints[JointType.HandLeft].Position.Y < skeleton.Joints[JointType.HipLeft].Position.Y)
+                skeleton.Joints[JointType.HandLeft].Position.Y < skeleton.Joints[JointType.HipLeft].Position.Y && leftHandGrip == true)
             {
                 // //Right hand below shoulder height but above hip height
                 if (skeleton.Joints[JointType.HandRight].Position.Y < skeleton.Joints[JointType.ShoulderRight].Position.Y &&
@@ -132,7 +132,7 @@ namespace Fizbin.Kinect.Gestures.Segments
                     
                      //오른손각도가 +45도
                     if (Math.Atan2(Convert.ToDouble(skeleton.Joints[JointType.HandRight].Position.X - skeleton.Joints[JointType.HipRight].Position.X),
-                        Convert.ToDouble(skeleton.Joints[JointType.HipRight].Position.Z - skeleton.Joints[JointType.HandRight].Position.Z)) > 0.785398)
+                        Convert.ToDouble(skeleton.Joints[JointType.HipRight].Position.Z - skeleton.Joints[JointType.HandRight].Position.Z)) > 0.5)
                     {
                         return_value =  GesturePartResult.Succeed;
                     }

@@ -63,8 +63,8 @@ namespace Fizbin.Kinect.Gestures.Segments
             Dictionary<GesturePartResult, float> returns;
 
             // right hand in front of right shoulder
-            if (skeleton.Joints[JointType.HandRight].Position.Z < skeleton.Joints[JointType.ElbowRight].Position.Z && 
-                skeleton.Joints[JointType.HandLeft].Position.Y < skeleton.Joints[JointType.HipCenter].Position.Y)
+            if (skeleton.Joints[JointType.HandRight].Position.Z < skeleton.Joints[JointType.ElbowRight].Position.Z &&
+                skeleton.Joints[JointType.HandLeft].Position.Y < skeleton.Joints[JointType.HipCenter].Position.Y && leftHandGrip == true)
             {
                 // right hand below shoulder height but above hip height
                 if (skeleton.Joints[JointType.HandRight].Position.Y < skeleton.Joints[JointType.ShoulderRight].Position.Y && 
@@ -108,7 +108,7 @@ namespace Fizbin.Kinect.Gestures.Segments
 
             // //Right hand in front of right Shoulder
             if (skeleton.Joints[JointType.HandRight].Position.Z < skeleton.Joints[JointType.ElbowRight].Position.Z &&
-                skeleton.Joints[JointType.HandLeft].Position.Y < skeleton.Joints[JointType.HipCenter].Position.Y)
+                skeleton.Joints[JointType.HandLeft].Position.Y < skeleton.Joints[JointType.HipCenter].Position.Y && leftHandGrip == true)
             {
                 // //right hand below shoulder height but above hip height
                 if (skeleton.Joints[JointType.HandRight].Position.Y < skeleton.Joints[JointType.ShoulderCenter].Position.Y &&
