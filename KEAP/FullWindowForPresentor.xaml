@@ -5,8 +5,8 @@
         xmlns:a="clr-namespace:KEAP"
         Title="FullWindowForPresentor" Loaded="Presentor_Loaded" Height="300" Width="300" Background="White">
     <Grid>
+        
         <a:KEAPCanvas x:Name="PresenterCanvas" Background="WhiteSmoke">
-            <kv:KinectSkeletonViewer HorizontalAlignment="Center" VerticalAlignment="Center" KinectSensorManager="{Binding KinectSensorManager}" Width="960" Height="720" ShowBones="True" ShowJoints="True" ShowCenter="True" ImageType="Depth" />
         </a:KEAPCanvas>
 
 
@@ -16,5 +16,6 @@
         <Button x:Name="Btn" Content="Button" HorizontalAlignment="Left" Margin="193,242,0,0" VerticalAlignment="Top" Width="75" Click="Btn_Click"/>
         <TextBlock x:Name="send_Data" HorizontalAlignment="Left" Margin="217,31,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
         <TextBox x:Name="message" HorizontalAlignment="Left" Height="18" Margin="93,242,0,0" TextWrapping="Wrap" Text="Hello" VerticalAlignment="Top" Width="75"/>
+        <kv:KinectSkeletonViewer HorizontalAlignment="Center" VerticalAlignment="Center" KinectSensorManager="{Binding KinectSensorManager}" Width="960" Height="720" ShowBones="True" ShowJoints="True" ShowCenter="True" ImageType="Depth" />
     </Grid>
 </Window>
