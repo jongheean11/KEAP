@@ -4,7 +4,10 @@
         xmlns:a="clr-namespace:KEAP"
         Title="FullWindowForAudience" Loaded="Audience_Loaded" Height="300" Width="300" Background="{x:Null}">
     <Grid x:Name="AudienceGrid" Background="White">
-       <!-- <a:KEAPCanvas x:Name="AudienceCanvas" Background="White">
+        <TextBlock x:Name="sub_Monitor" HorizontalAlignment="Left" FontSize="40" Margin="117,127,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
+        <TextBlock x:Name="grip_left" HorizontalAlignment="Left" FontSize="40" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Canvas.Left="30" Canvas.Top="201"/>
+        <TextBlock x:Name="grip_right" HorizontalAlignment="Left" FontSize="40" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Canvas.Left="282" Canvas.Top="201"/>
+        <!-- <a:KEAPCanvas x:Name="AudienceCanvas" Background="White">
             <TextBlock x:Name="sub_Monitor" HorizontalAlignment="Left" FontSize="40" Margin="117,127,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
             <TextBlock x:Name="grip_left" HorizontalAlignment="Left" FontSize="40" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Canvas.Left="30" Canvas.Top="201"/>
             <TextBlock x:Name="grip_right" HorizontalAlignment="Left" FontSize="40" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Canvas.Left="282" Canvas.Top="201"/>

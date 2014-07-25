@@ -204,6 +204,7 @@ namespace KEAP
                                 {
                                     rightHandRelease = false;
                                     rightHandGrip = true;
+                                    aud_View.get_Grip_From_Kinect();
                                     aud_View.getRightGripFromKinect("Gripped");
 
                                 }
@@ -211,6 +212,7 @@ namespace KEAP
                                 {
                                     rightHandGrip = false;
                                     rightHandRelease = true;
+                                    aud_View.get_Release_From_Kinect();
                                     aud_View.getRightGripFromKinect("Release");
                                 }
 

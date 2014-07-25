@@ -44,8 +44,8 @@ namespace KEAP
             foreach (KEAPCanvas canvas in main.canvas_List)
             {
                 List<Dictionary<int, string>> anilist = null;
-                if(animations[i]!=null)
-                    anilist = animations[i];
+                //if(animations[i]!=null)
+                //    anilist = animations[i];
                 
                 canvas_arr.Add(new KEAPCanvas());
                 canvas_arr[i].Width = canvas.Width;
@@ -370,47 +370,54 @@ namespace KEAP
         {
             // Same with Right Arrow Button
             // move to next slide or next animation
-            throw new NotImplementedException();
+            sub_Monitor.Text = "Enter_KeyEventHandler";
+            //throw new NotImplementedException();
         }
         
         private void Minus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // ZoomIn action
             // Keyboard Arrow's action change
-            throw new NotImplementedException();
+            sub_Monitor.Text = "Minus_KeyEventHandler";
+            //throw new NotImplementedException();
         }
 
         private void Plus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // ZoomOut action
             // Keyboard Arrow's action change
-            throw new NotImplementedException();
+            sub_Monitor.Text = "Plus_KeyEventHandler";
+            //throw new NotImplementedException();
         }
 
         private void Down_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // if(ZoomIn) Move Down ;
-            throw new NotImplementedException();
+            sub_Monitor.Text = "Down_Arrow_KeyEventHandler";
+            //throw new NotImplementedException();
         }
 
         private void Up_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // if(ZoomIn) Move Up ; 
-            throw new NotImplementedException();
+            sub_Monitor.Text = "Up_Arrow_KeyEventHandler";
+            //throw new NotImplementedException();
         }
 
         private void Left_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // if(ZoomIn) Move Left;
             // else move to before slide or animation;
-            throw new NotImplementedException();
+            sub_Monitor.Text = "Left_Arrow_KeyEventHandler";
+            //throw new NotImplementedException();
         }
 
         private void Right_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // if(ZoomIn) Move Right;
             // else move to next slide or animation
-            throw new NotImplementedException();
+            sub_Monitor.Text = "Right_Arrow_KeyEventHandler";
+            //throw new NotImplementedException();
         }
 
         private void Close_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
@@ -429,89 +436,100 @@ namespace KEAP
 
         public void get_SwipeRight_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_SwipeRight_From_Kinect";
         }
 
         public void get_SwipeLeft_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_SwipeLeft_From_Kinect";
         }
 
         public void get_SwipeUp_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_SwipeUp_From_Kinect";
         }
         //
         public void get_Start_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_Start_From_Kinect";
         }
 
         public void get_ZoomIn_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_ZoomIn_From_Kinect";
         }
 
         public void get_ZoomOut_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_ZoomOut_From_Kinect";
         }
 
         public void get_Pause_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_Pause_From_Kinect";
         }
 
         public void get_RightDown_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_RightDown_From_Kinect";
         }
 
         public void get_Down_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_Down_From_Kinect";
         }
 
         public void get_RightUp_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_RightUp_From_Kinect";
         }
 
         public void get_LeftDown_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_LeftDown_From_Kinect";
         }
 
         public void get_LeftUp_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_LeftUp_From_Kinect";
         }
 
         public void get_Left_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_Left_From_Kinect";
         }
 
         public void get_Right_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_Right_From_Kinect";
         }
 
         public void get_Up_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_Up_From_Kinect";
         }
 
         public void get_Push_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_Push_From_Kinect";
         }
 
         public void get_StrechedHands_From_Kinect()
         {
-
+            sub_Monitor.Text = "get_StrechedHands_From_Kinect";
         }
 
+
+        //debugging
+        public void get_Grip_From_Kinect()
+        {
+            //sub_Monitor.Text = "get_Grip_From_Kinect";
+        }
+
+        public void get_Release_From_Kinect()
+        {
+            //sub_Monitor.Text = "get_Release_From_Kinect";
+        }
 
         public void getDataFromKinect(string data)
         {
@@ -521,13 +539,13 @@ namespace KEAP
 
         public void getRightGripFromKinect(string data)
         {
-       //     grip_right.Text = data;
+            grip_right.Text = data;
             //           sub_Monitor.Text = zzz;
         }
 
         public void getLeftGripFromKinect(string data)
         {
-        //    grip_left.Text = data;
+            grip_left.Text = data;
             //           sub_Monitor.Text = zzz;
         }
 
