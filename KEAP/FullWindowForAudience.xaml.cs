@@ -43,7 +43,9 @@ namespace KEAP
             animations = main.animation_Dictionary;
             foreach (KEAPCanvas canvas in main.canvas_List)
             {
-                List<Dictionary<int, string>> anilist = animations[i];
+                List<Dictionary<int, string>> anilist = null;
+                if(animations[i]!=null)
+                    anilist = animations[i];
                 
                 canvas_arr.Add(new KEAPCanvas());
                 canvas_arr[i].Width = canvas.Width;
@@ -147,13 +149,16 @@ namespace KEAP
                         canvas_arr[i].Children.Add(ellipse);
                     }
                 }
-                foreach (Dictionary<int, string> dic in anilist)
+                if (anilist != null)
                 {
-                    string ani = dic[dic.Keys.First()];
-                    if (ani.Contains("Bounds") || ani.Contains("Move") || ani.Contains("FadeIn")
-                        || ani.Contains("Interlaced") || ani.Contains("Block") || ani.Contains("Circle") || ani.Contains("Radial") || ani.Contains("WaterFall"))
+                    foreach (Dictionary<int, string> dic in anilist)
                     {
-                        canvas_arr[i].Children[dic.Keys.First()].Visibility = Visibility.Collapsed;
+                        string ani = dic[dic.Keys.First()];
+                        if (ani.Contains("Bounds") || ani.Contains("Move") || ani.Contains("FadeIn")
+                            || ani.Contains("Interlaced") || ani.Contains("Block") || ani.Contains("Circle") || ani.Contains("Radial") || ani.Contains("WaterFall"))
+                        {
+                            canvas_arr[i].Children[dic.Keys.First()].Visibility = Visibility.Collapsed;
+                        }
                     }
                 }
                 i++;
