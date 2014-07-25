@@ -366,15 +366,15 @@ namespace KEAP
 
         }
 
-        private void Enter_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        public void Enter_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // Same with Right Arrow Button
             // move to next slide or next animation
             sub_Monitor.Text = "Enter_KeyEventHandler";
             //throw new NotImplementedException();
         }
-        
-        private void Minus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+
+        public void Minus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // ZoomIn action
             // Keyboard Arrow's action change
@@ -382,7 +382,7 @@ namespace KEAP
             //throw new NotImplementedException();
         }
 
-        private void Plus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        public void Plus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // ZoomOut action
             // Keyboard Arrow's action change
@@ -390,21 +390,21 @@ namespace KEAP
             //throw new NotImplementedException();
         }
 
-        private void Down_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        public void Down_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // if(ZoomIn) Move Down ;
             sub_Monitor.Text = "Down_Arrow_KeyEventHandler";
             //throw new NotImplementedException();
         }
 
-        private void Up_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        public void Up_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // if(ZoomIn) Move Up ; 
             sub_Monitor.Text = "Up_Arrow_KeyEventHandler";
             //throw new NotImplementedException();
         }
 
-        private void Left_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        public void Left_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // if(ZoomIn) Move Left;
             // else move to before slide or animation;
@@ -412,7 +412,7 @@ namespace KEAP
             //throw new NotImplementedException();
         }
 
-        private void Right_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        public void Right_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // if(ZoomIn) Move Right;
             // else move to next slide or animation
