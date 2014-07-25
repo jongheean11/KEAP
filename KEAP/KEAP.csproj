@@ -104,6 +104,9 @@
       <DependentUpon>FullWindowForPresentor.xaml</DependentUpon>
     </Compile>
     <Compile Include="InteractionClient.cs" />
+    <Compile Include="KinectAlert.xaml.cs">
+      <DependentUpon>KinectAlert.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PresentationListItem.cs" />
     <Compile Include="TemplateListItem.cs" />
     <Compile Include="WindowManagerHelper.cs" />
@@ -117,6 +120,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FullWindowForPresentor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="KinectAlert.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -68,8 +68,6 @@ namespace KEAP
             this.Closing += new System.ComponentModel.CancelEventHandler(Window_Closing);
             this.Loaded += new RoutedEventHandler(Window_Loaded);
 
-            InitializeComponent();
-
             DataContext = this;
             InitializeComponent();
 
@@ -100,8 +98,6 @@ namespace KEAP
             //@grip by minsu
             this.Closing += new System.ComponentModel.CancelEventHandler(Window_Closing);
             this.Loaded += new RoutedEventHandler(Window_Loaded);
-
-            InitializeComponent();
 
             DataContext = this;
             InitializeComponent();
@@ -892,6 +888,7 @@ namespace KEAP
             KinectSensor.KinectSensors.StatusChanged += new EventHandler<StatusChangedEventArgs>(KinectSensors_StatusChanged);
 
             _sensor = KinectSensor.KinectSensors.FirstOrDefault();  /////
+
             InitSensor(_sensor);  /////
 
             // maximized
@@ -1001,7 +998,7 @@ namespace KEAP
 
         private void Btn_Click(object sender, RoutedEventArgs e)
         {
-            aud_View.getDataFromKinect(message.Text);
+            //aud_View.getDataFromKinect(message.Text);
         }
     }
 }

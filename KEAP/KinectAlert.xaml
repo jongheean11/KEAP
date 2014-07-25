@@ -1,0 +1,17 @@
+﻿<Window x:Class="KEAP.KinectAlert"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="KinectAlert" Height="150" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="22" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="키넥트를 연결해주세요!" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <Button x:Name="OK" Content="OK" HorizontalAlignment="Center" VerticalAlignment="Top" Width="105.208" Click="OK_Click"/>
+        </Grid>
+    </Grid>
+</Window>

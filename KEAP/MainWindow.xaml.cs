@@ -20,6 +20,7 @@ using System.Windows.Media.Animation;
 using System.IO.Compression;
 using Microsoft.Win32;
 using System.Windows.Media.Effects;
+using Microsoft.Kinect;
 
 namespace KEAP
 {
@@ -3310,22 +3311,32 @@ namespace KEAP
                 Audience.WindowStyle = WindowStyle.None;
                 Audience.Topmost = true;
                 Audience.Show();
-                
-                Presentor = new FullWindowForPresentor(this, Audience);
-//                FullWindowForPresentor Presentor = new FullWindowForPresentor();
 
-                Presentor.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
-                System.Drawing.Rectangle working_Area2 = System.Windows.Forms.Screen.AllScreens[0].WorkingArea;
-                Presentor.Left = working_Area2.Left;
-                Presentor.Top = working_Area2.Top;
-                //SIZE
-                //                Presentor.Width = working_Area2.Width;
-                //                Presentor.Height = working_Area2.Height;
-                //Presentor.WindowState = WindowState.Maximized;
-                Presentor.WindowStyle = WindowStyle.None;
-                Presentor.Topmost = true;
-                Presentor.Show();
+                KinectSensor _sensor = KinectSensor.KinectSensors.FirstOrDefault();  /////
 
+                if (_sensor == null)
+                {
+                    KinectAlert alert = new KinectAlert();
+                    alert.ShowDialog();
+                    return;
+                }
+                else { 
+
+                    Presentor = new FullWindowForPresentor(this, Audience);
+    //                FullWindowForPresentor Presentor = new FullWindowForPresentor();
+
+                    Presentor.WindowStartupLocation = System.Windows.WindowStartupLocation.Manual;
+                    System.Drawing.Rectangle working_Area2 = System.Windows.Forms.Screen.AllScreens[0].WorkingArea;
+                    Presentor.Left = working_Area2.Left;
+                    Presentor.Top = working_Area2.Top;
+                    //SIZE
+                    //                Presentor.Width = working_Area2.Width;
+                    //                Presentor.Height = working_Area2.Height;
+                    //Presentor.WindowState = WindowState.Maximized;
+                    Presentor.WindowStyle = WindowStyle.None;
+                    Presentor.Topmost = true;
+                    Presentor.Show();
+                }
 
              }
             else if (System.Windows.Forms.Screen.AllScreens.Length == 1) // no dual monitor

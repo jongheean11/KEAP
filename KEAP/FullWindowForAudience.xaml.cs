@@ -221,6 +221,7 @@ namespace KEAP
         void AudienceCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             canvas_index++;
+            if (!(canvas_arr.Count > canvas_index)) return;
             AudienceCanvas.PreviewMouseLeftButtonDown -= AudienceCanvas_PreviewMouseLeftButtonDown;
             AudienceCanvas.PreviewMouseRightButtonDown -= AudienceCanvas_PreviewMouseRightButtonDown;
             AudienceGrid.Children.Remove(AudienceCanvas);
