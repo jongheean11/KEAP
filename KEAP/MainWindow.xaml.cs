@@ -1559,6 +1559,7 @@ namespace KEAP
             public double Image_Height { get; set; }
             public double Slide_Width { get; set; }
             public double Slide_Height { get; set; }
+            public double Rect_Height { get; set; }
         }
 
         private Image RenderCanvas(KEAPCanvas param_Canvas)
@@ -1586,7 +1587,8 @@ namespace KEAP
                     Image_Width = (Main_Border.ActualWidth * 0.75 / 3.75) - 35,
                     Image_Height = (Main_Border.ActualHeight * 0.75 / 3),
                     Slide_Width = (Main_Border.ActualWidth * 0.75 / 3.75),
-                    Slide_Height = ((Main_Border.ActualHeight * 0.75 / 3) + (35 * (3 / 3.75)))
+                    Slide_Height = ((Main_Border.ActualHeight * 0.75 / 3)),
+                    Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
                 });
             }
             else
@@ -1598,7 +1600,8 @@ namespace KEAP
                     Image_Width = (WindowSettings.resolution_Width * 0.75 / 3.75) - 35,
                     Image_Height = (WindowSettings.resolution_Height * 0.75 / 3),
                     Slide_Width = (WindowSettings.resolution_Width * 0.75 / 3.75),
-                    Slide_Height = ((WindowSettings.resolution_Height * 0.75 / 3) + (35 * (3 / 3.75)))
+                    Slide_Height = ((WindowSettings.resolution_Height * 0.75 / 3)),
+                    Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
                 });
             }
 
@@ -1618,7 +1621,8 @@ namespace KEAP
                     Image_Width = (WindowSettings.resolution_Width * 0.75 / 3.75) - 35,
                     Image_Height = (Main_Border.ActualHeight * 0.75 / 3),
                     Slide_Width = (Main_Border.ActualWidth * 0.75 / 3.75),
-                    Slide_Height = ((WindowSettings.resolution_Height * 0.75 / 3) + (35 * (3 / 3.75)))
+                    Slide_Height = ((WindowSettings.resolution_Height * 0.75 / 3)),
+                    Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
                 });
             }
 
@@ -1631,12 +1635,14 @@ namespace KEAP
                     Image_Width = (Main_Border.ActualWidth * 0.75 / 3.75) - 35,
                     Image_Height = (Main_Border.ActualHeight * 0.75 / 3),
                     Slide_Width = (Main_Border.ActualWidth * 0.75 / 3.75),
-                    Slide_Height = ((Main_Border.ActualHeight * 0.75 / 3) + (35 * (3 / 3.75)))
+                    Slide_Height = ((Main_Border.ActualHeight * 0.75 / 3)),
+                    Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
                 });
             }
             Slide_ListView.SelectedIndex = param_Number;
             Slides_List.RemoveAt(param_Number + 1);
             Slide_ListView.SelectedIndex = param_Number;
+            
             MainCanvas.Measure(new Size(MainCanvas.Width, MainCanvas.Height));
             MainCanvas.Arrange(new Rect(0, 0, MainCanvas.Width, MainCanvas.Height));
         }
