@@ -27,7 +27,8 @@ namespace KEAP
         KEAPCanvas AudienceCanvas;
         List<KEAPCanvas> canvas_arr;
         Dictionary<int, List<Dictionary<int, string>>> animations = new Dictionary<int, List<Dictionary<int, string>>>();
-        int canvas_index = 0, animation_index = -1;
+        int canvas_index = 0, animation_index = 0;
+        List<int> animation_indexes = new List<int>();
 
         public FullWindowForAudience(MainWindow main, FullWindowForPresentor pre)
         {
@@ -38,8 +39,12 @@ namespace KEAP
             InitializeComponent();
             int i = 0;
             canvas_arr = new List<KEAPCanvas>();
+
+            animations = main.animation_Dictionary;
             foreach (KEAPCanvas canvas in main.canvas_List)
             {
+                List<Dictionary<int, string>> anilist = animations[i];
+                
                 canvas_arr.Add(new KEAPCanvas());
                 canvas_arr[i].Width = canvas.Width;
                 canvas_arr[i].Height = canvas.Height;
@@ -142,6 +147,15 @@ namespace KEAP
                         canvas_arr[i].Children.Add(ellipse);
                     }
                 }
+                foreach (Dictionary<int, string> dic in anilist)
+                {
+                    string ani = dic[dic.Keys.First()];
+                    if (ani.Contains("Bounds") || ani.Contains("Move") || ani.Contains("FadeIn")
+                        || ani.Contains("Interlaced") || ani.Contains("Block") || ani.Contains("Circle") || ani.Contains("Radial") || ani.Contains("WaterFall"))
+                    {
+                        canvas_arr[i].Children[dic.Keys.First()].Visibility = Visibility.Collapsed;
+                    }
+                }
                 i++;
             }
             /*
@@ -150,7 +164,6 @@ namespace KEAP
                 animations.Add(i,new Dictionary<int,string>[main.animation_Dictionary[i].Count()]);
                 main.animation_Dictionary[i].CopyTo(animations[i]);
             }*/
-            animations = main.animation_Dictionary;
         }
 
         public FullWindowForAudience()
@@ -174,6 +187,13 @@ namespace KEAP
             AudienceCanvas.PreviewMouseLeftButtonDown += AudienceCanvas_PreviewMouseLeftButtonDown;
             AudienceCanvas.PreviewMouseRightButtonDown += AudienceCanvas_PreviewMouseRightButtonDown;
             AudienceGrid.Children.Add(AudienceCanvas);
+
+            List<Dictionary<int,string>> anilist = animations[canvas_index];
+            
+            foreach (Dictionary<int, string> dic in anilist)
+            {
+                animation_indexes.Add(dic.Keys.First());
+            }
             //AudienceCanvas.Arrange(Rec)
         }
 
@@ -196,94 +216,98 @@ namespace KEAP
             AudienceCanvas.PreviewMouseLeftButtonDown += AudienceCanvas_PreviewMouseLeftButtonDown;
             AudienceCanvas.PreviewMouseRightButtonDown += AudienceCanvas_PreviewMouseRightButtonDown;
             AudienceGrid.Children.Add(AudienceCanvas);
+
+            List<Dictionary<int, string>> anilist = animations[canvas_index];
+            animation_indexes = new List<int>();
+            foreach (Dictionary<int, string> dic in anilist)
+            {
+                animation_indexes.Add(dic.Keys.First());
+            }
+            animation_index = 0;
         }
 
         void AudienceCanvas_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            List<Dictionary<int,string>> anilist = animations[canvas_index];
-            string ani = null;
-            foreach (Dictionary<int, string> dic in anilist)
-            {
-                if (dic.Keys.First() > animation_index-1)
-                {
-                    animation_index = dic.Keys.First();
-                    ani = dic[animation_index];
-                    break;
-                }
-            }
+            if (animation_indexes.Count <= animation_index) return;
+            List<Dictionary<int, string>> anilist = animations[canvas_index];
+            string ani = (anilist[animation_index])[animation_indexes[animation_index]];
+
             if (ani == null) return;
+            AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])].Visibility = Visibility.Visible;
             if (ani == "BoundsLTR")
             {
-                BoundsLTR(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                BoundsLTR(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "BoundsRTL")
             {
-                BoundsRTL(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                BoundsRTL(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "BoundsTTB")
             {
-                BoundsTTB(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                BoundsTTB(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "BoundsBTT")
             {
-                BoundsBTT(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                BoundsBTT(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "MoveLTR")
             {
-                MoveLTR(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                MoveLTR(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "MoveRTL")
             {
-                MoveRTL(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                MoveRTL(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "MoveTTB")
             {
-                MoveTTB(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                MoveTTB(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "MoveBTT")
             {
-                MoveBTT(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                MoveBTT(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "FadeIn")
             {
-                FadeIn(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                FadeIn(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "FadeOut")
             {
-                FadeOut(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                FadeOut(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "ZoomIn")
             {
-                ZoomIn(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                ZoomIn(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "ZoomOut")
             {
-                ZoomOut(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                ZoomOut(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "Tornado")
             {
-                Tornado(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                Tornado(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "Circle")
             {
-                circleAnimation(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                circleAnimation(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "Interlaced")
             {
-                interlacedAnimation(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                interlacedAnimation(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "Block")
             {
-                blockAnimation(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                blockAnimation(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "Radial")
             {
-                radialAnimation(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                radialAnimation(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
             else if (ani == "WaterFall")
             {
-                WaterFallAnimation(AudienceCanvas.Children[Convert.ToInt32(animation_index)] as FrameworkElement);
+                WaterFallAnimation(AudienceCanvas.Children[Convert.ToInt32(animation_indexes[animation_index])] as FrameworkElement);
             }
+
+            animation_index++;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -499,6 +523,7 @@ namespace KEAP
         {
             DoubleAnimation fadeOut = new DoubleAnimation(1.0, 0.0, TimeSpan.FromSeconds(1), FillBehavior.HoldEnd);
             shape.BeginAnimation(OpacityProperty, fadeOut);
+            shape.Visibility = Visibility.Collapsed;
         }
 
         // 사각형이 커졌다 작아진다

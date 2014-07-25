@@ -107,8 +107,6 @@ namespace KEAP
                 }
                 else if (child is Line)
                 {
-                    //Canvas.SetLeft((child), X * ratio_X);
-                    //Canvas.SetTop((child), Y * ratio_Y);
                     ((Line)child).X1 = ((Line)child).X1 * ratio_X;
                     ((Line)child).Y1 = ((Line)child).Y1 * ratio_Y;
                     ((Line)child).X2 = ((Line)child).X2 * ratio_X;
