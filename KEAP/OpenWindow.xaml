@@ -22,7 +22,7 @@
         </Grid>
         <!-- recent presentation list grid view-->
         <Grid Grid.Column="0" Grid.Row="1">
-            <ListBox Name="recentPresentationsList" HorizontalContentAlignment="Stretch" SelectionChanged="recentPresentations_SelectionChanged" MouseDoubleClick="recentPresentationsList_MouseDoubleClick">
+            <ListBox Name="recentPresentationsList" HorizontalContentAlignment="Stretch" SelectionChanged="recentPresentations_SelectionChanged" MouseDoubleClick="recentPresentationsList_MouseDoubleClick" Margin="0,0,0,0.4">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid HorizontalAlignment="Stretch" Height="50">

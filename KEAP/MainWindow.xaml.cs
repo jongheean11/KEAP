@@ -2052,14 +2052,6 @@ namespace KEAP
             d = Math.Sqrt(Math.Pow((x2 - x1), 2) + Math.Pow((y2 - y1), 2));
             return d;
         }
-
-        private void BackMenu_Click(object sender, RoutedEventArgs e)
-        {
-            AllMenuBorderToWhite();
-            AllMenuGridToCollapsed();
-            BackMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
-        }
-
         private void HomeMenu_Click(object sender, RoutedEventArgs e)
         {
             AllMenuBorderToWhite();
@@ -2075,13 +2067,6 @@ namespace KEAP
             InsertMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
         }
 
-        private void DesignMenu_Click(object sender, RoutedEventArgs e)
-        {
-            AllMenuBorderToWhite();
-            AllMenuGridToCollapsed();
-            DesignMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
-        }
-
         private void AnimationMenu_Click(object sender, RoutedEventArgs e)
         {
             AllMenuBorderToWhite();
@@ -2090,23 +2075,9 @@ namespace KEAP
             AnimationMenu_Grid.Visibility = System.Windows.Visibility.Visible;
         }
 
-        private void ConvertMenu_Click(object sender, RoutedEventArgs e)
-        {
-            AllMenuBorderToWhite();
-            AllMenuGridToCollapsed();
-            ConvertMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
-        }
-
-        private void StyleMenu_Click(object sender, RoutedEventArgs e)
-        {
-            AllMenuBorderToWhite();
-            AllMenuGridToCollapsed();
-            BackMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
-        }
         void AllMenuBorderToWhite()
         {
-            HomeMenu.BorderBrush = InsertMenu.BorderBrush = DesignMenu.BorderBrush
-                = AnimationMenu.BorderBrush = ConvertMenu.BorderBrush = StyleMenu.BorderBrush = new SolidColorBrush(Colors.White);
+            HomeMenu.BorderBrush = InsertMenu.BorderBrush = AnimationMenu.BorderBrush = new SolidColorBrush(Colors.White);
         }
 
         void AllMenuGridToCollapsed()
@@ -2258,18 +2229,19 @@ namespace KEAP
 
             else
             {
-                if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
+                //if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
+                //{
+                Slides_List.Insert(param_Number, new SlideInfo()
                 {
-                    Slides_List.Insert(param_Number, new SlideInfo()
-                    {
-                        Source = image.Source,
-                        Number = Convert.ToString(canvas_List.Count),
-                        Image_Width = ((MainCanvas.Width + 50) * 0.75 / 3.75) - 35,
-                        Image_Height = ((((MainCanvas.Width + 50) * 0.75 / 3.75) - 35) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width)),
-                        Slide_Width = ((MainCanvas.Width + 50) * 0.75 / 3.75) - 25,
-                        Slide_Height = ((((MainCanvas.Width + 50) * 0.75 / 3.75) - 35) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width)) + 20,
-                        Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
-                    });
+                    Source = image.Source,
+                    Number = Convert.ToString(canvas_List.Count),
+                    Image_Width = ((WindowSettings.current_Width) * 0.7 / 4.45),
+                    Image_Height = ((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width),
+                    Slide_Width = ((WindowSettings.current_Width) * 0.7 / 4.45)-17,
+                    Slide_Height = ((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width),
+                    Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
+                });
+                  /*  });
                 }
                 else
                 {
@@ -2283,7 +2255,7 @@ namespace KEAP
                         Slide_Height = (((MainCanvas.Height + 50) * (0.75 * 3.8 / 4.45) / 3)-20),
                         Rect_Height = (Main_Border.ActualHeight * 0.6 / 3) * 0.28
                     });
-                }
+                }*/
             }
             
             Slide_ListView.SelectedIndex = param_Number;

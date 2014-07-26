@@ -47,13 +47,10 @@
         <Border x:Name="Main_Border" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FFE6E6E6" >
             <Border x:Name="MainCanvas_Border" Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="LightGray" Background="White"/>
         </Border>
-        <Button x:Name="BackMenu" Content="뒤로가기" HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Margin="10,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="BackMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <Button x:Name="HomeMenu" Content="홈" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="75,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="HomeMenu_Click" Background="{x:Null}" BorderBrush="Gray"/>
-        <Button x:Name="InsertMenu" Content="삽입" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="120,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="InsertMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <Button x:Name="DesignMenu" Content="디자인" HorizontalAlignment="Left" VerticalAlignment="Top" Width="50" Margin="170,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="DesignMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <Button x:Name="AnimationMenu" Content="애니메이션" HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="225,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="AnimationMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <Button x:Name="ConvertMenu" Content="전환" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="295,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="ConvertMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
-        <Button x:Name="StyleMenu" Content="서식" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="345,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="StyleMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+
+        <Button x:Name="HomeMenu" Content="홈" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="10,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="HomeMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="InsertMenu" Content="삽입" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="60,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="InsertMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Button x:Name="AnimationMenu" Content="애니메이션" HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="120,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="AnimationMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
 
         <Border x:Name="Menu_Border" BorderBrush="Gray" BorderThickness="1" Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2">
         </Border>
@@ -81,12 +78,8 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Button x:Name="ClipBoardButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,0,1" Background="{x:Null}" Grid.Column="0" Grid.RowSpan="3" BorderBrush="LightGray">
-                <DockPanel LastChildFill="True">
-                    <Image DockPanel.Dock="Top" Source="Images/Button/clip.png" Height="30" />
-                    <Label HorizontalContentAlignment="Center" DockPanel.Dock="Bottom">클립보드</Label>
-                </DockPanel>
-            </Button>
+            <Button Content="저장" Margin="10,20" Click="Save_Click" Grid.RowSpan="2" />
+            <Button Grid.Row="1" Grid.RowSpan="2" Content="Button" Margin="10,20" Click="Open_Click"/>
             <Button x:Name="CutButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,1,0,0" Background="{x:Null}" Grid.Row="0" Grid.Column="1" BorderBrush="LightGray" Click="CutButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
@@ -405,8 +398,6 @@
         <Button x:Name="TableButton" Content="표" Grid.Column="1" HorizontalAlignment="Left" Margin="580,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="50" Click="Table_Click" Grid.RowSpan="2" />
         <Button x:Name="ClearAllButton" Content="선택취소" Grid.Column="1" HorizontalAlignment="Left" Margin="451,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="50" Click="ClearAll_Click" Grid.RowSpan="2"/>
         <Button x:Name="EllipseButton" Content="원" Grid.Column="1" HorizontalAlignment="Left" Margin="521,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="50" Click="Ellipse_Click" Grid.RowSpan="2"/>
-        <Button Content="저장" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Click="Save_Click" />
-        <Button Grid.ColumnSpan="2" Content="Button" HorizontalAlignment="Left" Margin="60,0,0,0" VerticalAlignment="Top" Width="75" Click="Open_Click"/>
         <Button x:Name="SlideBackgroundSetButton" Content="배경지정" Grid.Column="1" HorizontalAlignment="Left" Margin="726,14,0,0" VerticalAlignment="Top" Width="50" Click="SlideBackgroundSetButton_Click" Grid.RowSpan="2" />
     </Grid>
 </Window>
