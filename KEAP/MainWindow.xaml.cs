@@ -98,7 +98,7 @@ namespace KEAP
             canvas_Background_Bitmapimage = new BitmapImage();
             canvas_Background_Bitmapimage.BeginInit();
             canvas_Background_Bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-            canvas_Background_Bitmapimage.UriSource = new Uri("pack://application:,,,/KEAP;v1.0.0.0;component/Images/Background/background1.jpg");
+            canvas_Background_Bitmapimage.UriSource = new Uri("pack://application:,,,/KEAP;v1.0.0.0;component/Images/Background/white.jpg");
             canvas_Background_Bitmapimage.EndInit();
             canvas_Background = BitmapFrame.Create(canvas_Background_Bitmapimage);
 
@@ -165,9 +165,11 @@ namespace KEAP
                 MainCanvas.Width = (MainCanvas.Height * (WindowSettings.resolution_Width / WindowSettings.resolution_Height));
             }
 
-            Autoedit_Slide_List(MainCanvas, Slide_ListView.SelectedIndex);
+            
             MainCanvas.Measure(new Size(MainCanvas.Width, MainCanvas.Height));
             MainCanvas.Arrange(new Rect(0, 0, MainCanvas.Width, MainCanvas.Height));
+            for (int i = 0; i < Slide_ListView.Items.Count; i++)
+                Autoedit_Slide_List(canvas_List[i], i);
         }
 
         #region MainCanvas 함수
@@ -2141,9 +2143,8 @@ namespace KEAP
             public string Number { get; set; }
             public double Image_Width { get; set; }
             public double Image_Height { get; set; }
-            public double Slide_Width { get; set; }
-            public double Slide_Height { get; set; }
-            public double Rect_Height { get; set; }
+            public double Rect_Height1 { get; set; }
+            public double Rect_Height2 { get; set; }
         }
 
         private Image RenderCanvas(KEAPCanvas param_Canvas)
@@ -2167,43 +2168,24 @@ namespace KEAP
                 Slides_List.Add(new SlideInfo()
                 {
                     Source = image.Source,
-                    Number = Convert.ToString(num),
-                    Image_Width = (Main_Border.ActualWidth * 0.75 / 3.75) - 35,
-                    Image_Height = (Main_Border.ActualHeight * 0.75 / 3),
-                    Slide_Width = (Main_Border.ActualWidth * 0.75 / 3.75),
-                    Slide_Height = ((Main_Border.ActualHeight * 0.75 / 3)),
-                    Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
+                    Number = Convert.ToString(canvas_List.Count),
+                    Image_Width = ((WindowSettings.current_Width) * 0.7 / 4.45) - 35,
+                    Image_Height = ((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width),
+                    Rect_Height1 = (((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width) * 0.105) * (WindowSettings.current_Width / WindowSettings.current_Height),
+                    Rect_Height2 = (((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width) * 0.01) * (WindowSettings.current_Width / WindowSettings.current_Height)
                 });
             }
             else
             {
-                if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
+                Slides_List.Add(new SlideInfo()
                 {
-                    Slides_List.Add(new SlideInfo()
-                    {
-                        Source = image.Source,
-                        Number = Convert.ToString(canvas_List.Count),
-                        Image_Width = ((MainCanvas.Width+50)*0.75/3.75) - 35,
-                        Image_Height = (((MainCanvas.Width+50)*0.75/3.75)*(WindowSettings.resolution_Height/WindowSettings.resolution_Width))-20,
-                        Slide_Width = ((MainCanvas.Width+50)*0.75/3.75),
-                        Slide_Height = (((MainCanvas.Width+50)*0.75/3.75)*(WindowSettings.resolution_Height/WindowSettings.resolution_Width)),
-                        Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
-                    });
-                }
-                else
-                {
-                    Slides_List.Add(new SlideInfo()
-                    {
-                        Source = image.Source,
-                        Number = Convert.ToString(canvas_List.Count),
-                        Image_Width = ((MainCanvas.Height + 50) * 0.6 / 3) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height) - 35,
-                        Image_Height = ((MainCanvas.Height + 50) * 0.6 / 3)-20,
-                        Slide_Width = ((MainCanvas.Height + 50) * 0.6 / 3) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height),
-                        Slide_Height = ((MainCanvas.Height + 50) * 0.6 / 3),
-                        Rect_Height = (Main_Border.ActualHeight * 0.6 / 3) * 0.28
-                    });
-                }
-                
+                    Source = image.Source,
+                    Number = Convert.ToString(canvas_List.Count),
+                    Image_Width = ((WindowSettings.current_Width) * 0.7 / 4.45) - 35,
+                    Image_Height = ((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width),
+                    Rect_Height1 = (((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width) * 0.105) * (WindowSettings.current_Width / WindowSettings.current_Height),
+                    Rect_Height2 = (((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width) * 0.01) * (WindowSettings.current_Width / WindowSettings.current_Height)
+                });
             }
 
             Slide_ListView.ItemsSource = Slides_List;
@@ -2218,44 +2200,25 @@ namespace KEAP
                 Slides_List.Insert(param_Number, new SlideInfo()
                 {
                     Source = image.Source,
-                    Number = Convert.ToString(param_Number + 1),
-                    Image_Width = (WindowSettings.resolution_Width * 0.75 / 3.75) - 35,
-                    Image_Height = (((WindowSettings.resolution_Width - 92) / 3.8 - 50) * 0.75),
-                    Slide_Width = (WindowSettings.resolution_Width * 0.75 / 4.45),
-                    Slide_Height = (((WindowSettings.resolution_Height - 92) / 3.8 - 50) * 0.75 + 20),
-                    Rect_Height = ((WindowSettings.resolution_Width - 92) * 0.75 / 3.8) * 0.28
+                    Number = Convert.ToString(canvas_List.Count),
+                    Image_Width = ((WindowSettings.current_Width) * 0.7 / 4.45) - 35,
+                    Image_Height = ((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width),
+                    Rect_Height1 = (((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width) * 0.105) * (WindowSettings.current_Width / WindowSettings.current_Height),
+                    Rect_Height2 = (((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width) * 0.01) * (WindowSettings.current_Width / WindowSettings.current_Height)
                 });
             }
 
             else
             {
-                //if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
-                //{
                 Slides_List.Insert(param_Number, new SlideInfo()
                 {
                     Source = image.Source,
                     Number = Convert.ToString(canvas_List.Count),
-                    Image_Width = ((WindowSettings.current_Width) * 0.7 / 4.45),
+                    Image_Width = ((WindowSettings.current_Width) * 0.7 / 4.45)-35,
                     Image_Height = ((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width),
-                    Slide_Width = ((WindowSettings.current_Width) * 0.7 / 4.45)-17,
-                    Slide_Height = ((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width),
-                    Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
+                    Rect_Height1 = (((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width) * 0.105) * (WindowSettings.current_Width / WindowSettings.current_Height),
+                    Rect_Height2 = (((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width) * 0.01) * (WindowSettings.current_Width / WindowSettings.current_Height)
                 });
-                  /*  });
-                }
-                else
-                {
-                    Slides_List.Insert(param_Number, new SlideInfo()
-                    {
-                        Source = image.Source,
-                        Number = Convert.ToString(canvas_List.Count),
-                        Image_Width = ((((MainCanvas.Height + 50) * (0.75 * 3.8 / 4.45) / 3)) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)),
-                        Image_Height = ((MainCanvas.Height + 50) * (0.75 * 3.8 / 4.45) / 3),
-                        Slide_Width = ((((MainCanvas.Height + 50) * (0.75 * 3.8 / 4.45) / 3)-3) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)),
-                        Slide_Height = (((MainCanvas.Height + 50) * (0.75 * 3.8 / 4.45) / 3)-20),
-                        Rect_Height = (Main_Border.ActualHeight * 0.6 / 3) * 0.28
-                    });
-                }*/
             }
             
             Slide_ListView.SelectedIndex = param_Number;
