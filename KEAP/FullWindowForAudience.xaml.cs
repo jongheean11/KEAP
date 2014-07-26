@@ -57,9 +57,10 @@ namespace KEAP
                         anilist = null;
                 }
                 canvas_arr.Add(new KEAPCanvas());
-                canvas_arr[i].Width = canvas.Width;
-                canvas_arr[i].Height = canvas.Height;
+                canvas_arr[i].Width = SystemParameters.MaximizedPrimaryScreenWidth;
+                canvas_arr[i].Height = SystemParameters.MaximizedPrimaryScreenHeight;
                 canvas_arr[i].Background = canvas.Background;
+                
                 for (int j=0; j<main.canvas_List[i].Children.Count; j++)
                 {
                     UIElement ele = main.canvas_List[i].Children[j];
@@ -69,8 +70,8 @@ namespace KEAP
                         EditableTextBlock textblock = new EditableTextBlock()
                         {
                             Text = copyele.Text,
-                            Width = copyele.Width,
-                            Height = copyele.Height,
+                            Width = copyele.Width * (SystemParameters.MaximizedPrimaryScreenWidth / canvas.Width),
+                            Height = copyele.Height * (SystemParameters.MaximizedPrimaryScreenHeight / canvas.Height),
                             FontSize = copyele.FontSize,
                             TextAlignment = copyele.TextAlignment,
                             Effect = copyele.Effect,
@@ -79,8 +80,8 @@ namespace KEAP
                             Background = copyele.Background,
                             Foreground = copyele.Foreground,
                         };
-                        Canvas.SetLeft(textblock,Canvas.GetLeft(copyele));
-                        Canvas.SetTop(textblock,Canvas.GetTop(copyele));
+                        Canvas.SetLeft(textblock,Canvas.GetLeft(copyele) * (SystemParameters.MaximizedPrimaryScreenWidth / canvas.Width));
+                        Canvas.SetTop(textblock,Canvas.GetTop(copyele) * (SystemParameters.MaximizedPrimaryScreenHeight / canvas.Height));
 
                         canvas_arr[i].Children.Add(textblock);
                     }
@@ -95,6 +96,17 @@ namespace KEAP
                             Fill = copyele.Fill
                         };
 
+                        Point[] copy_points = new Point[polygon.Points.Count];
+                        PointCollection copy_collection = new PointCollection();
+                        polygon.Points.CopyTo(copy_points, 0);
+                        for (int p = 0; p < polygon.Points.Count; p++)
+                        {
+                            copy_points[p].X = copy_points[p].X * (SystemParameters.MaximizedPrimaryScreenWidth / canvas.Width);
+                            copy_points[p].Y = copy_points[p].Y * (SystemParameters.MaximizedPrimaryScreenHeight / canvas.Height);
+                            copy_collection.Add(copy_points[p]);
+                        }
+                        polygon.Points = copy_collection;
+
                         canvas_arr[i].Children.Add(polygon);
                     }
                     else if (ele is Line)
@@ -102,10 +114,10 @@ namespace KEAP
                         Line copyele = ele as Line;
                         Line line = new Line()
                         {
-                            X1 = copyele.X1,
-                            Y1 = copyele.Y1,
-                            X2 = copyele.X2,
-                            Y2 = copyele.Y2,
+                            X1 = copyele.X1 * (SystemParameters.MaximizedPrimaryScreenWidth / canvas.Width),
+                            Y1 = copyele.Y1 * (SystemParameters.MaximizedPrimaryScreenHeight / canvas.Height),
+                            X2 = copyele.X2 * (SystemParameters.MaximizedPrimaryScreenWidth / canvas.Width),
+                            Y2 = copyele.Y2 * (SystemParameters.MaximizedPrimaryScreenHeight / canvas.Height),
                             Stroke = copyele.Stroke,
                             StrokeThickness = copyele.StrokeThickness,
                         };
@@ -118,11 +130,11 @@ namespace KEAP
                         Image image = new Image()
                         {
                             Source = copyele.Source,
-                            Width = copyele.Width,
-                            Height = copyele.Height,
+                            Width = copyele.Width * (SystemParameters.MaximizedPrimaryScreenWidth / canvas.Width),
+                            Height = copyele.Height * (SystemParameters.MaximizedPrimaryScreenHeight / canvas.Height)
                         };
-                        Canvas.SetLeft(image, Canvas.GetLeft(copyele));
-                        Canvas.SetTop(image, Canvas.GetTop(copyele));
+                        Canvas.SetLeft(image, Canvas.GetLeft(copyele) * (SystemParameters.MaximizedPrimaryScreenWidth / canvas.Width));
+                        Canvas.SetTop(image, Canvas.GetTop(copyele) * (SystemParameters.MaximizedPrimaryScreenHeight / canvas.Height));
 
                         canvas_arr[i].Children.Add(image);
                     }
@@ -131,14 +143,14 @@ namespace KEAP
                         Rectangle copyele = ele as Rectangle;
                         Rectangle rectangle = new Rectangle()
                         {
-                            Width = copyele.Width,
-                            Height = copyele.Height,
+                            Width = copyele.Width * (SystemParameters.MaximizedPrimaryScreenWidth / canvas.Width),
+                            Height = copyele.Height * (SystemParameters.MaximizedPrimaryScreenHeight / canvas.Height),
                             Fill = copyele.Fill,
                             Stroke = copyele.Stroke,
                             StrokeThickness = copyele.StrokeThickness
                         };
-                        Canvas.SetLeft(rectangle, Canvas.GetLeft(copyele));
-                        Canvas.SetTop(rectangle, Canvas.GetTop(copyele));
+                        Canvas.SetLeft(rectangle, Canvas.GetLeft(copyele) * (SystemParameters.MaximizedPrimaryScreenWidth / canvas.Width));
+                        Canvas.SetTop(rectangle, Canvas.GetTop(copyele) * (SystemParameters.MaximizedPrimaryScreenHeight / canvas.Height));
 
                         canvas_arr[i].Children.Add(rectangle);
                     }
@@ -147,17 +159,19 @@ namespace KEAP
                         Ellipse copyele = ele as Ellipse;
                         Ellipse ellipse = new Ellipse()
                         {
-                            Width = copyele.Width,
-                            Height = copyele.Height,
+                            Width = copyele.Width * (SystemParameters.MaximizedPrimaryScreenWidth / canvas.Width),
+                            Height = copyele.Height * (SystemParameters.MaximizedPrimaryScreenHeight / canvas.Height),
                             Fill = copyele.Fill,
                             Stroke = copyele.Stroke,
                             StrokeThickness = copyele.StrokeThickness
                         };
-                        Canvas.SetLeft(ellipse, Canvas.GetLeft(copyele));
-                        Canvas.SetTop(ellipse, Canvas.GetTop(copyele));
+                        Canvas.SetLeft(ellipse, Canvas.GetLeft(copyele) * (SystemParameters.MaximizedPrimaryScreenWidth / canvas.Width));
+                        Canvas.SetTop(ellipse, Canvas.GetTop(copyele) * (SystemParameters.MaximizedPrimaryScreenHeight / canvas.Height));
 
                         canvas_arr[i].Children.Add(ellipse);
                     }
+                    //canvas_arr[i].Measure(new Size(SystemParameters.MaximizedPrimaryScreenWidth, SystemParameters.MaximizedPrimaryScreenHeight));
+                    //canvas_arr[i].Arrange(new Rect(0, 0, SystemParameters.MaximizedPrimaryScreenWidth, SystemParameters.MaximizedPrimaryScreenHeight));
                 }
                 if (anilist != null)
                 {
@@ -417,6 +431,7 @@ namespace KEAP
         {
             // if(ZoomIn) Move Down ;
             sub_Monitor.Text = "Down_Arrow_KeyEventHandler";
+            ZoomIn(2,2);
             //throw new NotImplementedException();
         }
 
@@ -815,5 +830,176 @@ namespace KEAP
             WaterFall.MakeWaterFallAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
         }
         #endregion
+
+        KEAPCanvas zoomCanvas;
+        void ZoomIn(int x, int y)
+        {
+            zoomCanvas = new KEAPCanvas();
+            zoomCanvas.Width = AudienceCanvas.Width;
+            zoomCanvas.Height = AudienceCanvas.Height;
+            zoomCanvas.Background = AudienceCanvas.Background;
+            UIElement[] copyuiele = new UIElement[AudienceCanvas.Children.Count];
+            AudienceCanvas.Children.CopyTo(copyuiele, 0);
+            foreach (UIElement ele in copyuiele)
+            {
+                if (ele is EditableTextBlock)
+                {
+                    EditableTextBlock copyele = ele as EditableTextBlock;
+                    EditableTextBlock textblock = new EditableTextBlock()
+                    {
+                        Text = copyele.Text,
+                        Width = copyele.Width,
+                        Height = copyele.Height,
+                        FontSize = copyele.FontSize,
+                        TextAlignment = copyele.TextAlignment,
+                        Effect = copyele.Effect,
+                        FontWeight = copyele.FontWeight,
+                        FontFamily = copyele.FontFamily,
+                        Background = copyele.Background,
+                        Foreground = copyele.Foreground,
+                    };
+                    Canvas.SetLeft(textblock,Canvas.GetLeft(copyele));
+                    Canvas.SetTop(textblock,Canvas.GetTop(copyele));
+
+                    double x1 = Canvas.GetLeft(ele),
+                        y1 = Canvas.GetTop(ele);
+
+                    Canvas.SetLeft(textblock, x1 - (WindowSettings.resolution_Width * x / 8));
+                    Canvas.SetTop(textblock, y1 - (WindowSettings.resolution_Height * y / 8));
+
+                    zoomCanvas.Children.Add(textblock);
+                }
+                else if (ele is Polygon)
+                {
+                    Polygon copyele = ele as Polygon;
+                    Polygon polygon = new Polygon()
+                    {
+                        Points = copyele.Points,
+                        Stroke = copyele.Stroke,
+                        StrokeThickness = copyele.StrokeThickness,
+                        Fill = copyele.Fill
+                    };
+
+                    Point[] copy_points = new Point[polygon.Points.Count];
+                    PointCollection copy_collection = new PointCollection();
+                    polygon.Points.CopyTo(copy_points, 0);
+                    for (int i = 0; i < polygon.Points.Count; i++)
+                    {
+                        copy_points[i].X = copy_points[i].X -  (SystemParameters.MaximizedPrimaryScreenWidth * x / 8);
+                        copy_points[i].Y = copy_points[i].Y -  (SystemParameters.MaximizedPrimaryScreenHeight * y / 8);
+                        copy_collection.Add(copy_points[i]);
+                    }
+                    polygon.Points = copy_collection;
+
+                    zoomCanvas.Children.Add(polygon);
+                }
+                else if (ele is Line)
+                {
+                    Line copyele = ele as Line;
+                    Line line = new Line()
+                    {
+                        X1 = copyele.X1,
+                        Y1 = copyele.Y1,
+                        X2 = copyele.X2,
+                        Y2 = copyele.Y2,
+                        Stroke = copyele.Stroke,
+                        StrokeThickness = copyele.StrokeThickness,
+                    };
+
+                    line.X1 = ((Line)ele).X1 - (SystemParameters.MaximizedPrimaryScreenWidth * x / 8);
+                    line.Y1 = ((Line)ele).Y1 - (SystemParameters.MaximizedPrimaryScreenHeight * y / 8);
+                    line.X2 = ((Line)ele).X2 - (SystemParameters.MaximizedPrimaryScreenWidth * y / 8);
+                    line.Y2 = ((Line)ele).Y2 - (SystemParameters.MaximizedPrimaryScreenHeight * y / 8);
+
+                    zoomCanvas.Children.Add(line);
+                }
+                else if (ele is Image)
+                {
+                    Image copyele = ele as Image;
+                    Image image = new Image()
+                    {
+                        Source = copyele.Source,
+                        Width = copyele.Width,
+                        Height = copyele.Height,
+                    };
+                    Canvas.SetLeft(image, Canvas.GetLeft(copyele));
+                    Canvas.SetTop(image, Canvas.GetTop(copyele));
+
+                    double x1 = Canvas.GetLeft(ele),
+                        y1 = Canvas.GetTop(ele);
+
+                    Canvas.SetLeft(image, x1 - (SystemParameters.MaximizedPrimaryScreenWidth * x / 8));
+                    Canvas.SetTop(image, y1 - (SystemParameters.MaximizedPrimaryScreenHeight * y / 8));
+
+                    zoomCanvas.Children.Add(image);
+                }
+                else if (ele is Rectangle)
+                {
+                    Rectangle copyele = ele as Rectangle;
+                    Rectangle rectangle = new Rectangle()
+                    {
+                        Width = copyele.Width,
+                        Height = copyele.Height,
+                        Fill = copyele.Fill,
+                        Stroke = copyele.Stroke,
+                        StrokeThickness = copyele.StrokeThickness
+                    };
+                    Canvas.SetLeft(rectangle, Canvas.GetLeft(copyele));
+                    Canvas.SetTop(rectangle, Canvas.GetTop(copyele));
+
+                    double x1 = Canvas.GetLeft(ele),
+                        y1 = Canvas.GetTop(ele);
+
+                    Canvas.SetLeft(rectangle, x1 - (SystemParameters.MaximizedPrimaryScreenWidth * x / 8));
+                        Canvas.SetTop(rectangle, y1 - (SystemParameters.MaximizedPrimaryScreenHeight * y / 8));
+
+                    zoomCanvas.Children.Add(rectangle);
+                }
+                else if (ele is Ellipse)
+                {
+                    Ellipse copyele = ele as Ellipse;
+                    Ellipse ellipse = new Ellipse()
+                    {
+                        Width = copyele.Width,
+                        Height = copyele.Height,
+                        Fill = copyele.Fill,
+                        Stroke = copyele.Stroke,
+                        StrokeThickness = copyele.StrokeThickness
+                    };
+                    Canvas.SetLeft(ellipse, Canvas.GetLeft(copyele));
+                    Canvas.SetTop(ellipse, Canvas.GetTop(copyele));
+
+                    double x1 = Canvas.GetLeft(ele),
+                        y1 = Canvas.GetTop(ele);
+
+                    Canvas.SetLeft(ellipse, x1 - (SystemParameters.MaximizedPrimaryScreenWidth * x / 8));
+                    Canvas.SetTop(ellipse, y1 - (SystemParameters.MaximizedPrimaryScreenHeight * y / 8));
+
+                    zoomCanvas.Children.Add(ellipse);
+                }
+            }
+
+            zoomCanvas.UpdateLayout();
+            Image zoom_img = new Image();
+            RenderTargetBitmap zoom_rtb = new RenderTargetBitmap(((int)(zoomCanvas.Width*x/8)) + 200, (((int)zoomCanvas.Height*y/8) + 200), 96d, 96d, System.Windows.Media.PixelFormats.Default);
+            AudienceGrid.Children.Insert(0, zoomCanvas);
+            AudienceGrid.Children.Remove(AudienceCanvas);
+            zoomCanvas.UpdateLayout();
+            AudienceGrid.UpdateLayout();
+            zoom_rtb.Render(zoomCanvas);
+            zoom_img.Source = zoom_rtb;
+            zoom_img.HorizontalAlignment = HorizontalAlignment.Stretch;
+            zoom_img.VerticalAlignment = VerticalAlignment.Stretch;
+            zoom_img.Stretch = Stretch.Fill;
+            //AudienceGrid.Children.Remove(AudienceCanvas);
+            zoom_img.Width = SystemParameters.MaximizedPrimaryScreenWidth;
+            zoom_img.Height = SystemParameters.MaximizedPrimaryScreenHeight;
+            //AudienceGrid.Children.Remove(zoomCanvas);
+            //AudienceGrid.Children.Add(zoom_img);
+            
+            AudienceGrid.Children.Clear();
+            AudienceGrid.Background = new ImageBrush(zoom_img.Source);
+            //AudienceGrid.Background = new SolidColorBrush(Colors.Blue);
+        }
     }
 }

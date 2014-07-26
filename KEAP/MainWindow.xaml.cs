@@ -2102,12 +2102,12 @@ namespace KEAP
             if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
             {
                 new_Canvas.Width = (WindowSettings.current_Width * 3.75 / 4.45) - 50;
-                new_Canvas.Height = (new_Canvas.Height * (WindowSettings.resolution_Height / WindowSettings.resolution_Width));
+                new_Canvas.Height = (MainCanvas.Height * (WindowSettings.resolution_Height / WindowSettings.resolution_Width));
             }
             else
             {
                 new_Canvas.Height = (WindowSettings.current_Height - 92) * (3 / 3.8) - 50;
-                new_Canvas.Width = (new_Canvas.Height * (WindowSettings.resolution_Width / WindowSettings.resolution_Height));
+                new_Canvas.Width = (MainCanvas.Height * (WindowSettings.resolution_Width / WindowSettings.resolution_Height));
             }
 
             new_Canvas.PreviewMouseLeftButtonDown += MainCanvas_PreviewMouseLeftButtonDown;
@@ -2116,10 +2116,13 @@ namespace KEAP
 
             MainCanvas_Border.Child = new_Canvas;
             canvas_List.Add(new_Canvas);
-
+            
             Add_Slide_List(canvas_List.Count);
 
             Autoedit_Slide_List(new_Canvas, canvas_List.Count - 1);
+
+            Image image_renew = RenderCanvas(canvas_List[canvas_List.Count-1]);
+            ((SlideInfo)(Slide_ListView.Items[canvas_List.Count-1])).Source = image_renew.Source;
         }
 
         private void Slide_ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -2215,7 +2218,7 @@ namespace KEAP
                 Slides_List.Insert(param_Number, new SlideInfo()
                 {
                     Source = image.Source,
-                    Number = Convert.ToString(canvas_List.Count),
+                    Number = Convert.ToString(param_Number+1),
                     Image_Width = ((WindowSettings.current_Width) * 0.7 / 4.45)-35,
                     Image_Height = ((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width),
                     Rect_Height1 = (((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width) * 0.105) * (WindowSettings.current_Width / WindowSettings.current_Height),
