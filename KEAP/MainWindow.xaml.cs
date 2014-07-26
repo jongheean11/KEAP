@@ -156,11 +156,13 @@ namespace KEAP
         {
             if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
             {
+                //MainCanvas.Width > 0, when "WindowSettings.current_Width" > 59.33... ~= 50 * 3.35 / 3.75
                 MainCanvas.Width = (WindowSettings.current_Width * 3.75 / 4.45) - 50;
                 MainCanvas.Height = (MainCanvas.Width * (WindowSettings.resolution_Height / WindowSettings.resolution_Width));
             }
             else
             {
+                // MainCanvs.height > 0, when  "WindowSettings.current_Height" > 155.33... ~= 50 * 3.8/3 + 92  
                 MainCanvas.Height = (WindowSettings.current_Height - 92) * (3 / 3.8) - 50;
                 MainCanvas.Width = (MainCanvas.Height * (WindowSettings.resolution_Width / WindowSettings.resolution_Height));
             }
@@ -4252,4 +4254,6 @@ namespace KEAP
             }
         }
     }
+
+
 }
