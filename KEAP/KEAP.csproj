@@ -178,6 +178,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Images\Templates\" />
     <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
@@ -230,6 +231,15 @@
       <Project>{4de23893-27e7-423f-9bb6-ba21dac2c45e}</Project>
       <Name>Microsoft.Samples.Kinect.WpfViewers</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Background\white.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Background\background1.jpg" />
+    <Resource Include="Images\Background\background3.jpg" />
+    <Resource Include="Images\Background\background2.jpg" />
+    <Resource Include="Images\Background\background4.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -33,7 +33,9 @@ namespace KEAP
         public List<KEAPCanvas> canvas_List = new List<KEAPCanvas>();
         public ObservableCollection<SlideInfo> Slides_List = new ObservableCollection<SlideInfo>();
         public Dictionary<int, List<BitmapFrame>> bitmapFrame_Dictionary = new Dictionary<int, List<BitmapFrame>>();
-
+        public BitmapFrame canvas_Background;
+        public BitmapImage canvas_Background_Bitmapimage;
+        
         public List<Dictionary<int, string>> animation_List = new List<Dictionary<int, string>>();
         public Dictionary<int, List<Dictionary<int, string>>> animation_Dictionary = new Dictionary<int, List<Dictionary<int, string>>>();
 
@@ -78,7 +80,8 @@ namespace KEAP
         int table_Row_Count = 2, table_Column_Count = 3;
 
         Brush stroke_Brush, fill_Brush, font_Brush;
-
+        FontFamily font_Family; int font_Family_Index;
+        double font_Size; int font_Size_Index;
 
         public MainWindow()
         {
@@ -89,13 +92,22 @@ namespace KEAP
             this.Width = WindowSettings.resolution_Width;
             this.Height = WindowSettings.resolution_Height;
             this.WindowState = WindowState.Maximized;
+
+            canvas_Background_Bitmapimage = new BitmapImage();
+            canvas_Background_Bitmapimage = new BitmapImage();
+            canvas_Background_Bitmapimage.BeginInit();
+            canvas_Background_Bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+            canvas_Background_Bitmapimage.UriSource = new Uri("pack://application:,,,/KEAP;v1.0.0.0;component/Images/Background/background1.jpg");
+            canvas_Background_Bitmapimage.EndInit();
+            canvas_Background = BitmapFrame.Create(canvas_Background_Bitmapimage);
+
             MainCanvas = new KEAPCanvas()
             {
                 VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
-                Background = new SolidColorBrush(Colors.White)
+                Background = new ImageBrush(canvas_Background_Bitmapimage)
             };
-
+            
             if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
             {
                 MainCanvas.Width = (WindowSettings.resolution_Width * 3.75 / 4.45) - 50;
@@ -121,6 +133,8 @@ namespace KEAP
             fill_Brush = new SolidColorBrush(Colors.White);
             font_Brush = new SolidColorBrush(Colors.Black);
             AddKeyBindings();
+
+            Autoedit_Slide_List(MainCanvas, Slide_ListView.SelectedIndex);
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -167,6 +181,7 @@ namespace KEAP
                 if (line_Mode_Toggle)
                 {
                     line_Mode_Toggle = false;
+                    line_Mode = false;
                 }
                 else
                 {
@@ -261,7 +276,9 @@ namespace KEAP
                         Background = fill_Brush,
                         TextWrapping = TextWrapping.Wrap,
                         //FontStyle = Windows.UI.Text.FontStyle.Normal,
-                        Foreground = font_Brush
+                        Foreground = font_Brush,
+                        FontFamily = font_Family,
+                        FontSize = font_Size
                     };
 
                     textblock.MouseLeftButtonDown += UIElement_MouseLeftButtonDown;
@@ -350,32 +367,46 @@ namespace KEAP
                     edit_Mode = false; //editing..
                     edit_Mode_Ready = false;
                     MainCanvas.Children.Remove(edit_Rect);
+                    BoldButton.Background = new SolidColorBrush(Colors.White);
+                    ItalicButton.Background = new SolidColorBrush(Colors.White);
+                    UnderlineButton.Background = new SolidColorBrush(Colors.White);
+                    ShadowButton.Background = new SolidColorBrush(Colors.White);
+                    BoldButton_Clicked = ItalicButton_Clicked = UnderlineButton_Clicked = ShadowButton_Clicked = false;
                 }
             }
             else if (selected_Polygon != null)
             {
-                if ((e.GetPosition(MainCanvas).X < Canvas.GetLeft(selected_Polygon)) ||
-                    (e.GetPosition(MainCanvas).Y < Canvas.GetTop(selected_Polygon)) ||
-                    (e.GetPosition(MainCanvas).X > Canvas.GetLeft(selected_Polygon) + selected_Polygon.Width) ||
-                    (e.GetPosition(MainCanvas).Y > Canvas.GetTop(selected_Polygon) + selected_Polygon.Height))
+                if (edit_Rect != null)
                 {
-                    edit_Mode = false; //editing..
-                    edit_Mode_Ready = false;
-                    MainCanvas.Children.Remove(edit_Rect);
+                    if ((e.GetPosition(MainCanvas).X < Canvas.GetLeft(edit_Rect) + 5) ||
+                        (e.GetPosition(MainCanvas).Y < Canvas.GetTop(edit_Rect) + 5) ||
+                        (e.GetPosition(MainCanvas).X > Canvas.GetLeft(edit_Rect) + 5 + edit_Rect.Width - 10) ||
+                        (e.GetPosition(MainCanvas).Y > Canvas.GetTop(edit_Rect) + 5 + edit_Rect.Height - 10))
+                    {
+                        edit_Mode = false; //editing..
+                        edit_Mode_Ready = false;
+                        MainCanvas.Children.Remove(edit_Rect);
 
-                    selected_Polygon.StrokeDashArray = null;
+                        selected_Polygon.StrokeDashArray = null;
+                    }
                 }
             }
+                
             else if (selected_Line != null)
             {
-                if ((e.GetPosition(MainCanvas).X < Canvas.GetLeft(selected_Line)) ||
-                    (e.GetPosition(MainCanvas).Y < Canvas.GetTop(selected_Line)) ||
-                    (e.GetPosition(MainCanvas).X > Canvas.GetLeft(selected_Line) + selected_Line.Width) ||
-                    (e.GetPosition(MainCanvas).Y > Canvas.GetTop(selected_Line) + selected_Line.Height))
+                if (edit_Rect != null)
                 {
-                    edit_Mode = false; //editing..
-                    edit_Mode_Ready = false;
-                    MainCanvas.Children.Remove(edit_Rect);
+                    if ((e.GetPosition(MainCanvas).X < Canvas.GetLeft(edit_Rect) + 5) ||
+                        (e.GetPosition(MainCanvas).Y < Canvas.GetTop(edit_Rect) + 5) ||
+                        (e.GetPosition(MainCanvas).X > Canvas.GetLeft(edit_Rect) + 5 + edit_Rect.Width - 10) ||
+                        (e.GetPosition(MainCanvas).Y > Canvas.GetTop(edit_Rect) + 5 + edit_Rect.Height - 10))
+                    {
+                        edit_Mode = false; //editing..
+                        edit_Mode_Ready = false;
+                        MainCanvas.Children.Remove(edit_Rect);
+
+                        selected_Line.StrokeDashArray = null;
+                    }
                 }
             }
             else if (selected_Image != null)
@@ -405,7 +436,7 @@ namespace KEAP
 
             Image image_renew = RenderCanvas(MainCanvas);
             ((SlideInfo)(Slide_ListView.Items[Slide_ListView.SelectedIndex])).Source = image_renew.Source;
-            image_Mode = rectangle_Mode = line_Mode = table_Mode = false;
+            text_Mode = image_Mode = rectangle_Mode = ellipse_Mode = table_Mode = false;
         }
         void MainCanvas_PreviewMouseMove(object sender, MouseEventArgs e)
         {
@@ -470,7 +501,9 @@ namespace KEAP
                         Background = fill_Brush,
                         HorizontalAlignment = HorizontalAlignment.Stretch,
                         VerticalAlignment = VerticalAlignment.Stretch,
-                        Foreground = font_Brush
+                        Foreground = font_Brush,
+                        FontFamily = font_Family,
+                        FontSize = font_Size
                     };
 
                     if (x1 < x2)
@@ -784,27 +817,6 @@ namespace KEAP
                         resize_y2 = Canvas.GetTop(edit_Rect) + edit_Rect.Height - 5,
                         resize_mouse_x = e.GetPosition(MainCanvas).X,
                         resize_mouse_y = e.GetPosition(MainCanvas).Y;
-                    /*if (selected_Text != null)
-                    {
-                        resize_x1 = Canvas.GetLeft(selected_Text);
-                        resize_y1 = Canvas.GetTop(selected_Text);
-                        resize_x2 = Canvas.GetLeft(selected_Text) + selected_Text.Width;
-                        resize_y2 = Canvas.GetTop(selected_Text) + selected_Text.Height;
-                    }
-                    else if (selected_Image != null)
-                    {
-                        resize_x1 = Canvas.GetLeft(selected_Image);
-                        resize_y1 = Canvas.GetTop(selected_Image);
-                        resize_x2 = Canvas.GetLeft(selected_Image) + selected_Image.Width;
-                        resize_y2 = Canvas.GetTop(selected_Image) + selected_Image.Height;
-                    }
-                    else if (selected_Shape != null)
-                    {
-                        resize_x1 = Canvas.GetLeft(selected_Shape);
-                        resize_y1 = Canvas.GetTop(selected_Shape);
-                        resize_x2 = Canvas.GetLeft(selected_Shape) + selected_Shape.Width;
-                        resize_y2 = Canvas.GetTop(selected_Shape) + selected_Shape.Height;
-                    }*/
 
                     if (Math.Abs(resize_mouse_x - resize_x1) < 17)
                     {
@@ -826,7 +838,7 @@ namespace KEAP
                         bottom = true;
                         drag_Mode = true;
                     }
-                    //if (select_Text_Mode && selected_Text != null)
+                    
                     if (!(left || right || top || bottom))
                     {
                         if (selected_Text != null && sender == selected_Text)
@@ -848,8 +860,8 @@ namespace KEAP
                         {
                             drag_Mode = true;
                             selected_Line.CaptureMouse();
-                            Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(sender as Line));
-                            Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(sender as Line));
+                            Start_Point_Shape.X = ((e.GetPosition(MainCanvas)).X - Canvas.GetLeft(edit_Rect) + 5);
+                            Start_Point_Shape.Y = ((e.GetPosition(MainCanvas)).Y - Canvas.GetTop(edit_Rect) + 5);
                         }
                         //else if (select_Shape_Mode && selected_Shape != null)
                         else if (selected_Image != null && sender == selected_Image)
@@ -892,8 +904,68 @@ namespace KEAP
                         };
                         Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Text) - 5);
                         Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Text) - 5);
-                        
                         MainCanvas.Children.Add(edit_Rect);
+
+                        if (selected_Text.FontWeight == FontWeights.Bold)
+                        {
+                            BoldButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                            BoldButton_Clicked = true;
+                        }
+                        else
+                        {
+                            BoldButton.Background = new SolidColorBrush(Colors.White);
+                            BoldButton_Clicked = false;
+                        }
+                        if (selected_Text.FontStyle == FontStyles.Italic)
+                        {
+                            ItalicButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                            ItalicButton_Clicked = true;
+                        }
+                        else
+                        {
+                            ItalicButton.Background = new SolidColorBrush(Colors.White);
+                            ItalicButton_Clicked = false;
+                        }
+                        if (selected_Text.TextDecorations.Count != 0)
+                        {
+                            UnderlineButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                            UnderlineButton_Clicked = true;
+                        }
+                        else
+                        {
+                            UnderlineButton.Background = new SolidColorBrush(Colors.White);
+                            UnderlineButton_Clicked = false;
+                        }
+                        if (selected_Text.Effect != null)
+                        {
+                            ShadowButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                            ShadowButton_Clicked = true;
+                        }
+                        else
+                        {
+                            ShadowButton.Background = new SolidColorBrush(Colors.White);
+                            ShadowButton_Clicked = false;
+                        }
+                        font_Family_Index = 0;
+                        foreach (FontFamily fam in Fonts.SystemFontFamilies)
+                        {
+                            if (fam == selected_Text.FontFamily)
+                            {
+                                break;
+                            }
+                            font_Family_Index++;
+                        }
+                        FontFamily_Combobox.SelectedIndex = font_Family_Index;
+                        font_Size_Index = 0;
+                        for (int i = 10; i < 60; i=i+2)
+                        {
+                            if (Convert.ToDouble(i) == selected_Text.FontSize)
+                            {
+                                break;
+                            }
+                            font_Size_Index++;
+                        }
+                        FontSize_Combobox.SelectedIndex = font_Size_Index;
                     }
                     else if (sender is Polygon)
                     {
@@ -932,17 +1004,41 @@ namespace KEAP
                     {
                         selected_Line = sender as Line;
                         if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
+
+                        double min_x, min_y, max_x, max_y;
+                        if (selected_Line.X1 > selected_Line.X2)
+                        {
+                            min_x = selected_Line.X2;
+                            max_x = selected_Line.X1;
+                        }
+                        else
+                        {
+                            min_x = selected_Line.X1;
+                            max_x = selected_Line.X2;
+                        }
+                        if (selected_Line.Y1 > selected_Line.Y2)
+                        {
+                            min_y = selected_Line.Y2;
+                            max_y = selected_Line.Y1;
+                        }
+                        else
+                        {
+                            min_y = selected_Line.Y1;
+                            max_y = selected_Line.Y2;
+                        }
+
                         edit_Rect = new Rectangle()
                         {
-                            Width = selected_Line.Width + 10,
-                            Height = selected_Line.Height + 10,
+                            Width = max_x - min_x + 10,
+                            Height = max_x - min_x + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
-                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Line) - 5);
-                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Line) - 5);
+                        Canvas.SetLeft(edit_Rect, min_x - 5);
+                        Canvas.SetTop(edit_Rect, min_y - 5);
                         
                         MainCanvas.Children.Add(edit_Rect);
+                        selected_Line.StrokeDashArray = dashes;
                     }
                     else if (sender is Image)
                     {
@@ -1004,6 +1100,67 @@ namespace KEAP
                         Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Text) - 5);
                         
                         MainCanvas.Children.Add(edit_Rect);
+
+                        if (selected_Text.FontWeight == FontWeights.Bold)
+                        {
+                            BoldButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                            BoldButton_Clicked = true;
+                        }
+                        else
+                        {
+                            BoldButton.Background = new SolidColorBrush(Colors.White);
+                            BoldButton_Clicked = false;
+                        }
+                        if (selected_Text.FontStyle == FontStyles.Italic)
+                        {
+                            ItalicButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                            ItalicButton_Clicked = true;
+                        }
+                        else
+                        {
+                            ItalicButton.Background = new SolidColorBrush(Colors.White);
+                            ItalicButton_Clicked = false;
+                        }
+                        if (selected_Text.TextDecorations.Count != 0)
+                        {
+                            UnderlineButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                            UnderlineButton_Clicked = true;
+                        }
+                        else
+                        {
+                            UnderlineButton.Background = new SolidColorBrush(Colors.White);
+                            UnderlineButton_Clicked = false;
+                        }
+                        if (selected_Text.Effect != null)
+                        {
+                            ShadowButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                            ShadowButton_Clicked = true;
+                        }
+                        else
+                        {
+                            ShadowButton.Background = new SolidColorBrush(Colors.White);
+                            ShadowButton_Clicked = false;
+                        }
+                        font_Family_Index = 0;
+                        foreach (FontFamily fam in Fonts.SystemFontFamilies)
+                        {
+                            if (fam == selected_Text.FontFamily)
+                            {
+                                break;
+                            }
+                            font_Family_Index++;
+                        }
+                        FontFamily_Combobox.SelectedIndex = font_Family_Index;
+                        font_Size_Index = 0;
+                        for (int i = 10; i < 60; i = i + 2)
+                        {
+                            if (Convert.ToDouble(i) == selected_Text.FontSize)
+                            {
+                                break;
+                            }
+                            font_Size_Index++;
+                        }
+                        FontSize_Combobox.SelectedIndex = font_Size_Index;
                     }
                     else if (sender is Polygon)
                     {
@@ -1045,17 +1202,41 @@ namespace KEAP
                         Begin_Point_Shape = e.GetPosition(sender as Line);
 
                         if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
+                        double min_x, min_y, max_x, max_y;
+                        if (selected_Line.X1 > selected_Line.X2)
+                        {
+                            min_x = selected_Line.X2;
+                            max_x = selected_Line.X1;
+                        }
+                        else
+                        {
+                            min_x = selected_Line.X1;
+                            max_x = selected_Line.X2;
+                        }
+                        if (selected_Line.Y1 > selected_Line.Y2)
+                        {
+                            min_y = selected_Line.Y2;
+                            max_y = selected_Line.Y1;
+                        }
+                        else
+                        {
+                            min_y = selected_Line.Y1;
+                            max_y = selected_Line.Y2;
+                        }
+
                         edit_Rect = new Rectangle()
                         {
-                            Width = selected_Line.Width + 10,
-                            Height = selected_Line.Height + 10,
+                            Width = max_x - min_x + 10,
+                            Height = max_x - min_x + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
-                        Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Line) - 5);
-                        Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Line) - 5);
+
+                        Canvas.SetLeft(edit_Rect, min_x - 5);
+                        Canvas.SetTop(edit_Rect, min_y - 5);
                         
                         MainCanvas.Children.Add(edit_Rect);
+                        selected_Line.StrokeDashArray = dashes;
                     }
                     else if (sender is Image)
                     {
@@ -1114,18 +1295,24 @@ namespace KEAP
                     found = true;
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                     edit_Rect = null;
+
+                    BoldButton.Background = new SolidColorBrush(Colors.White);
+                    ItalicButton.Background = new SolidColorBrush(Colors.White);
+                    UnderlineButton.Background = new SolidColorBrush(Colors.White);
+                    ShadowButton.Background = new SolidColorBrush(Colors.White);
+                    BoldButton_Clicked = ItalicButton_Clicked = UnderlineButton_Clicked = ShadowButton_Clicked = false;
                 }
                 if ((!(selected_Polygon == (sender as Polygon))) && selected_Polygon!=null)
                 {
+                    selected_Polygon.StrokeDashArray = null;
                     selected_Polygon = null;
                     found = true;
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
                     edit_Rect = null;
-                    
-                    selected_Polygon.StrokeDashArray = null;
                 }
                 if ((!(selected_Line == (sender as Line))) && selected_Line!=null)
                 {
+                    selected_Line.StrokeDashArray = null;
                     selected_Line = null;
                     found = true;
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
@@ -1175,6 +1362,66 @@ namespace KEAP
                     Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Text) - 5);
                     
                     MainCanvas.Children.Add(edit_Rect);
+                    if (selected_Text.FontWeight == FontWeights.Bold)
+                    {
+                        BoldButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                        BoldButton_Clicked = true;
+                    }
+                    else
+                    {
+                        BoldButton.Background = new SolidColorBrush(Colors.White);
+                        BoldButton_Clicked = false;
+                    }
+                    if (selected_Text.FontStyle == FontStyles.Italic)
+                    {
+                        ItalicButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                        ItalicButton_Clicked = true;
+                    }
+                    else
+                    {
+                        ItalicButton.Background = new SolidColorBrush(Colors.White);
+                        ItalicButton_Clicked = false;
+                    }
+                    if (selected_Text.TextDecorations.Count != 0)
+                    {
+                        UnderlineButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                        UnderlineButton_Clicked = true;
+                    }
+                    else
+                    {
+                        UnderlineButton.Background = new SolidColorBrush(Colors.White);
+                        UnderlineButton_Clicked = false;
+                    }
+                    if (selected_Text.Effect != null)
+                    {
+                        ShadowButton.Background = new SolidColorBrush(Colors.DodgerBlue);
+                        ShadowButton_Clicked = true;
+                    }
+                    else
+                    {
+                        ShadowButton.Background = new SolidColorBrush(Colors.White);
+                        ShadowButton_Clicked = false;
+                    }
+                    font_Family_Index = 0;
+                    foreach (FontFamily fam in Fonts.SystemFontFamilies)
+                    {
+                        if (fam == selected_Text.FontFamily)
+                        {
+                            break;
+                        }
+                        font_Family_Index++;
+                    }
+                    FontFamily_Combobox.SelectedIndex = font_Family_Index;
+                    font_Size_Index = 0;
+                    for (int i = 10; i < 60; i = i + 2)
+                    {
+                        if (Convert.ToDouble(i) == selected_Text.FontSize)
+                        {
+                            break;
+                        }
+                        font_Size_Index++;
+                    }
+                    FontSize_Combobox.SelectedIndex = font_Size_Index;
                 }
                 if (selected_Polygon != null)
                 {
@@ -1218,19 +1465,44 @@ namespace KEAP
                     drag_Mode = false;
                     select_Mode = !select_Mode;
                     selected_Line.ReleaseMouseCapture();
-                    selected_Line = sender as Line;
+                    if (sender != null) selected_Line = sender as Line;
                     if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
+
+                    double min_x, min_y, max_x, max_y;
+                    if (selected_Line.X1 > selected_Line.X2)
+                    {
+                        min_x = selected_Line.X2;
+                        max_x = selected_Line.X1;
+                    }
+                    else
+                    {
+                        min_x = selected_Line.X1;
+                        max_x = selected_Line.X2;
+                    }
+                    if (selected_Line.Y1 > selected_Line.Y2)
+                    {
+                        min_y = selected_Line.Y2;
+                        max_y = selected_Line.Y1;
+                    }
+                    else
+                    {
+                        min_y = selected_Line.Y1;
+                        max_y = selected_Line.Y2;
+                    }
+
                     edit_Rect = new Rectangle()
                     {
-                        Width = selected_Line.Width + 10,
-                        Height = selected_Line.Height + 10,
+                        Width = max_x-min_x + 10,
+                        Height = max_y-min_y + 10,
                         Stroke = new SolidColorBrush(Colors.Black),
                         StrokeDashArray = dashes
                     };
-                    Canvas.SetLeft(edit_Rect, Canvas.GetLeft(selected_Line) - 5);
-                    Canvas.SetTop(edit_Rect, Canvas.GetTop(selected_Line) - 5);
+
+                    Canvas.SetLeft(edit_Rect, min_x - 5);
+                    Canvas.SetTop(edit_Rect, min_y - 5);
                     
                     MainCanvas.Children.Add(edit_Rect);
+                    selected_Line.StrokeDashArray = dashes;
                 }
                 else if (selected_Image != null)
                 {
@@ -1544,24 +1816,53 @@ namespace KEAP
 
                 else if (selected_Line != null)
                 {
+                    double min_x, min_y, max_x, max_y;
+                    if (selected_Line.X1 > selected_Line.X2)
+                    {
+                        min_x = selected_Line.X2;
+                        max_x = selected_Line.X1;
+                    }
+                    else
+                    {
+                        min_x = selected_Line.X1;
+                        max_x = selected_Line.X2;
+                    }
+                    if (selected_Line.Y1 > selected_Line.Y2)
+                    {
+                        min_y = selected_Line.Y2;
+                        max_y = selected_Line.Y1;
+                    }
+                    else
+                    {
+                        min_y = selected_Line.Y1;
+                        max_y = selected_Line.Y2;
+                    }
+
                     if (End_Point.X < Start_Point_Shape.X)
                         m_left = 0;
-                    else if (MainCanvas.Width - End_Point.X > selected_Line.Width - Start_Point_Shape.X)
+                    else if (MainCanvas.Width - End_Point.X > (max_x - min_x - Start_Point_Shape.X))
                         m_left = (End_Point.X - Start_Point_Shape.X);
                     else
                         m_left = MainCanvas.ActualWidth - selected_Line.Width;
 
                     if (End_Point.Y < Start_Point_Shape.Y)
                         m_top = 0;
-                    else if (MainCanvas.Height - End_Point.Y > selected_Line.Height - Start_Point_Shape.Y)
+                    else if (MainCanvas.Height - End_Point.Y > (max_y - min_y - Start_Point_Shape.Y))
                         m_top = (End_Point.X - Start_Point_Shape.Y);
                     else
                         m_top = MainCanvas.ActualHeight - selected_Line.Height;
 
-                    Canvas.SetLeft(selected_Line, m_left);
-                    Canvas.SetTop(selected_Line, m_top);
+                    double previous_x = Canvas.GetLeft(edit_Rect),
+                        previous_y = Canvas.GetTop(edit_Rect);
                     Canvas.SetLeft(edit_Rect, m_left - 5);
                     Canvas.SetTop(edit_Rect, m_top - 5);
+                    double diff_x = Canvas.GetLeft(edit_Rect) - previous_x,
+                        diff_y = Canvas.GetTop(edit_Rect) - previous_y;
+
+                    selected_Line.X1 = selected_Line.X1 + diff_x;
+                    selected_Line.X2 = selected_Line.X2 + diff_x;
+                    selected_Line.Y1 = selected_Line.Y1 + diff_y;
+                    selected_Line.Y2 = selected_Line.Y2 + diff_y;
                 }
                 else if (selected_Image != null)
                 {
@@ -1615,6 +1916,12 @@ namespace KEAP
         {
             pen_Mode = text_Mode = line_Mode = rectangle_Mode = polygon_Mode = image_Mode = table_Mode = ellipse_Mode = eraseforpen_Mode = false;
             if (selected_Polygon != null) selected_Polygon.StrokeDashArray = null;
+            if (selected_Line != null) selected_Line.StrokeDashArray = null;
+            BoldButton.Background = new SolidColorBrush(Colors.White);
+            ItalicButton.Background = new SolidColorBrush(Colors.White);
+            UnderlineButton.Background = new SolidColorBrush(Colors.White);
+            ShadowButton.Background = new SolidColorBrush(Colors.White);
+            BoldButton_Clicked = ItalicButton_Clicked = UnderlineButton_Clicked = ShadowButton_Clicked = false;
             selected_Text = null;
             selected_Polygon = null;
             selected_Line = null;
@@ -1813,7 +2120,7 @@ namespace KEAP
             {
                 VerticalAlignment = System.Windows.VerticalAlignment.Center,
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                Background = new SolidColorBrush(Colors.White)
+                Background = new ImageBrush(canvas_Background_Bitmapimage)
             };
 
             if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
@@ -1898,16 +2205,33 @@ namespace KEAP
             }
             else
             {
-                Slides_List.Add(new SlideInfo()
+                if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
                 {
-                    Source = image.Source,
-                    Number = Convert.ToString(canvas_List.Count),
-                    Image_Width = (WindowSettings.resolution_Width * 0.75 / 3.75) - 35,
-                    Image_Height = (WindowSettings.resolution_Height * 0.75 / 3),
-                    Slide_Width = (WindowSettings.resolution_Width * 0.75 / 3.75),
-                    Slide_Height = ((WindowSettings.resolution_Height * 0.75 / 3)),
-                    Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
-                });
+                    Slides_List.Add(new SlideInfo()
+                    {
+                        Source = image.Source,
+                        Number = Convert.ToString(canvas_List.Count),
+                        Image_Width = ((MainCanvas.Width+50)*0.75/3.75) - 35,
+                        Image_Height = (((MainCanvas.Width+50)*0.75/3.75)*(WindowSettings.resolution_Height/WindowSettings.resolution_Width))-20,
+                        Slide_Width = ((MainCanvas.Width+50)*0.75/3.75),
+                        Slide_Height = (((MainCanvas.Width+50)*0.75/3.75)*(WindowSettings.resolution_Height/WindowSettings.resolution_Width)),
+                        Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
+                    });
+                }
+                else
+                {
+                    Slides_List.Add(new SlideInfo()
+                    {
+                        Source = image.Source,
+                        Number = Convert.ToString(canvas_List.Count),
+                        Image_Width = ((MainCanvas.Height + 50) * 0.6 / 3) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height) - 35,
+                        Image_Height = ((MainCanvas.Height + 50) * 0.6 / 3)-20,
+                        Slide_Width = ((MainCanvas.Height + 50) * 0.6 / 3) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height),
+                        Slide_Height = ((MainCanvas.Height + 50) * 0.6 / 3),
+                        Rect_Height = (Main_Border.ActualHeight * 0.6 / 3) * 0.28
+                    });
+                }
+                
             }
 
             Slide_ListView.ItemsSource = Slides_List;
@@ -1916,7 +2240,7 @@ namespace KEAP
         void Autoedit_Slide_List(KEAPCanvas param_Canvas, int param_Number)
         {
             Image image = RenderCanvas(param_Canvas);
-
+            
             if (Main_Border.ActualWidth == 0)
             {
                 Slides_List.Insert(param_Number, new SlideInfo()
@@ -1924,30 +2248,50 @@ namespace KEAP
                     Source = image.Source,
                     Number = Convert.ToString(param_Number + 1),
                     Image_Width = (WindowSettings.resolution_Width * 0.75 / 3.75) - 35,
-                    Image_Height = (Main_Border.ActualHeight * 0.75 / 3),
-                    Slide_Width = (Main_Border.ActualWidth * 0.75 / 3.75),
-                    Slide_Height = ((WindowSettings.resolution_Height * 0.75 / 3)),
-                    Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
+                    Image_Height = (((WindowSettings.resolution_Width - 92) / 3.8 - 50) * 0.75),
+                    Slide_Width = (WindowSettings.resolution_Width * 0.75 / 4.45),
+                    Slide_Height = (((WindowSettings.resolution_Height - 92) / 3.8 - 50) * 0.75 + 20),
+                    Rect_Height = ((WindowSettings.resolution_Width - 92) * 0.75 / 3.8) * 0.28
                 });
             }
 
             else
             {
-                Slides_List.Insert(param_Number, new SlideInfo()
+                if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
                 {
-                    Source = image.Source,
-                    Number = Convert.ToString(param_Number + 1),
-                    Image_Width = (Main_Border.ActualWidth * 0.75 / 3.75) - 35,
-                    Image_Height = (Main_Border.ActualHeight * 0.75 / 3),
-                    Slide_Width = (Main_Border.ActualWidth * 0.75 / 3.75),
-                    Slide_Height = ((Main_Border.ActualHeight * 0.75 / 3)),
-                    Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
-                });
+                    Slides_List.Insert(param_Number, new SlideInfo()
+                    {
+                        Source = image.Source,
+                        Number = Convert.ToString(canvas_List.Count),
+                        Image_Width = ((MainCanvas.Width + 50) * 0.75 / 3.75) - 35,
+                        Image_Height = ((((MainCanvas.Width + 50) * 0.75 / 3.75) - 35) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width)),
+                        Slide_Width = ((MainCanvas.Width + 50) * 0.75 / 3.75) - 25,
+                        Slide_Height = ((((MainCanvas.Width + 50) * 0.75 / 3.75) - 35) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width)) + 20,
+                        Rect_Height = (Main_Border.ActualHeight * 0.75 / 3) * 0.28
+                    });
+                }
+                else
+                {
+                    Slides_List.Insert(param_Number, new SlideInfo()
+                    {
+                        Source = image.Source,
+                        Number = Convert.ToString(canvas_List.Count),
+                        Image_Width = ((((MainCanvas.Height + 50) * (0.75 * 3.8 / 4.45) / 3)) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)),
+                        Image_Height = ((MainCanvas.Height + 50) * (0.75 * 3.8 / 4.45) / 3),
+                        Slide_Width = ((((MainCanvas.Height + 50) * (0.75 * 3.8 / 4.45) / 3)-3) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)),
+                        Slide_Height = (((MainCanvas.Height + 50) * (0.75 * 3.8 / 4.45) / 3)-20),
+                        Rect_Height = (Main_Border.ActualHeight * 0.6 / 3) * 0.28
+                    });
+                }
             }
+            
             Slide_ListView.SelectedIndex = param_Number;
+            
             Slides_List.RemoveAt(param_Number + 1);
             Slide_ListView.SelectedIndex = param_Number;
             
+            //((SlideInfo)(Slide_ListView.Items[param_Number])).Source = image.Source;
+            Slide_ListView.ItemsSource = Slides_List;
             MainCanvas.Measure(new Size(MainCanvas.Width, MainCanvas.Height));
             MainCanvas.Arrange(new Rect(0, 0, MainCanvas.Width, MainCanvas.Height));
         }
@@ -1991,23 +2335,36 @@ namespace KEAP
                 xmlfile.Close();
             }
             using (XmlWriter xmlFile = XmlWriter.Create(param_path + param_name + ".xml"))
-            //using (XmlReader xmlFile = XmlReader.Create(param_path + param_name + ".xml"))
             {
                 XmlDocument xmlDoc;
                 xmlDoc = new XmlDocument();
-                //xmlDoc.lLoad(xmlFile);
 
                 XmlElement file = xmlDoc.CreateElement("file");
                 file.SetAttribute("Time", DateTime.Now.ToLongDateString() + "\\" + DateTime.Now.ToLongTimeString());
                 file.SetAttribute("MainCanvas_Width", Convert.ToString(MainCanvas.Width));
                 file.SetAttribute("MainCanvas_Height", Convert.ToString(MainCanvas.Height));
                 int i = 1;
+
+
+                FileStream fs_BG;
+                string filepath_BG = param_path + param_name + "_Background.png"; // filename_Image_(Canvas#)_(Image#).png
+                fs_BG = System.IO.File.OpenWrite(filepath_BG);
+                PngBitmapEncoder encoder_BG = new PngBitmapEncoder();
+                // push the rendered bitmap to it
+                encoder_BG.Frames.Add(BitmapFrame.Create(canvas_Background));
+                // save the data to the stream
+                encoder_BG.Save(fs_BG);
+                //fs.Dispose();
+                fs_BG.Close();
+                file.SetAttribute("Background_Path", param_name + "_Background.png");
+
                 foreach (KEAPCanvas canvas in canvas_List)
                 {
                     XmlElement canvas_element = xmlDoc.CreateElement("Slide" + Convert.ToString(i));
                     List<BitmapFrame> bitmapFrame_List = null;
                     if (i - 1 < bitmapFrame_Dictionary.Count)
                         bitmapFrame_List = bitmapFrame_Dictionary[i - 1];
+                    
                     int j = 0;
                     foreach (UIElement obj in canvas.Children)
                     {
@@ -2119,20 +2476,53 @@ namespace KEAP
                             fontsize.InnerText = Convert.ToString(thistextblock.FontSize);
                             T.AppendChild(fontsize);
 
-                            Brush brush = thistextblock.Background;
-                            XmlElement Color_of_A = xmlDoc.CreateElement("Color_A");//((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A;
-                            Color_of_A.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).A);
-                            T.AppendChild(Color_of_A);
-                            XmlElement Color_of_R = xmlDoc.CreateElement("Color_R");
-                            Color_of_R.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).R);
-                            T.AppendChild(Color_of_R);
-                            XmlElement Color_of_G = xmlDoc.CreateElement("Color_G");
-                            Color_of_G.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).G);
-                            T.AppendChild(Color_of_G);
-                            XmlElement Color_of_B = xmlDoc.CreateElement("Color_B");
-                            Color_of_B.InnerText = Convert.ToString(((Color)brush.GetValue(SolidColorBrush.ColorProperty)).B);
-                            T.AppendChild(Color_of_B);
+                            Brush e_Fill_Brush = thistextblock.Background;
+                            XmlElement Fill_Color_of_A = xmlDoc.CreateElement("Fill_Color_A");//((Color)e_Fill_Brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                            Fill_Color_of_A.InnerText = Convert.ToString(((Color)e_Fill_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            T.AppendChild(Fill_Color_of_A);
+                            XmlElement Fill_Color_of_R = xmlDoc.CreateElement("Fill_Color_R");
+                            Fill_Color_of_R.InnerText = Convert.ToString(((Color)e_Fill_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            T.AppendChild(Fill_Color_of_R);
+                            XmlElement Fill_Color_of_G = xmlDoc.CreateElement("Fill_Color_G");
+                            Fill_Color_of_G.InnerText = Convert.ToString(((Color)e_Fill_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            T.AppendChild(Fill_Color_of_G);
+                            XmlElement Fill_Color_of_B = xmlDoc.CreateElement("Fill_Color_B");
+                            Fill_Color_of_B.InnerText = Convert.ToString(((Color)e_Fill_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            T.AppendChild(Fill_Color_of_B);
 
+                            Brush e_Foreground_Brush = thistextblock.Background;
+                            XmlElement Foreground_Color_of_A = xmlDoc.CreateElement("Foreground_Color_A");//((Color)e_Foreground_Brush.GetValue(SolidColorBrush.ColorProperty)).A;
+                            Foreground_Color_of_A.InnerText = Convert.ToString(((Color)e_Foreground_Brush.GetValue(SolidColorBrush.ColorProperty)).A);
+                            T.AppendChild(Foreground_Color_of_A);
+                            XmlElement Foreground_Color_of_R = xmlDoc.CreateElement("Foreground_Color_R");
+                            Foreground_Color_of_R.InnerText = Convert.ToString(((Color)e_Foreground_Brush.GetValue(SolidColorBrush.ColorProperty)).R);
+                            T.AppendChild(Foreground_Color_of_R);
+                            XmlElement Foreground_Color_of_G = xmlDoc.CreateElement("Foreground_Color_G");
+                            Foreground_Color_of_G.InnerText = Convert.ToString(((Color)e_Foreground_Brush.GetValue(SolidColorBrush.ColorProperty)).G);
+                            T.AppendChild(Foreground_Color_of_G);
+                            XmlElement Foreground_Color_of_B = xmlDoc.CreateElement("Foreground_Color_B");
+                            Foreground_Color_of_B.InnerText = Convert.ToString(((Color)e_Foreground_Brush.GetValue(SolidColorBrush.ColorProperty)).B);
+                            T.AppendChild(Foreground_Color_of_B);
+
+                            XmlElement textalignment = xmlDoc.CreateElement("TextAlignment");
+                            textalignment.InnerText = thistextblock.TextAlignment.ToString();
+                            T.AppendChild(textalignment);
+
+                            XmlElement e_FontFamily = xmlDoc.CreateElement("FontFamily");
+                            e_FontFamily.InnerText = thistextblock.FontFamily.ToString();
+                            T.AppendChild(e_FontFamily);
+
+                            XmlElement e_FontWeight = xmlDoc.CreateElement("FontWeight");
+                            e_FontWeight.InnerText = thistextblock.FontWeight.ToString();
+                            T.AppendChild(e_FontWeight);
+
+                            XmlElement e_Effect = xmlDoc.CreateElement("Effect");
+                            if (thistextblock.Effect != null)
+                                e_Effect.InnerText = "1";
+                            else
+                                e_Effect.InnerText = "0";
+                            T.AppendChild(e_Effect);
+                            
                             canvas_element.AppendChild(T);
                         }
 
@@ -2369,12 +2759,25 @@ namespace KEAP
                     // Slide_ListView.SelectedIndex = -1;
                     Slides_List = new ObservableCollection<SlideInfo>();
 
+                    string background_Path = file.GetAttribute("Background_Path");
+                    
+                    canvas_Background_Bitmapimage = new BitmapImage();
+                    canvas_Background_Bitmapimage.BeginInit();
+                    canvas_Background_Bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                    canvas_Background_Bitmapimage.UriSource = new Uri(param_path + background_Path, UriKind.Absolute);
+                    canvas_Background_Bitmapimage.EndInit();
+                    
+                    
+                    canvas_Background = BitmapFrame.Create(canvas_Background_Bitmapimage);
+                    ImageBrush imagebrush_BG = new ImageBrush(canvas_Background_Bitmapimage);
+
                     foreach (XmlElement slide in file.ChildNodes)
                     {
                         KEAPCanvas canvas = new KEAPCanvas();
                         canvas.Width = canvas_Width;
                         canvas.Height = canvas_Height;
-
+                        canvas.Background = imagebrush_BG;
+                        
                         animation_List = new List<Dictionary<int, string>>();
                         foreach (XmlElement uielement in slide.ChildNodes)
                         {
@@ -2514,6 +2917,27 @@ namespace KEAP
                                 p++;
 
                                 xmlnode = uielement.ChildNodes[p];
+                                Byte fill_Color_A = Convert.ToByte(xmlnode.InnerText);
+                                p++;
+                                xmlnode = uielement.ChildNodes[p];
+                                Byte fill_Color_R = Convert.ToByte(xmlnode.InnerText);
+                                p++;
+                                xmlnode = uielement.ChildNodes[p];
+                                Byte fill_Color_G = Convert.ToByte(xmlnode.InnerText);
+                                p++;
+                                xmlnode = uielement.ChildNodes[p];
+                                Byte fill_Color_B = Convert.ToByte(xmlnode.InnerText);
+                                p++;
+
+                                Color fillcolor = new Color()
+                                {
+                                    A = fill_Color_A,
+                                    G = fill_Color_G,
+                                    R = fill_Color_R,
+                                    B = fill_Color_B
+                                };
+
+                                xmlnode = uielement.ChildNodes[p];
                                 Byte font_Color_A = Convert.ToByte(xmlnode.InnerText);
                                 p++;
                                 xmlnode = uielement.ChildNodes[p];
@@ -2535,35 +2959,52 @@ namespace KEAP
                                 };
 
                                 xmlnode = uielement.ChildNodes[p];
-                                Byte fill_Color_A = Convert.ToByte(xmlnode.InnerText);
+                                TextAlignment textalignment;
+                                if(xmlnode.InnerText=="Center")
+                                    textalignment = TextAlignment.Center;
+                                else if(xmlnode.InnerText=="Left")
+                                    textalignment = TextAlignment.Left;
+                                else if (xmlnode.InnerText == "Right")
+                                    textalignment = TextAlignment.Right;
+                                else
+                                    textalignment = TextAlignment.Justify;
                                 p++;
-                                xmlnode = uielement.ChildNodes[p];
-                                Byte fill_Color_R = Convert.ToByte(xmlnode.InnerText);
-                                p++;
-                                xmlnode = uielement.ChildNodes[p];
-                                Byte fill_Color_G = Convert.ToByte(xmlnode.InnerText);
-                                p++;
-                                xmlnode = uielement.ChildNodes[p];
-                                Byte fill_Color_B = Convert.ToByte(xmlnode.InnerText);
 
-                                Color fillcolor = new Color()
-                                {
-                                    A = fill_Color_A,
-                                    G = fill_Color_G,
-                                    R = fill_Color_R,
-                                    B = fill_Color_B
-                                };
+                                xmlnode = uielement.ChildNodes[p];
+                                FontFamily fontfamily = new FontFamily(xmlnode.ToString());
+                                p++;
 
-                                TextBox newtextbox = new TextBox()
+                                xmlnode = uielement.ChildNodes[p];
+                                FontWeight fontweight;
+                                if (xmlnode.InnerText == "Bold")
+                                    fontweight = FontWeights.Bold;
+                                else
+                                    fontweight = FontWeights.Normal;
+                                p++;
+
+                                xmlnode = uielement.ChildNodes[p];
+                                Effect effect;
+                                if(xmlnode.InnerText == "1")
+                                    effect = new DropShadowEffect() { ShadowDepth = 4, Direction = 315, Color = Colors.Black, Opacity = 0.5 };
+                                else
+                                    effect = null;
+                                p++;
+
+                                EditableTextBlock newtextbox = new EditableTextBlock()
                                 {
                                     Width = _points[2] - _points[0],
                                     Height = _points[3] - _points[1],
                                     Text = _Text,
                                     FontSize = _FontSize,
                                     Foreground = new SolidColorBrush(fontcolor),
-                                    Background = new SolidColorBrush(fillcolor)
+                                    Background = new SolidColorBrush(fillcolor),
+                                    FontFamily = fontfamily,
+                                    FontWeight = fontweight,
+                                    TextAlignment = textalignment
                                 };
-
+                                if (effect != null)
+                                    newtextbox.Effect = new DropShadowEffect() { ShadowDepth = 4, Direction = 315, Color = Colors.Black, Opacity = 0.5 };
+                                
                                 Canvas.SetLeft(newtextbox, _points[0]);
                                 Canvas.SetTop(newtextbox, _points[1]);
                                 newtextbox.Width = _points[2] - _points[0];
@@ -3203,6 +3644,43 @@ namespace KEAP
 
         #endregion
 
+        #region Combobox 및 컬러 메뉴
+
+        private void FontFamily_Combobox_Loaded(object sender, RoutedEventArgs e)
+        {
+            foreach (FontFamily FontFamily in Fonts.SystemFontFamilies)
+            {
+                FontFamily_Combobox.Items.Add(FontFamily.Source);
+            }
+            FontFamily_Combobox.SelectedIndex = 0;
+   
+        }
+
+        private void FontFamily_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (selected_Text != null)
+                selected_Text.FontFamily = new FontFamily(FontFamily_Combobox.SelectedItem.ToString());
+            font_Family = new FontFamily(FontFamily_Combobox.SelectedItem.ToString());
+            font_Family_Index = FontFamily_Combobox.SelectedIndex;
+        }
+
+        private void FontSize_Combobox_Loaded(object sender, RoutedEventArgs e)
+        {
+            for(int i=10; i<60; i=i+2)
+            {
+                FontSize_Combobox.Items.Add(Convert.ToString(i));
+            }
+            FontSize_Combobox.SelectedIndex = 0;
+        }
+
+        private void FontSize_Combobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (selected_Text != null)
+                selected_Text.FontSize = Convert.ToDouble(FontSize_Combobox.SelectedItem.ToString());
+            font_Size = Convert.ToDouble(FontSize_Combobox.SelectedItem.ToString());
+            font_Size_Index = FontSize_Combobox.SelectedIndex;
+        }
+
         private void ComboFontColor_Loaded(object sender, RoutedEventArgs e)
         {
             ComboFontColor.superCombo.SelectedIndex = 7;
@@ -3235,6 +3713,7 @@ namespace KEAP
 
             fill_Brush = ComboFillColor.SelectedColor;
         }
+        #endregion
 
         private void ComboLineColor_Loaded(object sender, RoutedEventArgs e)
         {
@@ -3801,22 +4280,30 @@ namespace KEAP
             if (result == true)
             {
                 image_Path = dlg.FileName;
-                image_Mode = true;
+                //image_Mode = true;
 
-                new_Bitmap_Image = new BitmapImage();
+                canvas_Background_Bitmapimage = new BitmapImage();
 
-                new_Bitmap_Image.BeginInit();
-                new_Bitmap_Image.UriSource = new Uri(image_Path, UriKind.Absolute);
-                new_Bitmap_Image.EndInit();
+                canvas_Background_Bitmapimage.BeginInit();
+                canvas_Background_Bitmapimage.UriSource = new Uri(image_Path, UriKind.Absolute);
+                canvas_Background_Bitmapimage.EndInit();
+
+                canvas_Background = BitmapFrame.Create(canvas_Background_Bitmapimage);
+
+                ImageBrush imagebrush = new ImageBrush(canvas_Background_Bitmapimage);
+                imagebrush.Stretch = Stretch.Fill;
+                int i = 0;
+                foreach (KEAPCanvas canvas in canvas_List)
+                {
+                    canvas.Background = imagebrush;
+                    Image image_renew = RenderCanvas(canvas);
+                    Slides_List.ElementAt(i).Source = image_renew.Source;
+                    ((SlideInfo)(Slide_ListView.Items[i])).Source = image_renew.Source;
+                    i++;
+                }
+                
+                MainCanvas.Background = imagebrush;
             }
-            ImageBrush imagebrush = new ImageBrush(new_Bitmap_Image);
-            imagebrush.Stretch = Stretch.Fill;
-            (canvas_List[Slide_ListView.SelectedIndex]).Background = imagebrush;
-            MainCanvas.Background = imagebrush;
-            Image image_renew = RenderCanvas(MainCanvas);
-            ((SlideInfo)(Slide_ListView.Items[Slide_ListView.SelectedIndex])).Source = image_renew.Source;
         }
-
-        
     }
 }

@@ -20,21 +20,25 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <!--DEBUG-->
-                    <StackPanel x:Name="Slide_ItemStackPanel" Orientation="Vertical" VerticalAlignment="Center"  HorizontalAlignment="Center">
-                        <!--Width="{Binding Path=Slide_Width}">-->
-                        <Grid>
+                    <StackPanel x:Name="Slide_ItemStackPanel" Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{Binding Path=Slide_Width}" Height="{Binding Path=Slide_Height}">
+                        <Grid Background="LightGray">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="25"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Name="Item_Number" HorizontalAlignment="Left" Text="{Binding Path=Number}" Margin="5,0,5,0" Width="15" TextTrimming="WordEllipsis" FontSize="12" Grid.Column="0"/>
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">
+                            <Border Margin="5,10,5,10" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="LightGray">
+                                <Image Source="{Binding Path=Source}" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Fill" Width="{Binding Path=Image_Width}" Height="{Binding Path=Image_Height}"/>
+                            </Border>
+                            </StackPanel>
                             <!--Height="{Binding Path=Image_Height}"-->
-                            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1">
+                          <!--  <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1">
                                 <Rectangle VerticalAlignment="Top"  HorizontalAlignment="Right" Width="{Binding Path=Image_Wdith}" Height="{Binding Path=Rect_Height}"/>
                                 <Border Margin="5,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" BorderBrush="LightGray">
                                     <Image Source="{Binding Path=Source}" VerticalAlignment="Top" Stretch="Fill" Width="{Binding Path=Image_Width}" Height="{Binding Path=Image_Height}"/>
                                 </Border>
-                            </StackPanel>
+                            </StackPanel>-->
                         </Grid>
                     </StackPanel>
                 </DataTemplate>
@@ -141,14 +145,36 @@
             </Button>
 
             <Rectangle Grid.Column="4" Grid.RowSpan="3" Fill="Gray"/>
-            <ComboBox x:Name="FontFamily_ComboBox" ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}" Grid.Column="5" HorizontalAlignment="Left" Width="140" Margin="5,15,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="LightGray" IsSynchronizedWithCurrentItem="True" Height="25" Grid.RowSpan="3">
+            <ComboBox x:Name="FontFamily_Combobox" Grid.Column="5" Grid.Row="0"  Grid.RowSpan="2" Margin="5,15,0,0" Height="24" Width="130" Loaded="FontFamily_Combobox_Loaded" SelectionChanged="FontFamily_Combobox_SelectionChanged"  FontFamily="HYGothic" FontSize="14" VerticalAlignment="Top" >
+                <ComboBox.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;글꼴&gt;"/></TextBlock>
+                            <TextBlock Margin="5"><Run Text="글꼴이름을 변경합니다"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </ComboBox.ToolTip>
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" FontFamily="{Binding}" FontSize="16"/>
+                        <TextBlock Text="{Binding}" FontFamily="{Binding}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <ComboBox x:Name="FontSize_ComboBox" ItemsSource="{Binding Source={x:Static SystemFonts.IconFontStyleKey}}" Grid.Column="6" HorizontalAlignment="Right" Width="50" Margin="5,15,10,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="LightGray" Height="25" Grid.RowSpan="3"/>
+            <ComboBox x:Name="FontSize_Combobox" Grid.Column="6" Grid.Row="0"  Grid.RowSpan="2" Margin="0,15,0,5" Height="24" Width="50" Loaded="FontSize_Combobox_Loaded" SelectionChanged="FontSize_Combobox_SelectionChanged"  FontFamily="HYGothic" FontSize="14" VerticalAlignment="Top" >
+                <ComboBox.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;글자 크기&gt;"/></TextBlock>
+                            <TextBlock Margin="5"><Run Text="글자 크기를 변경합니다"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </ComboBox.ToolTip>
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontFamily="{Binding}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <Button x:Name="BoldButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,0,0,15" Background="{x:Null}" Grid.Column="5" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="BoldButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
@@ -381,6 +407,6 @@
         <Button x:Name="EllipseButton" Content="원" Grid.Column="1" HorizontalAlignment="Left" Margin="521,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="50" Click="Ellipse_Click" Grid.RowSpan="2"/>
         <Button Content="저장" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Click="Save_Click" />
         <Button Grid.ColumnSpan="2" Content="Button" HorizontalAlignment="Left" Margin="60,0,0,0" VerticalAlignment="Top" Width="75" Click="Open_Click"/>
-        <Button x:Name="SlideBackgroundSetButton" Content="이미지" Grid.Column="1" HorizontalAlignment="Left" Margin="726,14,0,0" VerticalAlignment="Top" Width="50" Click="SlideBackgroundSetButton_Click" Grid.RowSpan="2" />
+        <Button x:Name="SlideBackgroundSetButton" Content="배경지정" Grid.Column="1" HorizontalAlignment="Left" Margin="726,14,0,0" VerticalAlignment="Top" Width="50" Click="SlideBackgroundSetButton_Click" Grid.RowSpan="2" />
     </Grid>
 </Window>
