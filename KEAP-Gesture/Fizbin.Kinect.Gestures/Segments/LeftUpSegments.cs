@@ -30,7 +30,7 @@ namespace Fizbin.Kinect.Gestures.Segments
             {
 
 
-                if (skeleton.Joints[JointType.HandRight].Position.Y < skeleton.Joints[JointType.HipRight].Position.Y &&  // 오른손은 가만히
+                if (//skeleton.Joints[JointType.HandRight].Position.Y < skeleton.Joints[JointType.HipRight].Position.Y &&  // 오른손은 가만히
                   skeleton.Joints[JointType.HandLeft].Position.X < skeleton.Joints[JointType.ShoulderLeft].Position.X // 왼손이 왼쪽 어깨보다 왼쪽
                     )
                 {
