@@ -51,7 +51,7 @@ namespace KEAP
                     anilist = null;
                 else
                 {
-                    if (i <= animations.Count)
+                    if (i < animations.Count)
                         anilist = animations[i];
                     else
                         anilist = null;
@@ -231,7 +231,6 @@ namespace KEAP
                     animation_indexes.Add(dic.Keys.First());
                 }
             }
-            //AudienceCanvas.Arrange(Rec)
         }
 
         void AudienceCanvas_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

@@ -36,28 +36,26 @@ namespace KEAP
         public Dictionary<int, List<BitmapFrame>> bitmapFrame_Dictionary = new Dictionary<int, List<BitmapFrame>>();
         public BitmapFrame canvas_Background;
         public BitmapImage canvas_Background_Bitmapimage;
+        public ObservableCollection<Ani_List_Info> Anis_List = new ObservableCollection<Ani_List_Info>();
         
         public List<Dictionary<int, string>> animation_List = new List<Dictionary<int, string>>();
         public Dictionary<int, List<Dictionary<int, string>>> animation_Dictionary = new Dictionary<int, List<Dictionary<int, string>>>();
-
-        private Shape target_Shape;
 
         int previous_selection = -1;
         KEAPCanvas MainCanvas;
 
         bool pen_Mode = false, text_Mode = false, line_Mode = false, line_Mode_Toggle = false,
             rectangle_Mode = false, polygon_Mode = false, polygon_Mode_Toggle = false, image_Mode = false,
-            table_Mode = false, ellipse_Mode = false, eraseforpen_Mode = false;
+            ellipse_Mode = false, eraseforpen_Mode = false;
 
         bool select_Mode = false;
 
         bool pen_Move_Mode = false, text_Move_Mode = false, line_Move_Mode = false,
             rectangle_Move_Mode = false, polygon_Move_Mode = false, image_Move_Mode = false,
-            table_Move_Mode = false, ellipse_Move_Mode = false;
+            ellipse_Move_Mode = false;
         bool drag_Mode = true;
-        bool select_Shape_Mode = false, select_Line_Mode = false, select_Text_Mode = false, select_Polygon_Mode = false;
+        
         bool edit_Mode = false, edit_Mode_Ready = false;
-        bool canvas_in_Mode = false;
         bool canvas_LeftButton_Down = false;
         bool poly_Start_Get = false;
 
@@ -67,7 +65,6 @@ namespace KEAP
 
         BitmapImage new_Bitmap_Image;
         string image_Path;
-        Rectangle image_Rect;
 
         Rectangle edit_Rect;
 
@@ -77,8 +74,6 @@ namespace KEAP
         Polygon selected_Polygon;
         Shape selected_Shape;
         Image selected_Image;
-
-        int table_Row_Count = 2, table_Column_Count = 3;
 
         Brush stroke_Brush, fill_Brush, font_Brush;
         FontFamily font_Family; int font_Family_Index;
@@ -140,6 +135,9 @@ namespace KEAP
             AddKeyBindings();
 
             Autoedit_Slide_List(MainCanvas, Slide_ListView.SelectedIndex);
+            
+            AllMenuGridToCollapsed();
+            HomeMenu_Grid.Visibility = Visibility.Visible;
         }
 
 
@@ -307,74 +305,6 @@ namespace KEAP
                 //image.MouseLeave += UIElement_MouseLeave;
                 MainCanvas.Children.Add(image);
             }
-
-            if (table_Mode)
-            {
-                Grid grid = new Grid()
-                {
-                    Background = new SolidColorBrush(Colors.LightGray),
-                    Width = 1,
-                    Height = 1
-                };
-
-                int i;
-                for (i = 0; i < table_Row_Count; i++)
-                {
-                    RowDefinition row_Definition = new RowDefinition();
-                    grid.RowDefinitions.Add(row_Definition);
-                }
-                for (i = 0; i < table_Column_Count; i++)
-                {
-                    ColumnDefinition column_Definition = new ColumnDefinition();
-                    grid.ColumnDefinitions.Add(column_Definition);
-                }
-
-                int table_Entry_X = 0, table_Entry_Y = 0;
-                while (table_Entry_X * table_Entry_Y != table_Row_Count * table_Column_Count)
-                {
-                    EditableTextBlock textblock = new EditableTextBlock()
-                    {
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        TextAlignment = TextAlignment.Center,
-                        //BorderBrush = new SolidColorBrush(Colors.Black),
-                        Background = fill_Brush,
-                        TextWrapping = TextWrapping.Wrap,
-                        //FontStyle = Windows.UI.Text.FontStyle.Normal,
-                        Foreground = font_Brush,
-                        FontFamily = font_Family,
-                        FontSize = font_Size
-                    };
-
-                    textblock.MouseLeftButtonDown += UIElement_MouseLeftButtonDown;
-                    textblock.MouseLeftButtonUp += UIElement_MouseLeftButtonUp;
-                    textblock.MouseMove += UIElement_MouseMove;
-
-                    Grid.SetRow(textblock, table_Entry_X);
-                    Grid.SetColumn(textblock, table_Entry_Y);
-                    Grid.SetRowSpan(textblock, 1);
-                    Grid.SetColumnSpan(textblock, 1);
-
-                    textblock.Width = (grid.Width / table_Column_Count);
-                    textblock.Height = (grid.Height / table_Row_Count);
-                    if (table_Entry_Y == table_Column_Count - 1)
-                    {
-                        table_Entry_Y = 0;
-                        table_Entry_X++;
-                    }
-                    else
-                        table_Entry_Y++;
-                    grid.Children.Add(textblock);
-                }
-                //grid.MouseEnter += UIElement_MouseEnter;
-                grid.MouseLeftButtonDown += UIElement_MouseLeftButtonDown;
-                grid.MouseLeftButtonUp += UIElement_MouseLeftButtonUp;
-                grid.MouseMove += UIElement_MouseMove;
-                //grid.MouseLeave += UIElement_MouseLeave;
-
-                MainCanvas.Children.Add(grid);
-            }
-
         }
 
         void MainCanvas_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -501,7 +431,7 @@ namespace KEAP
 
             Image image_renew = RenderCanvas(MainCanvas);
             ((SlideInfo)(Slide_ListView.Items[Slide_ListView.SelectedIndex])).Source = image_renew.Source;
-            text_Mode = image_Mode = rectangle_Mode = ellipse_Mode = table_Mode = false;
+            text_Mode = image_Mode = rectangle_Mode = ellipse_Mode = false;
         }
         void MainCanvas_PreviewMouseMove(object sender, MouseEventArgs e)
         {
@@ -684,51 +614,7 @@ namespace KEAP
                         else { Canvas.SetLeft(((Image)MainCanvas.Children[prev_Count_Children]), x1); Canvas.SetTop(((Image)MainCanvas.Children[prev_Count_Children]), y2); }
                     }
                 }
-                else if (table_Mode)
-                {
-                    int area1 = 0, area2 = 0, area3 = 0;
-                    if (x1 < x2)
-                    {
-                        ((Grid)MainCanvas.Children[prev_Count_Children]).Width = x2 - x1;
-                        area1 = 1;
-                    }
-                    else
-                    {
-                        ((Grid)MainCanvas.Children[prev_Count_Children]).Width = x1 - x2;
-                        area2 = 1; area3 = 1;
-                    }
-                    if (y1 < y2)
-                    {
-                        ((Grid)MainCanvas.Children[prev_Count_Children]).Height = y2 - y1;
-                        area3 = 0;
-                    }
-                    else
-                    {
-                        ((Grid)MainCanvas.Children[prev_Count_Children]).Height = y1 - y2;
-                        area1 = 0; area2 = 0;
-                    }
-                    double block_Width = ((Grid)MainCanvas.Children[prev_Count_Children]).Width / table_Column_Count,
-                        block_Height = ((Grid)MainCanvas.Children[prev_Count_Children]).Height / table_Row_Count;
-                    if (block_Width > 2)
-                    {
-                        block_Width = block_Width - 2;
-                    }
-                    if (block_Height > 2)
-                    {
-                        block_Height = block_Height - 2;
-                    }
-                    foreach (EditableTextBlock textblock in ((Grid)MainCanvas.Children[prev_Count_Children]).Children)
-                    {
-                        textblock.Width = block_Width;
-                        textblock.Height = block_Height;
-                    }
-
-                    if (area1 == 1) { Canvas.SetLeft(((Grid)MainCanvas.Children[prev_Count_Children]), x1); Canvas.SetTop(((Grid)MainCanvas.Children[prev_Count_Children]), y1); }
-                    else if (area2 == 1) { Canvas.SetLeft(((Grid)MainCanvas.Children[prev_Count_Children]), x2); Canvas.SetTop(((Grid)MainCanvas.Children[prev_Count_Children]), y1); }
-                    else if (area3 == 1) { Canvas.SetLeft(((Grid)MainCanvas.Children[prev_Count_Children]), x2); Canvas.SetTop(((Grid)MainCanvas.Children[prev_Count_Children]), y2); }
-                    else { Canvas.SetLeft(((Grid)MainCanvas.Children[prev_Count_Children]), x1); Canvas.SetTop(((Grid)MainCanvas.Children[prev_Count_Children]), y2); }
-                }
-
+                
                 else if (ellipse_Mode)
                 {
                     int area1 = 0, area2 = 0, area3 = 0;
@@ -1141,7 +1027,7 @@ namespace KEAP
             }
             else
             {
-                if (!(rectangle_Mode || ellipse_Mode || text_Mode || line_Mode || polygon_Mode || pen_Mode || image_Mode || table_Mode))
+                if (!(rectangle_Mode || ellipse_Mode || text_Mode || line_Mode || polygon_Mode || pen_Mode || image_Mode))
                 {
                     edit_Mode_Ready = true;
 
@@ -1979,7 +1865,7 @@ namespace KEAP
         #region 버튼Boolean Settion
         void SetAllModeFalse()
         {
-            pen_Mode = text_Mode = line_Mode = rectangle_Mode = polygon_Mode = image_Mode = table_Mode = ellipse_Mode = eraseforpen_Mode = false;
+            pen_Mode = text_Mode = line_Mode = rectangle_Mode = polygon_Mode = image_Mode = ellipse_Mode = eraseforpen_Mode = false;
             if (selected_Polygon != null) selected_Polygon.StrokeDashArray = null;
             if (selected_Line != null) selected_Line.StrokeDashArray = null;
             BoldButton.Background = new SolidColorBrush(Colors.White);
@@ -2074,11 +1960,6 @@ namespace KEAP
             }
         }
 
-        private void Table_Click(object sender, RoutedEventArgs e)
-        {
-            SetAllModeFalse();
-            table_Mode = true;
-        }
 
         private void ClearAll_Click(object sender, RoutedEventArgs e)
         {
@@ -2099,7 +1980,7 @@ namespace KEAP
 
         void SetAllMoveModeFalse()
         {
-            pen_Move_Mode = text_Move_Mode = line_Move_Mode = rectangle_Move_Mode = polygon_Move_Mode = image_Move_Mode = table_Move_Mode = ellipse_Move_Mode = eraseforpen_Mode = false;
+            pen_Move_Mode = text_Move_Mode = line_Move_Mode = rectangle_Move_Mode = polygon_Move_Mode = image_Move_Mode = ellipse_Move_Mode = eraseforpen_Mode = false;
         }
 
 
@@ -2107,7 +1988,7 @@ namespace KEAP
 
         private bool IsSelectMode()
         {
-            return !(pen_Mode || text_Mode || line_Mode || rectangle_Mode || polygon_Mode || image_Mode || table_Mode || ellipse_Mode || eraseforpen_Mode);
+            return !(pen_Mode || text_Mode || line_Mode || rectangle_Mode || polygon_Mode || image_Mode || ellipse_Mode || eraseforpen_Mode);
         }
 
         private double GetDistance(double x1, double y1, double x2, double y2)
@@ -2129,6 +2010,7 @@ namespace KEAP
             AllMenuBorderToWhite();
             AllMenuGridToCollapsed();
             InsertMenu.BorderBrush = new SolidColorBrush(Colors.LightGray);
+            InsertMenu_Grid.Visibility = System.Windows.Visibility.Visible;
         }
 
         private void AnimationMenu_Click(object sender, RoutedEventArgs e)
@@ -2146,8 +2028,7 @@ namespace KEAP
 
         void AllMenuGridToCollapsed()
         {
-            HomeMenu_Grid.Visibility = InsertMenu_Grid.Visibility = StyleMenu_Grid.Visibility
-                = DesignMenu_Grid.Visibility = ConvertMenu_Grid.Visibility = AnimationMenu_Grid.Visibility = System.Windows.Visibility.Collapsed;
+            HomeMenu_Grid.Visibility = InsertMenu_Grid.Visibility = AnimationMenu_Grid.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         private void NewSlideButton_Click(object sender, RoutedEventArgs e)
@@ -3553,6 +3434,7 @@ namespace KEAP
         private void FadeIn_Click(object sender, RoutedEventArgs e)
         {
             AniManaging("FadeIn");
+            
         }
 
         private void FadeOut_Click(object sender, RoutedEventArgs e)
@@ -3562,7 +3444,7 @@ namespace KEAP
 
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            AniManaging("ZoomIn");
+            AniManaging("ZoomIn"); 
         }
 
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
@@ -3621,6 +3503,7 @@ namespace KEAP
             else if (selected_Image != null) ele = selected_Image;
             else if (selected_Shape != null) ele = selected_Shape;
             else return;
+
             foreach (Dictionary<int, string> dic in ani_List)
             {
                 if (dic.Keys.Contains(MainCanvas.Children.IndexOf(ele)))
@@ -3641,6 +3524,7 @@ namespace KEAP
                 ani_List.Add(temp_dic);
                 animation_Dictionary[canvas_List.IndexOf(MainCanvas)] = ani_List;
             }
+            Add_AnimationList(Slide_ListView.SelectedIndex);
         }
 
         #endregion
@@ -4316,7 +4200,229 @@ namespace KEAP
                 MainCanvas.Background = imagebrush;
             }
         }
+
+        public class Ani_List_Info
+        {
+            public string Number { get; set; }
+            public string AnimationName { get; set; }
+        }
+
+        void Add_AnimationList(int index)
+        {
+            List<Dictionary<int,string>> ani_list = animation_Dictionary[index];
+            Anis_List.Clear();
+            int i = 1;
+            foreach (Dictionary<int,string> dic in ani_list)
+            {
+                Anis_List.Add(new Ani_List_Info()
+                {
+                    Number = Convert.ToString(i),
+                    AnimationName = dic.Values.First()
+                });
+                i++;
+            }
+            Animation_ListBox.ItemsSource = Anis_List;
+            Animation_ListBox.UpdateLayout();
+        }
+
+        private void BoundsLTR_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) BoundsLTR(selected_Text);
+            else if (selected_Polygon != null) BoundsLTR(selected_Polygon);
+            else if (selected_Line != null) BoundsLTR(selected_Line);
+            else if (selected_Image != null) BoundsLTR(selected_Image);
+            else if (selected_Shape != null) BoundsLTR(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void BoundsRTL_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) BoundsRTL(selected_Text);
+            else if (selected_Polygon != null) BoundsRTL(selected_Polygon);
+            else if (selected_Line != null) BoundsRTL(selected_Line);
+            else if (selected_Image != null) BoundsRTL(selected_Image);
+            else if (selected_Shape != null) BoundsRTL(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void BoundsTTB_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) BoundsTTB(selected_Text);
+            else if (selected_Polygon != null) BoundsTTB(selected_Polygon);
+            else if (selected_Line != null) BoundsTTB(selected_Line);
+            else if (selected_Image != null) BoundsTTB(selected_Image);
+            else if (selected_Shape != null) BoundsTTB(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void BoundsBTT_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) BoundsBTT(selected_Text);
+            else if (selected_Polygon != null) BoundsBTT(selected_Polygon);
+            else if (selected_Line != null) BoundsBTT(selected_Line);
+            else if (selected_Image != null) BoundsBTT(selected_Image);
+            else if (selected_Shape != null) BoundsBTT(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void MoveLTR_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) MoveLTR(selected_Text);
+            else if (selected_Polygon != null) MoveLTR(selected_Polygon);
+            else if (selected_Line != null) MoveLTR(selected_Line);
+            else if (selected_Image != null) MoveLTR(selected_Image);
+            else if (selected_Shape != null) MoveLTR(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void MoveRTL_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) MoveRTL(selected_Text);
+            else if (selected_Polygon != null) MoveRTL(selected_Polygon);
+            else if (selected_Line != null) MoveRTL(selected_Line);
+            else if (selected_Image != null) MoveRTL(selected_Image);
+            else if (selected_Shape != null) MoveRTL(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void MoveTTB_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) MoveTTB(selected_Text);
+            else if (selected_Polygon != null) MoveTTB(selected_Polygon);
+            else if (selected_Line != null) MoveTTB(selected_Line);
+            else if (selected_Image != null) MoveTTB(selected_Image);
+            else if (selected_Shape != null) MoveTTB(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void MoveBTT_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) MoveBTT(selected_Text);
+            else if (selected_Polygon != null) MoveBTT(selected_Polygon);
+            else if (selected_Line != null) MoveBTT(selected_Line);
+            else if (selected_Image != null) MoveBTT(selected_Image);
+            else if (selected_Shape != null) MoveBTT(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void FadeIn_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) FadeIn(selected_Text);
+            else if (selected_Polygon != null) FadeIn(selected_Polygon);
+            else if (selected_Line != null) FadeIn(selected_Line);
+            else if (selected_Image != null) FadeIn(selected_Image);
+            else if (selected_Shape != null) FadeIn(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void FadeOut_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            edit_Rect.UpdateLayout();
+            if (selected_Text != null) { FadeOut(selected_Text); selected_Text.Visibility = Visibility.Visible; selected_Text.UpdateLayout(); }
+            else if (selected_Polygon != null) { FadeOut(selected_Polygon); selected_Polygon.Visibility = Visibility.Visible; selected_Polygon.UpdateLayout(); }
+            else if (selected_Line != null) { FadeOut(selected_Line); selected_Line.Visibility = Visibility.Visible; selected_Line.UpdateLayout(); }
+            else if (selected_Image != null) { FadeOut(selected_Image); selected_Image.Visibility = Visibility.Visible; selected_Image.UpdateLayout(); }
+            else if (selected_Shape != null) { FadeOut(selected_Shape); selected_Shape.Visibility = Visibility.Visible; selected_Shape.UpdateLayout(); }
+            edit_Rect.Visibility = Visibility.Visible;
+            
+        }
+
+        private void ZoomIn_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) ZoomIn(selected_Text);
+            else if (selected_Polygon != null) ZoomIn(selected_Polygon);
+            else if (selected_Line != null) ZoomIn(selected_Line);
+            else if (selected_Image != null) ZoomIn(selected_Image);
+            else if (selected_Shape != null) ZoomIn(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void ZoomOut_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) ZoomOut(selected_Text);
+            else if (selected_Polygon != null) ZoomOut(selected_Polygon);
+            else if (selected_Line != null) ZoomOut(selected_Line);
+            else if (selected_Image != null) ZoomOut(selected_Image);
+            else if (selected_Shape != null) ZoomOut(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void Tornado_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) Tornado(selected_Text);
+            else if (selected_Polygon != null) Tornado(selected_Polygon);
+            else if (selected_Line != null) Tornado(selected_Line);
+            else if (selected_Image != null) Tornado(selected_Image);
+            else if (selected_Shape != null) Tornado(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void Circle_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) circleAnimation(selected_Text);
+            else if (selected_Polygon != null) circleAnimation(selected_Polygon);
+            else if (selected_Line != null) circleAnimation(selected_Line);
+            else if (selected_Image != null) circleAnimation(selected_Image);
+            else if (selected_Shape != null) circleAnimation(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void Interlaced_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) interlacedAnimation(selected_Text);
+            else if (selected_Polygon != null) interlacedAnimation(selected_Polygon);
+            else if (selected_Line != null) interlacedAnimation(selected_Line);
+            else if (selected_Image != null) interlacedAnimation(selected_Image);
+            else if (selected_Shape != null) interlacedAnimation(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void Block_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) blockAnimation(selected_Text);
+            else if (selected_Polygon != null) blockAnimation(selected_Polygon);
+            else if (selected_Line != null) blockAnimation(selected_Line);
+            else if (selected_Image != null) blockAnimation(selected_Image);
+            else if (selected_Shape != null) blockAnimation(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void Radial_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) radialAnimation(selected_Text);
+            else if (selected_Polygon != null) radialAnimation(selected_Polygon);
+            else if (selected_Line != null) radialAnimation(selected_Line);
+            else if (selected_Image != null) radialAnimation(selected_Image);
+            else if (selected_Shape != null) radialAnimation(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
+
+        private void WaterFall_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            edit_Rect.Visibility = Visibility.Collapsed;
+            if (selected_Text != null) WaterFallAnimation(selected_Text);
+            else if (selected_Polygon != null) WaterFallAnimation(selected_Polygon);
+            else if (selected_Line != null) WaterFallAnimation(selected_Line);
+            else if (selected_Image != null) WaterFallAnimation(selected_Image);
+            else if (selected_Shape != null) WaterFallAnimation(selected_Shape);
+            edit_Rect.Visibility = Visibility.Visible;
+        }
     }
-
-
 }

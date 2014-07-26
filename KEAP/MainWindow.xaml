@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Customcontrols"
-        Title="MainWindow" Width="1000"
+        Title="MainWindow" Width="1200"
         MinHeight="540"
         MinWidth="650">
     <Grid x:Name="MainGrid">
@@ -21,7 +21,6 @@
         <ListView x:Name="Slide_ListView" Margin="0" SelectionChanged="Slide_ListView_SelectionChanged" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" ItemsSource="{Binding Slides_List}" Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="#FFE6E6E6">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <!--DEBUG-->
                     <StackPanel x:Name="Slide_ItemStackPanel" Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <Grid Background="LightGray">
                             <Grid.ColumnDefinitions>
@@ -29,22 +28,11 @@
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Name="Item_Number" HorizontalAlignment="Left" Text="{Binding Path=Number}" Margin="5,0,5,0" Width="9" TextTrimming="WordEllipsis" FontSize="12" Grid.Column="0"/>
-
-                            <!--<Border Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" BorderBrush="LightGray" >-->
                             <StackPanel Orientation="Vertical" Grid.Column="1" Margin="0,5,5,0">
                                 <Rectangle Height="{Binding Path=Rect_Height1}" Fill="{x:Null}"/>
                                 <Image Source="{Binding Path=Source}" Stretch="Fill" Width="{Binding Path=Image_Width}" Height="{Binding Path=Image_Height}"/>
                                 <Rectangle Height="{Binding Path=Rect_Height2}" Fill="{x:Null}"/>
                             </StackPanel>
-                                <!--</Border>-->
-                            
-                            <!--Height="{Binding Path=Image_Height}"-->
-                          <!--  <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="1">
-                                
-                                <Border Margin="5,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" BorderBrush="LightGray">
-                                    <Image Source="{Binding Path=Source}" VerticalAlignment="Top" Stretch="Fill" Width="{Binding Path=Image_Width}" Height="{Binding Path=Image_Height}"/>
-                                </Border>
-                            </StackPanel>-->
                         </Grid>
                     </StackPanel>
                 </DataTemplate>
@@ -60,8 +48,8 @@
 
         <Border x:Name="Menu_Border" BorderBrush="Gray" BorderThickness="1" Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2">
         </Border>
-        
-        <Grid x:Name="HomeMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Visible">
+
+        <Grid x:Name="HomeMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="62"/>
                 <!--0-->
@@ -326,7 +314,7 @@
             </local:Colorpicker>
             <Rectangle Grid.Column="11" Grid.RowSpan="3" Fill="Gray"/>
             <!-- slide_show btn by JiHyun -->
-            <Button x:Name="Slide_Show" Content="슬라이드 쇼" Grid.Column="10" HorizontalAlignment="Left" Margin="112.667,21,0,0" VerticalAlignment="Top" Width="75" Click="Slide_Show_Click" Grid.RowSpan="2"/>
+
 
             <Button x:Name="MoveFront" Content="MoveFront" Grid.Column="12" HorizontalAlignment="Left" Margin="29,5,0,0" Grid.Row="0" VerticalAlignment="Top" Width="75" Click="MoveFront_Click"/>
             <Button x:Name="MoveBack" Content="MoveBack" Grid.Column="12" HorizontalAlignment="Left" Margin="29.5,0.0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="MoveBack_Click" />
@@ -334,18 +322,54 @@
         </Grid>
         <Grid x:Name="InsertMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" x:Name="PenButton" Content="펜" HorizontalAlignment="Left" Margin="20,37,0,0" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Pen_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Pen_PreviewMouseLeftButtonUp"/>
+            <Button Grid.Column="2" x:Name="EraseButton" Content="지우개" HorizontalAlignment="Left" Margin="20.4,32,0,0" VerticalAlignment="Top" Width="50" Click="ErasePen_Click"/>
+            <Button Grid.Column="4" x:Name="LineButton" Content="선" HorizontalAlignment="Left" Margin="21.8,37,0,0" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Line_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Line_PreviewMouseLeftButtonUp"/>
+            <Button Grid.Column="6" x:Name="TextButton" Content="텍스트" HorizontalAlignment="Left" Margin="10.2,37,0,0" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Text_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Text_PreviewMouseLeftButtonUp"/>
+            <Button Grid.Column="8" x:Name="RectangleButton" Content="사각형" HorizontalAlignment="Left" Margin="9.6,37,0,0" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Rectangle_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Rectangle_PreviewMouseLeftButtonUp"/>
+            <Button Grid.Column="10" x:Name="PolygonButton" Content="다각형" HorizontalAlignment="Left" Margin="20,37,0,0" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Polygon_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Polygon_PreviewMouseLeftButtonUp"/>
+            <Button Grid.Column="12" x:Name="ImageButton" Content="이미지" HorizontalAlignment="Left" Margin="21.4,42,0,0" VerticalAlignment="Top" Width="50" Click="Image_Click"/>
+            <Button Grid.Column="14" x:Name="EllipseButton" Content="원" HorizontalAlignment="Left" Margin="21.8,46,0,0" VerticalAlignment="Top" Width="50" Click="Ellipse_Click"/>
+            <Button Grid.Column="16" x:Name="ClearAllButton" Content="선택취소" HorizontalAlignment="Left" Margin="21.2,41,0,0" VerticalAlignment="Top" Width="50" Click="ClearAll_Click"/>
+            <Button Grid.Column="18" x:Name="SlideBackgroundSetButton" Content="배경지정" HorizontalAlignment="Left" Margin="19.6,46,0,0" VerticalAlignment="Top" Width="50" Click="SlideBackgroundSetButton_Click"/>
+
+            <Rectangle Grid.Column="1" Fill="Gray"/>
+            <Rectangle Grid.Column="3" Fill="Gray"/>
+            <Rectangle Grid.Column="5" Fill="Gray"/>
+            <Rectangle Grid.Column="7" Fill="Gray"/>
+            <Rectangle Grid.Column="9" Fill="Gray"/>
+            <Rectangle Grid.Column="11" Fill="Gray"/>
+            <Rectangle Grid.Column="13" Fill="Gray"/>
+            <Rectangle Grid.Column="15" Fill="Gray"/>
+            <Rectangle Grid.Column="17" Fill="Gray"/>
+            <Rectangle Grid.Column="19" Fill="Gray"/>
         </Grid>
-        <Grid x:Name="DesignMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Collapsed"></Grid>
-        <Grid x:Name="AnimationMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Collapsed">
+
+        <Grid x:Name="AnimationMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Visible">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80"/>
-                <!--0-->
+                <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="2"/>
@@ -366,45 +390,226 @@
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Button Grid.Row="0" Grid.Column="0" Margin="5,10,5,5" Content="BoundsLTR" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsLTR_Click"/>
-            <Button Grid.Row="1" Grid.Column="0" Margin="5,10,5,5" Content="BoundsRTL" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsRTL_Click" />
-            <Button Grid.Row="0" Grid.Column="2" Margin="5,10,5,5" Content="BoundsTTB" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsTTB_Click" />
-            <Button Grid.Row="1" Grid.Column="2" Margin="5,10,5,5" Content="BoundsBTT" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsBTT_Click"/>
-            <Button Grid.Row="0" Grid.Column="4" Margin="5,10,5,5" Content="MoveLTR" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveLTR_Click" />
-            <Button Grid.Row="1" Grid.Column="4" Margin="5,10,5,5" Content="MoveRTL" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveRTL_Click"/>
-            <Button Grid.Row="0" Grid.Column="6" Margin="5,10,5,5" Content="MoveTTB" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveTTB_Click"/>
-            <Button Grid.Row="1" Grid.Column="6" Margin="5,10,5,5" Content="MoveBTT" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveBTT_Click"/>
-            <Button Grid.Row="0" Grid.Column="8" Margin="5,10,5,5" Content="FadeIn" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="FadeIn_Click" />
-            <Button Grid.Row="1" Grid.Column="8" Margin="5,10,5,5" Content="FadeOut" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="FadeOut_Click"/>
-            <Button Grid.Row="0" Grid.Column="10" Margin="5,10,5,5" Content="ZoomIn" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="ZoomIn_Click"/>
-            <Button Grid.Row="1" Grid.Column="10" Margin="5,10,5,5" Content="ZoomOut" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="ZoomOut_Click"/>
-            <Button Grid.Row="0" Grid.Column="12" Margin="5,10,5,5" Content="Tornado" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Tornado_Click"/>
-            <Button Grid.Row="1" Grid.Column="12" Margin="5,10,5,5" Content="circle" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Circle_Click"/>
-            <Button Grid.Row="0" Grid.Column="14" Margin="5,10,5,5" Content="interlaced" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Interlaced_Click"/>
-            <Button Grid.Row="1" Grid.Column="14" Margin="5,10,5,5" Content="block" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Block_Click"/>
-            <Button Grid.Row="0" Grid.Column="16" Margin="5,10,5,5" Content="radial" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Radial_Click"/>
-            <Button Grid.Row="1" Grid.Column="16" Margin="5,10,5,5" Content="WaterFall" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="WaterFall_Click"/>
-            <Button Grid.Row="0" Grid.Column="18" Margin="5,10,5,5" Content="Button" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto"/>
-            <Button Grid.Row="1" Grid.Column="18" Margin="5,10,5,5" Content="Button" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto"/>
-        </Grid>
-        <Grid x:Name="ConvertMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Collapsed"></Grid>
-        <Grid x:Name="StyleMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Collapsed"></Grid>
+            <ListBox x:Name="Animation_ListBox" Height="Auto" Width="Auto" Margin="5" Grid.RowSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <!--DEBUG-->
+                        <StackPanel x:Name="Slide_ItemStackPanel" Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <Grid Background="#FFE6E6E6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="25"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="Item_Number" HorizontalAlignment="Left" Text="{Binding Path=Number}" Margin="5,0,0,0" Width="10" TextTrimming="WordEllipsis" FontSize="10" Grid.Column="0" Height="15"/>
+                                <TextBlock x:Name="Item_AnimationName" HorizontalAlignment="Stretch" Text="{Binding Path=AnimationName}" TextAlignment="Center" Margin="5,0,5,0" TextTrimming="WordEllipsis" FontSize="10" Grid.Column="1" Height="15" Width="Auto"/>
+                            </Grid>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Button x:Name="Slide_Show" Content="슬라이드 쇼" Grid.Column="2" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="60" Click="Slide_Show_Click" Grid.RowSpan="2"/>
+            <Button Grid.Row="0" Grid.Column="4" Margin="5,10,5,5" Content="BoundsLTR" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsLTR_Click" ToolTipOpening="BoundsLTR_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;BoundsLTR&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 왼쪽에서 오른쪽으로 바운스합니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="4" Margin="5,10,5,5" Content="BoundsRTL" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsRTL_Click" ToolTipOpening="BoundsRTL_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;BoundsRTL&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 오른쪽에서 왼쪽으로 바운스합니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="6" Margin="5,10,5,5" Content="BoundsTTB" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsTTB_Click" ToolTipOpening="BoundsTTB_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;BoundsTTB&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 위쪽에서 아래쪽으로 바운스합니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="6" Margin="5,10,5,5" Content="BoundsBTT" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsBTT_Click" ToolTipOpening="BoundsBTT_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;BoundsBTT&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 아래쪽에서 위쪽으로 바운스합니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="8" Margin="5,10,5,5" Content="MoveLTR" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveLTR_Click" ToolTipOpening="MoveLTR_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;MoveLTR&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 왼쪽에서 오른쪽으로 이동합니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="8" Margin="5,10,5,5" Content="MoveRTL" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveRTL_Click" ToolTipOpening="MoveRTL_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;MoveRTL&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 오른쪽에서 왼쪽으로 이동합니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="10" Margin="5,10,5,5" Content="MoveTTB" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveTTB_Click" ToolTipOpening="MoveTTB_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;MoveTTB&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 위쪽에서 아래쪽으로 이동합니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="10" Margin="5,10,5,5" Content="MoveBTT" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveBTT_Click" ToolTipOpening="MoveBTT_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;MoveBTT&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 아래쪽에서 위쪽으로 이동합니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="12" Margin="5,10,5,5" Content="FadeIn" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="FadeIn_Click" ToolTipOpening="FadeIn_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;FadeIn&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 서서히 나타납니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="12" Margin="5,10,5,5" Content="FadeOut" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="FadeOut_Click" ToolTipOpening="FadeOut_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;FadeOut&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 서서히 사라집니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="14" Margin="5,10,5,5" Content="ZoomIn" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="ZoomIn_Click" ToolTipOpening="ZoomIn_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;ZoomIn&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 축소되었다가 원상태로 돌아갑니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="14" Margin="5,10,5,5" Content="ZoomOut" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="ZoomOut_Click" ToolTipOpening="ZoomOut_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;ZoomOut&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 확대되었다가 원상태로 돌아갑니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="16" Margin="5,10,5,5" Content="Tornado" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Tornado_Click" ToolTipOpening="Tornado_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;Tornado&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 회전합니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="16" Margin="5,10,5,5" Content="circle" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Circle_Click" ToolTipOpening="Circle_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;Circle&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 원형으로 퍼지며 나타납니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="18" Margin="5,10,5,5" Content="interlaced" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Interlaced_Click" ToolTipOpening="Interlaced_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;Interlaced&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;이건뭐더라.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="18" Margin="5,10,5,5" Content="block" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Block_Click" ToolTipOpening="Block_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;Block&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 블록단위로 서서히 나타납니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="0" Grid.Column="20" Margin="5,10,5,5" Content="radial" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Radial_Click" ToolTipOpening="Radial_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;Radial&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;아썅 졸려ㅡㅡ&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
+            <Button Grid.Row="1" Grid.Column="20" Margin="5,10,5,5" Content="WaterFall" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="WaterFall_Click" ToolTipOpening="WaterFall_ToolTipOpening">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;Waterfall&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;개체가 위쪽부터 폭포수 모양대로 서서히 나타납니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+            </Button>
 
-        <Button x:Name="EraseButton" Content="지우개" HorizontalAlignment="Left" Margin="600,3,0,0" VerticalAlignment="Top" Width="50"  RenderTransformOrigin="-0.82,-1.137" Grid.Column="1" Grid.RowSpan="2" Click="ErasePen_Click"/>
-        <Button x:Name="PenButton" Content="펜" HorizontalAlignment="Left" Margin="530,3,0,0" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Pen_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Pen_PreviewMouseLeftButtonUp" RenderTransformOrigin="-0.82,-1.137" Grid.Column="1" Grid.RowSpan="2"/>
-        <Button x:Name="TextButton" Content="텍스트" Grid.Column="1" HorizontalAlignment="Left" Margin="378,3,0,0" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Text_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Text_PreviewMouseLeftButtonUp" Grid.RowSpan="2"/>
-        <Button x:Name="LineButton" Content="선" Grid.Column="1" HorizontalAlignment="Left" Margin="466,3,0,0" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Line_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Line_PreviewMouseLeftButtonUp" Grid.RowSpan="2"/>
-        <Button x:Name="RectangleButton" Content="사각형" Grid.Column="1" HorizontalAlignment="Left" Margin="270,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Rectangle_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Rectangle_PreviewMouseLeftButtonUp" Grid.RowSpan="2"/>
-        <Button x:Name="PolygonButton" Content="다각형" Grid.Column="1" HorizontalAlignment="Left" Margin="328,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="50" PreviewMouseLeftButtonDown="Polygon_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="Polygon_PreviewMouseLeftButtonUp" Grid.RowSpan="2"/>
-        <Button x:Name="ImageButton" Content="이미지" Grid.Column="1" HorizontalAlignment="Left" Margin="396,14,0,0" VerticalAlignment="Top" Width="50" Click="Image_Click" Grid.RowSpan="2" />
-        <Button x:Name="TableButton" Content="표" Grid.Column="1" HorizontalAlignment="Left" Margin="580,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="50" Click="Table_Click" Grid.RowSpan="2" />
-        <Button x:Name="ClearAllButton" Content="선택취소" Grid.Column="1" HorizontalAlignment="Left" Margin="451,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="50" Click="ClearAll_Click" Grid.RowSpan="2"/>
-        <Button x:Name="EllipseButton" Content="원" Grid.Column="1" HorizontalAlignment="Left" Margin="521,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="50" Click="Ellipse_Click" Grid.RowSpan="2"/>
-        <Button x:Name="SlideBackgroundSetButton" Content="배경지정" Grid.Column="1" HorizontalAlignment="Left" Margin="726,14,0,0" VerticalAlignment="Top" Width="50" Click="SlideBackgroundSetButton_Click" Grid.RowSpan="2" />
+            <Rectangle Grid.Column="1" Grid.RowSpan="2" Fill="Gray"/>
+            <Rectangle Grid.Column="3" Grid.RowSpan="2" Fill="Gray"/>
+            <Rectangle Grid.Column="5" Grid.RowSpan="2" Fill="Gray"/>
+            <Rectangle Grid.Column="7" Grid.RowSpan="2" Fill="Gray"/>
+            <Rectangle Grid.Column="9" Grid.RowSpan="2" Fill="Gray"/>
+            <Rectangle Grid.Column="11" Grid.RowSpan="2" Fill="Gray"/>
+            <Rectangle Grid.Column="13" Grid.RowSpan="2" Fill="Gray"/>
+            <Rectangle Grid.Column="15" Grid.RowSpan="2" Fill="Gray"/>
+            <Rectangle Grid.Column="17" Grid.RowSpan="2" Fill="Gray"/>
+            <Rectangle Grid.Column="19" Grid.RowSpan="2" Fill="Gray"/>
+            <Rectangle Grid.Column="21" Grid.RowSpan="2" Fill="Gray"/>
+            
+        </Grid>
     </Grid>
 </Window>
