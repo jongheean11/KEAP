@@ -33,13 +33,19 @@ namespace Fizbin.Kinect.Gestures.Segments
                 if (skeleton.Joints[JointType.HipRight].Position.Y < skeleton.Joints[JointType.HandRight].Position.Y
                     && skeleton.Joints[JointType.ShoulderRight].Position.Y > skeleton.Joints[JointType.HandRight].Position.Y)
                 {
-                    // Debug.WriteLine("GesturePart 0 - left hand below shoulder height but above hip height - PASS");
-                    // //left hand left of left Shoulder
-                    // //몸보다 앞
-                    if (skeleton.Joints[JointType.HipRight].Position.Z > skeleton.Joints[JointType.HandRight].Position.Z)
+                    if (
+                    skeleton.Joints[JointType.HipRight].Position.Z < skeleton.Joints[JointType.HandRight].Position.Z + 0.45)
                     {
-                        // Debug.WriteLine("GesturePart 0 - left hand left of left Shoulder - PASS");
-                        return_value = GesturePartResult.Succeed;
+                        // Debug.WriteLine("GesturePart 0 - left hand below shoulder height but above hip height - PASS");
+                        // //left hand left of left Shoulder
+                        // //몸보다 앞
+                        if (skeleton.Joints[JointType.HipRight].Position.Z > skeleton.Joints[JointType.HandRight].Position.Z)
+                        {
+                            // Debug.WriteLine("GesturePart 0 - left hand left of left Shoulder - PASS");
+                            return_value = GesturePartResult.Succeed;
+                        }
+                        else return_value = GesturePartResult.Pausing;
+
                     }
 
                     // Debug.WriteLine("GesturePart 0 - left hand left of left Shoulder - UNDETERMINED");
@@ -81,13 +87,20 @@ namespace Fizbin.Kinect.Gestures.Segments
                 if (skeleton.Joints[JointType.ShoulderLeft].Position.Y < skeleton.Joints[JointType.HandRight].Position.Y)
                 {
                     //오른쪽 어깨보다 오른손이 오른족에 있다.
-                    if (skeleton.Joints[JointType.ShoulderRight].Position.X < skeleton.Joints[JointType.HandRight].Position.X)
+                    if (
+                  skeleton.Joints[JointType.HipRight].Position.Z < skeleton.Joints[JointType.HandRight].Position.Z + 0.45)
                     {
-                        return_value = GesturePartResult.Succeed;
-                    }
+                        if (skeleton.Joints[JointType.ShoulderRight].Position.X < skeleton.Joints[JointType.HandRight].Position.X)
+                        {
+                            return_value = GesturePartResult.Succeed;
+                        }
 
-                        // Debug.WriteLine("GesturePart 0 - left hand left of left Shoulder - UNDETERMINED");
+                            // Debug.WriteLine("GesturePart 0 - left hand left of left Shoulder - UNDETERMINED");
+                        else return_value = GesturePartResult.Pausing;
+                    }
                     else return_value = GesturePartResult.Pausing;
+                    
+
                 }
                 else return_value = GesturePartResult.Pausing;
                 // Debug.WriteLine("GesturePart 0 - left hand below shoulder height but above hip height - FAIL");
@@ -124,17 +137,22 @@ namespace Fizbin.Kinect.Gestures.Segments
                 if (skeleton.Joints[JointType.ShoulderRight].Position.Y > skeleton.Joints[JointType.HandRight].Position.Y)
                 {
                     //오른쪽 어깨보다 오른손이 오른족에 있다.
-                    if (
-                        //skeleton.Joints[JointType.ShoulderRight].Position.X < skeleton.Joints[JointType.HandRight].Position.X - 0.2
-                        
-                        Math.Atan2(Convert.ToDouble(skeleton.Joints[JointType.HandRight].Position.X - skeleton.Joints[JointType.ShoulderRight].Position.X),
-                        Convert.ToDouble(skeleton.Joints[JointType.ShoulderRight].Position.Y - skeleton.Joints[JointType.HandRight].Position.Y)) > 0.98                      
-                        )
+                    if (skeleton.Joints[JointType.HipRight].Position.Z < skeleton.Joints[JointType.HandRight].Position.Z + 0.45)
                     {
-                        return_value = GesturePartResult.Succeed;
-                    }
+                        if (
+                            //skeleton.Joints[JointType.ShoulderRight].Position.X < skeleton.Joints[JointType.HandRight].Position.X - 0.2
 
-                        // Debug.WriteLine("GesturePart 0 - left hand left of left Shoulder - UNDETERMINED");
+                            Math.Atan2(Convert.ToDouble(skeleton.Joints[JointType.HandRight].Position.X - skeleton.Joints[JointType.ShoulderRight].Position.X),
+                            Convert.ToDouble(skeleton.Joints[JointType.ShoulderRight].Position.Y - skeleton.Joints[JointType.HandRight].Position.Y)) > 0.98
+                            )
+                        {
+                            return_value = GesturePartResult.Succeed;
+                        }
+
+
+                            // Debug.WriteLine("GesturePart 0 - left hand left of left Shoulder - UNDETERMINED");
+                        else return_value = GesturePartResult.Pausing;
+                    }
                     else return_value = GesturePartResult.Pausing;
                 }
                 else return_value = GesturePartResult.Pausing;
