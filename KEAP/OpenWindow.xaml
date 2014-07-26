@@ -46,7 +46,7 @@
         </Grid>
 <!-- template list grid view-->
         <Grid Grid.Column="1" Grid.Row="1">
-            <ListBox Name="templateList" HorizontalContentAlignment="Stretch" SelectionChanged="recentPresentations_SelectionChanged" MouseDoubleClick="recentPresentationsList_MouseDoubleClick">
+            <ListBox Name="templateList" HorizontalContentAlignment="Stretch" MouseDoubleClick="templateList_MouseDoubleClick" SelectionChanged="templateList_SelectionChanged" >
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="3"/>
@@ -59,8 +59,10 @@
                                 <RowDefinition Height="100"/>
                                 <RowDefinition Height="15"/>
                             </Grid.RowDefinitions>
-                            <Rectangle Margin="5,5,5,5" HorizontalAlignment="Center" Grid.Row="0" Fill="{Binding rectangleColor}" Width="208" Height="117"/>
-                            <TextBlock Grid.Row="1" Text="{Binding name}" FontSize="13" HorizontalAlignment="Center" />
+                            <Border BorderThickness="1" BorderBrush="Black" Width="170" Height="95">
+                                <Image Source="{Binding thumb_Img_Uri}" Width="176" Height="95" />
+                            </Border>
+                            <TextBlock Grid.Row="1" Text="{Binding name}" FontSize="11" HorizontalAlignment="Center" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

@@ -84,7 +84,7 @@ namespace KEAP
         FontFamily font_Family; int font_Family_Index;
         double font_Size; int font_Size_Index;
 
-        public MainWindow()
+        public MainWindow(TemplateListItem selected_Template)
         {
             InitializeComponent();
             WindowState = WindowSettings.current_WindowState;
@@ -98,7 +98,8 @@ namespace KEAP
             canvas_Background_Bitmapimage = new BitmapImage();
             canvas_Background_Bitmapimage.BeginInit();
             canvas_Background_Bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-            canvas_Background_Bitmapimage.UriSource = new Uri("pack://application:,,,/KEAP;v1.0.0.0;component/Images/Background/white.jpg");
+//            canvas_Background_Bitmapimage.UriSource = new Uri("pack://application:,,,/KEAP;v1.0.0.0;component/Images/Background/white.jpg");
+            canvas_Background_Bitmapimage.UriSource = new Uri(selected_Template.img_Uri);
             canvas_Background_Bitmapimage.EndInit();
             canvas_Background = BitmapFrame.Create(canvas_Background_Bitmapimage);
 
@@ -130,9 +131,68 @@ namespace KEAP
             Add_Slide_List(canvas_List.Count);
             Slide_ListView.SelectedIndex = 0;
             this.SizeChanged += MainWindow_SizeChanged;
+            //stroke_Brush = new SolidColorBrush(Colors.Black);
+            //fill_Brush = new SolidColorBrush(Colors.White);
+            //font_Brush = new SolidColorBrush(Colors.Black);
+            stroke_Brush = new SolidColorBrush(selected_Template.stroke_Brush);
+            fill_Brush = new SolidColorBrush(selected_Template.fill_Brush);
+            font_Brush = new SolidColorBrush(selected_Template.font_Brush);
+            AddKeyBindings();
+
+            Autoedit_Slide_List(MainCanvas, Slide_ListView.SelectedIndex);
+        }
+
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            WindowState = WindowSettings.current_WindowState;
+
+            // 그냥 최대로 했음
+            this.Width = WindowSettings.resolution_Width;
+            this.Height = WindowSettings.resolution_Height;
+            this.WindowState = WindowState.Maximized;
+
+            canvas_Background_Bitmapimage = new BitmapImage();
+            canvas_Background_Bitmapimage = new BitmapImage();
+            canvas_Background_Bitmapimage.BeginInit();
+            canvas_Background_Bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+            canvas_Background_Bitmapimage.UriSource = new Uri("pack://application:,,,/KEAP;v1.0.0.0;component/Images/Background/background_01.jpg");
+            canvas_Background_Bitmapimage.EndInit();
+            canvas_Background = BitmapFrame.Create(canvas_Background_Bitmapimage);
+
+            MainCanvas = new KEAPCanvas()
+            {
+                VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
+                Background = new ImageBrush(canvas_Background_Bitmapimage)
+            };
+
+            if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
+            {
+                MainCanvas.Width = (WindowSettings.resolution_Width * 3.75 / 4.45) - 50;
+                MainCanvas.Height = (MainCanvas.Height * (WindowSettings.resolution_Width / WindowSettings.resolution_Height));
+            }
+            else
+            {
+                MainCanvas.Height = (WindowSettings.resolution_Height - 92) * (3 / 3.8) - 50;
+                MainCanvas.Width = MainCanvas.Height * (WindowSettings.resolution_Height / WindowSettings.resolution_Width);
+            }
+
+            MainCanvas_Border.Child = MainCanvas;
+            MainCanvas.PreviewMouseLeftButtonDown += MainCanvas_PreviewMouseLeftButtonDown;
+            MainCanvas.PreviewMouseMove += MainCanvas_PreviewMouseMove;
+            MainCanvas.PreviewMouseLeftButtonUp += MainCanvas_PreviewMouseLeftButtonUp;
+
+            canvas_List.Add(MainCanvas);
+
+            Add_Slide_List(canvas_List.Count);
+            Slide_ListView.SelectedIndex = 0;
+            this.SizeChanged += MainWindow_SizeChanged;
             stroke_Brush = new SolidColorBrush(Colors.Black);
             fill_Brush = new SolidColorBrush(Colors.White);
             font_Brush = new SolidColorBrush(Colors.Black);
+            
             AddKeyBindings();
 
             Autoedit_Slide_List(MainCanvas, Slide_ListView.SelectedIndex);

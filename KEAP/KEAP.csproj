@@ -240,13 +240,28 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Background\white.jpg" />
+    <Resource Include="Images\Background\background_01.jpg" />
+    <Resource Include="Images\Background\background_02.jpg" />
+    <Resource Include="Images\Background\background_03.jpg" />
+    <Resource Include="Images\Background\background_04.jpg" />
+    <Resource Include="Images\Background\background_05.jpg" />
+    <Resource Include="Images\Background\background_06.jpg" />
+    <Resource Include="Images\Background\background_07.jpg" />
+    <Resource Include="Images\Background\background_08.jpg" />
+    <Resource Include="Images\Background\background_09.jpg" />
+    <Resource Include="Images\Background\background_10.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Background\background1.jpg" />
-    <Resource Include="Images\Background\background3.jpg" />
-    <Resource Include="Images\Background\background2.jpg" />
-    <Resource Include="Images\Background\background4.jpg" />
+    <Resource Include="Images\Background\thumbnail_background_01.jpg" />
+    <Resource Include="Images\Background\thumbnail_background_02.jpg" />
+    <Resource Include="Images\Background\thumbnail_background_03.jpg" />
+    <Resource Include="Images\Background\thumbnail_background_04.jpg" />
+    <Resource Include="Images\Background\thumbnail_background_05.jpg" />
+    <Resource Include="Images\Background\thumbnail_background_06.jpg" />
+    <Resource Include="Images\Background\thumbnail_background_07.jpg" />
+    <Resource Include="Images\Background\thumbnail_background_08.jpg" />
+    <Resource Include="Images\Background\thumbnail_background_09.jpg" />
+    <Resource Include="Images\Background\thumbnail_background_10.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
