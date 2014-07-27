@@ -43,7 +43,7 @@ namespace KEAP
 
         int previous_selection = -1;
         KEAPCanvas MainCanvas;
-
+        string current_File_Name = "새파일";
         bool pen_Mode = false, text_Mode = false, line_Mode = false, line_Mode_Toggle = false,
             rectangle_Mode = false, polygon_Mode = false, polygon_Mode_Toggle = false, image_Mode = false,
             ellipse_Mode = false, eraseforpen_Mode = false;
@@ -58,8 +58,6 @@ namespace KEAP
         bool edit_Mode = false, edit_Mode_Ready = false;
         bool canvas_LeftButton_Down = false;
         bool poly_Start_Get = false;
-        double shape_x = 0.0;
-        double shape_y = 0.0;
 
         Point Start_Point, Start_Point_Poly, Start_Point_Shape, Begin_Point_Shape;
 
@@ -106,7 +104,7 @@ namespace KEAP
                 HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
                 Background = new ImageBrush(canvas_Background_Bitmapimage)
             };
-            
+            FileName.Text = current_File_Name;
             if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
             {
                 MainCanvas.Width = (WindowSettings.resolution_Width * 3.75 / 4.45) - 50;
