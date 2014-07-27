@@ -1073,7 +1073,7 @@ namespace KEAP
                height = (int)bounds.Height;
            }
 
-            RenderTargetBitmap zoom_rtb = new RenderTargetBitmap(width/4 + 402, height/4 + 237, 96d, 96d, System.Windows.Media.PixelFormats.Default);
+            RenderTargetBitmap zoom_rtb = new RenderTargetBitmap(width/4 + 402, height/4 + 237, 120d, 120d, System.Windows.Media.PixelFormats.Default);
             AudienceGrid.Children.Insert(0, zoomCanvas);
             AudienceGrid.Children.Remove(AudienceCanvas);
             zoomCanvas.UpdateLayout();
