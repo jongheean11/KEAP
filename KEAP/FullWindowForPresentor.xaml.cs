@@ -184,7 +184,7 @@ namespace KEAP
 
         private void Plus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            aud_View.Plus_KeyEventHandler(sender, e);
+            aud_View.Space_KeyEventHandler(sender, e);
         }
 
         private void Down_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)

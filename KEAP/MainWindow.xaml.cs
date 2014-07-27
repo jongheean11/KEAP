@@ -2133,7 +2133,7 @@ namespace KEAP
             Image image = RenderCanvas(MainCanvas);
             ((SlideInfo)(Slide_ListView.Items[Slide_ListView.SelectedIndex])).Source = image.Source;
             //Slide_ListView.Items[Slide_ListView.SelectedIndex]
-            pen_Mode = line_Mode = rectangle_Mode = ellipse_Mode = text_Mode = image_Mode = false;
+            pen_Mode = rectangle_Mode = ellipse_Mode = text_Mode = image_Mode = false;
         }
 
 
