@@ -973,8 +973,8 @@ namespace KEAP
                     double x1 = Canvas.GetLeft(ele),
                         y1 = Canvas.GetTop(ele);
 
-                    Canvas.SetLeft(textblock, x1 - (SystemParameters.PrimaryScreenWidth * (120 / 96 ) * x / 8));
-                    Canvas.SetTop(textblock, y1 - (SystemParameters.PrimaryScreenHeight * (120 / 96 ) * y / 8));
+                    Canvas.SetLeft(textblock, x1 - (SystemParameters.PrimaryScreenWidth * x / 8));
+                    Canvas.SetTop(textblock, y1 - (SystemParameters.PrimaryScreenHeight * y / 8));
 
                     zoomCanvas.Children.Add(textblock);
                 }
@@ -994,8 +994,8 @@ namespace KEAP
                     polygon.Points.CopyTo(copy_points, 0);
                     for (int i = 0; i < polygon.Points.Count; i++)
                     {
-                        copy_points[i].X = copy_points[i].X - (SystemParameters.WorkArea.Width * (120 / 96 ) * x / 8);
-                        copy_points[i].Y = copy_points[i].Y - (SystemParameters.PrimaryScreenHeight * (120 / 96 ) * y / 8);
+                        copy_points[i].X = copy_points[i].X - (SystemParameters.WorkArea.Width * x / 8);
+                        copy_points[i].Y = copy_points[i].Y - (SystemParameters.PrimaryScreenHeight * y / 8);
                         copy_collection.Add(copy_points[i]);
                     }
                     polygon.Points = copy_collection;
@@ -1015,10 +1015,10 @@ namespace KEAP
                         StrokeThickness = copyele.StrokeThickness,
                     };
 
-                    line.X1 = ((Line)ele).X1 - (SystemParameters.WorkArea.Width * (120 / 96 ) * x / 8);
-                    line.Y1 = ((Line)ele).Y1 - (SystemParameters.PrimaryScreenHeight * (120 / 96 ) * y / 8);
-                    line.X2 = ((Line)ele).X2 - (SystemParameters.WorkArea.Width * (120 / 96 ) * y / 8);
-                    line.Y2 = ((Line)ele).Y2 - (SystemParameters.PrimaryScreenHeight * (120 / 96 ) * y / 8);
+                    line.X1 = ((Line)ele).X1 - (SystemParameters.WorkArea.Width * x / 8);
+                    line.Y1 = ((Line)ele).Y1 - (SystemParameters.PrimaryScreenHeight * y / 8);
+                    line.X2 = ((Line)ele).X2 - (SystemParameters.WorkArea.Width * y / 8);
+                    line.Y2 = ((Line)ele).Y2 - (SystemParameters.PrimaryScreenHeight * y / 8);
 
                     zoomCanvas.Children.Add(line);
                 }
@@ -1037,8 +1037,8 @@ namespace KEAP
                     double x1 = Canvas.GetLeft(ele),
                         y1 = Canvas.GetTop(ele);
 
-                    Canvas.SetLeft(image, x1 - (SystemParameters.WorkArea.Width * (120 / 96 ) * x / 8));
-                    Canvas.SetTop(image, y1 - (SystemParameters.PrimaryScreenHeight * (120 / 96 ) * y / 8));
+                    Canvas.SetLeft(image, x1 - (SystemParameters.WorkArea.Width * x / 8));
+                    Canvas.SetTop(image, y1 - (SystemParameters.PrimaryScreenHeight * y / 8));
 
                     zoomCanvas.Children.Add(image);
                 }
@@ -1059,8 +1059,8 @@ namespace KEAP
                     double x1 = Canvas.GetLeft(ele),
                         y1 = Canvas.GetTop(ele);
 
-                    Canvas.SetLeft(rectangle, x1 - (SystemParameters.WorkArea.Width * (120 / 96 ) * x / 8));
-                    Canvas.SetTop(rectangle, y1 - (SystemParameters.PrimaryScreenHeight * (120 / 96 ) * y / 8));
+                    Canvas.SetLeft(rectangle, x1 - (SystemParameters.WorkArea.Width * x / 8));
+                    Canvas.SetTop(rectangle, y1 - (SystemParameters.PrimaryScreenHeight * y / 8));
 
                     zoomCanvas.Children.Add(rectangle);
                 }
@@ -1081,8 +1081,8 @@ namespace KEAP
                     double x1 = Canvas.GetLeft(ele),
                         y1 = Canvas.GetTop(ele);
 
-                    Canvas.SetLeft(ellipse, x1 - (SystemParameters.WorkArea.Width * (120 / 96 ) * x / 8));
-                    Canvas.SetTop(ellipse, y1 - (SystemParameters.PrimaryScreenHeight * (120 / 96 ) * y / 8));
+                    Canvas.SetLeft(ellipse, x1 - (SystemParameters.WorkArea.Width * x / 8));
+                    Canvas.SetTop(ellipse, y1 - (SystemParameters.PrimaryScreenHeight * y / 8));
 
                     zoomCanvas.Children.Add(ellipse);
                 }

@@ -1107,7 +1107,7 @@ namespace KEAP
             AudienceCanvas = canvas_arr[0];
             //AudienceCanvas.PreviewMouseLeftButtonDown += AudienceCanvas_PreviewMouseLeftButtonDown;
             //AudienceCanvas.PreviewMouseRightButtonDown += AudienceCanvas_PreviewMouseRightButtonDown;
-            AudienceGrid.Children.Insert(0,AudienceCanvas);
+            PresentorGrid.Children.Insert(0,AudienceCanvas);
 
             List<Dictionary<int, string>> anilist;
             if (animations.Keys.Contains(canvas_index))
@@ -1634,7 +1634,7 @@ namespace KEAP
                 }
             }
 
-            AudienceGrid.Background = null;
+            PresentorGrid.Background = null;
             zoomCanvas.UpdateLayout();
             zoom_img = new Image();
 
@@ -1654,31 +1654,31 @@ namespace KEAP
 
             RenderTargetBitmap zoom_rtb = new RenderTargetBitmap(width / 4 + 402, height / 4 + 237, 96d, 96d, System.Windows.Media.PixelFormats.Default);
             
-            AudienceGrid.Children.Insert(0, zoomCanvas);
-            AudienceGrid.Children.Remove(AudienceCanvas);
+            PresentorGrid.Children.Insert(0, zoomCanvas);
+            PresentorGrid.Children.Remove(AudienceCanvas);
             zoomCanvas.UpdateLayout();
-            AudienceGrid.UpdateLayout();
+            PresentorGrid.UpdateLayout();
             zoom_rtb.Render(TargetVisual);
             zoom_img.Source = zoom_rtb;
             zoom_img.HorizontalAlignment = HorizontalAlignment.Stretch;
             zoom_img.VerticalAlignment = VerticalAlignment.Stretch;
             zoom_img.Stretch = Stretch.Fill;
-            //AudienceGrid.Children.Remove(AudienceCanvas);
+            //PresentorGrid.Children.Remove(AudienceCanvas);
             zoom_img.Width = SystemParameters.WorkArea.Width;
             zoom_img.Height = SystemParameters.MaximizedPrimaryScreenHeight;
 
-            AudienceGrid.Children.Add(zoom_img);
+            PresentorGrid.Children.Add(zoom_img);
 
-            AudienceGrid.Children.Remove(zoomCanvas);
-            //AudienceGrid.Background = new ImageBrush(zoom_img.Source);
-            //AudienceGrid.Background = new SolidColorBrush(Colors.Blue);
+            PresentorGrid.Children.Remove(zoomCanvas);
+            //PresentorGrid.Background = new ImageBrush(zoom_img.Source);
+            //PresentorGrid.Background = new SolidColorBrush(Colors.Blue);
         }
         void ZoomOut()
         {
-            if (AudienceGrid.Children.Contains(AudienceCanvas)) return;
-            if (AudienceGrid.Children.Contains(zoomCanvas)) AudienceGrid.Children.Remove(zoomCanvas);
-            if (AudienceGrid.Children.Contains(zoom_img)) AudienceGrid.Children.Remove(zoom_img);
-            AudienceGrid.Children.Add(AudienceCanvas);
+            if (PresentorGrid.Children.Contains(AudienceCanvas)) return;
+            if (PresentorGrid.Children.Contains(zoomCanvas)) PresentorGrid.Children.Remove(zoomCanvas);
+            if (PresentorGrid.Children.Contains(zoom_img)) PresentorGrid.Children.Remove(zoom_img);
+            PresentorGrid.Children.Add(AudienceCanvas);
         }
     }
 }
