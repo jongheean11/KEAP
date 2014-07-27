@@ -2084,7 +2084,7 @@ namespace KEAP
             Image image = RenderCanvas(MainCanvas);
             ((SlideInfo)(Slide_ListView.Items[Slide_ListView.SelectedIndex])).Source = image.Source;
             //Slide_ListView.Items[Slide_ListView.SelectedIndex]
-            
+            pen_Mode = line_Mode = rectangle_Mode = ellipse_Mode = text_Mode = image_Mode = false;
         }
 
 
@@ -2633,8 +2633,15 @@ namespace KEAP
                     Open_Xml(xmlFile_Name, xmlFile_Path, imageFile_Path_List);
                 }
 
+                Slides_List.Clear();
+                Slide_ListView.SelectionChanged -= Slide_ListView_SelectionChanged;
+                Slide_ListView.ItemsSource=null;
+                Slide_ListView.Items.Clear();
+                Slide_ListView.SelectionChanged += Slide_ListView_SelectionChanged;
+                
                 for (int p = 0; p < canvas_List.Count; p++)
                 {
+                    MainCanvas_Border.Child = canvas_List.ElementAt(p);
                     MainCanvas = canvas_List[p];
                     MainCanvas.UpdateLayout();
                     Image image = RenderCanvas(MainCanvas);
@@ -2648,8 +2655,10 @@ namespace KEAP
                         Rect_Height1 = (((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width) * 0.105) * (WindowSettings.current_Width / WindowSettings.current_Height),
                         Rect_Height2 = (((WindowSettings.current_Width) * 0.7 / 4.45) * (WindowSettings.resolution_Height / WindowSettings.resolution_Width) * 0.01) * (WindowSettings.current_Width / WindowSettings.current_Height)
                     });
+                    Slide_ListView.ItemsSource = Slides_List;
+                    Add_AnimationList(p);
                 }
-
+                
                 Slide_ListView.SelectedIndex = 0;
                 MainCanvas = canvas_List[0];
 
@@ -3118,7 +3127,6 @@ namespace KEAP
                                 canvas.Children.Add(newimage);
                             }
                         }
-                        canvas_List.Add(canvas);
 
                         XmlNodeList ani_list = slide.GetElementsByTagName("Animation");
                         foreach (XmlElement ani in ani_list)
@@ -3134,6 +3142,11 @@ namespace KEAP
                             animation_Dictionary.Add(i - 1, new List<Dictionary<int,string>>());
                         else
                             animation_Dictionary.Add(i - 1, animation_List);
+
+                        canvas.PreviewMouseLeftButtonDown += MainCanvas_PreviewMouseLeftButtonDown;
+                        canvas.PreviewMouseLeftButtonUp += MainCanvas_PreviewMouseLeftButtonUp;
+                        canvas.PreviewMouseMove += MainCanvas_PreviewMouseMove;
+                        canvas_List.Add(canvas);
                         i++;
                     }
                 }
