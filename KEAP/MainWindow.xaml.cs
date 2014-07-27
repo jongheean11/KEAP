@@ -2193,13 +2193,14 @@ namespace KEAP
                 string name = filename.Substring(0, filename.Length - 5);
 
                 string fullpath = savedlg.FileName;
+                
+                string startPath = "c:\\KEAP\\"+filename;
+                string zipPath = fullpath;
 
-                string startPath = "c:\\KEAP\\" + name + "\\";
-                string zipPath = "c:\\KEAP\\testing\\" + name + ".keap";
-
+                Directory.CreateDirectory(startPath);
                 Save_Xml(name, startPath);
                 // Declare Variables
-
+                
                 ZipFile.CreateFromDirectory(startPath, zipPath);
             }
         }
@@ -2550,14 +2551,20 @@ namespace KEAP
                             canvas_element.AppendChild(I);
                         }
                     }
-
-                    List<Dictionary<int, string>> ani_List = animation_Dictionary[i - 1];
+                    List<Dictionary<int, string>> ani_List;
+                    if (i < animation_Dictionary.Count)
+                        ani_List = animation_Dictionary[i - 1];
+                    else
+                        ani_List = null;
                     //int p = 0;
-                    foreach (Dictionary<int, string> dic in ani_List)
+                    if (ani_List != null)
                     {
-                        XmlElement animation = xmlDoc.CreateElement("Animation");
-                        animation.InnerText = Convert.ToString(dic.Keys.First()) + "." + dic[dic.Keys.First()];
-                        canvas_element.AppendChild(animation);
+                        foreach (Dictionary<int, string> dic in ani_List)
+                        {
+                            XmlElement animation = xmlDoc.CreateElement("Animation");
+                            animation.InnerText = Convert.ToString(dic.Keys.First()) + "." + dic[dic.Keys.First()];
+                            canvas_element.AppendChild(animation);
+                        }
                     }
 
                     file.AppendChild(canvas_element);
