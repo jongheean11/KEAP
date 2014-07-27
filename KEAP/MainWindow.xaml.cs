@@ -3701,8 +3701,8 @@ namespace KEAP
             bool found = false;
             FrameworkElement ele = null;
             if (selected_Text != null) ele = selected_Text;
-            else if (selected_Polygon != null) ele = selected_Polygon;
-            else if (selected_Line != null) ele = selected_Line;
+            //else if (selected_Polygon != null) ele = selected_Polygon;
+            //else if (selected_Line != null) ele = selected_Line;
             else if (selected_Image != null) ele = selected_Image;
             else if (selected_Shape != null) ele = selected_Shape;
             else return;

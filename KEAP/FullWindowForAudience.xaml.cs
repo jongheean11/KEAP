@@ -38,23 +38,30 @@ namespace KEAP
 
             InitializeComponent();
             int i = 0;
-            
             canvas_arr = new List<KEAPCanvas>();
-            bool ani_null = false;
-            if (main.animation_Dictionary.Count == 0) ani_null = true;
-            else animations = main.animation_Dictionary;
-            
+
             foreach (KEAPCanvas canvas in main.canvas_List)
             {
-                List<Dictionary<int, string>> anilist;
+                bool ani_null = false;
+                if (!main.animation_Dictionary.Keys.Contains(i)) ani_null = true;
+                else animations = main.animation_Dictionary;
+                List<Dictionary<int, string>> anilist = new List<Dictionary<int,string>>();
                 if (ani_null)
                     anilist = null;
                 else
                 {
-                    if (i < animations.Count)
-                        anilist = animations[i];
-                    else
-                        anilist = null;
+                //    if (i < animations.Count)
+                    Dictionary<int, string>[] ani_arr = new Dictionary<int,string>[main.animation_Dictionary[i].Count];
+                    //main.animation_Dictionary[i].CopyTo(animations);
+                    main.animation_Dictionary[i].CopyTo(ani_arr);
+                    for (int k = 0; k < main.animation_Dictionary[i].Count;k++)
+                    {
+                        Dictionary<int,string> tempdic = new Dictionary<int,string>();
+                        tempdic.Add(ani_arr[k].Keys.First(),ani_arr[k].Values.First());
+                        anilist.Add(tempdic);
+                    }
+                //    else
+                //        anilist = null;
                 }
                 canvas_arr.Add(new KEAPCanvas());
                 canvas_arr[i].Width = SystemParameters.WorkArea.Width;
@@ -220,7 +227,7 @@ namespace KEAP
             AudienceGrid.Children.Add(AudienceCanvas);
 
             List<Dictionary<int, string>> anilist;
-            if(canvas_index<animations.Count)
+            if(animations.Keys.Contains(canvas_index))
                 anilist = animations[canvas_index];
             else
                 anilist = null;
@@ -268,6 +275,7 @@ namespace KEAP
                 anilist = null;
             if (anilist != null)
             {
+                animation_indexes.Clear();
                 foreach (Dictionary<int, string> dic in anilist)
                 {
                     animation_indexes.Add(dic.Keys.First());
