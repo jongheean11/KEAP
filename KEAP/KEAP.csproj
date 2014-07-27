@@ -263,6 +263,49 @@
     <Resource Include="Images\Background\thumbnail_background_09.jpg" />
     <Resource Include="Images\Background\thumbnail_background_10.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Button\ani_bounds_BTT.png" />
+    <Resource Include="Images\Button\ani_bounds_LTR.png" />
+    <Resource Include="Images\Button\ani_bounds_RTL.png" />
+    <Resource Include="Images\Button\ani_bounds_TTB.png" />
+    <Resource Include="Images\Button\ani_circle.png" />
+    <Resource Include="Images\Button\ani_fade_in.png" />
+    <Resource Include="Images\Button\ani_fade_out.png" />
+    <Resource Include="Images\Button\ani_interlaced.png" />
+    <Resource Include="Images\Button\ani_move_BTT.png" />
+    <Resource Include="Images\Button\ani_move_LTR.png" />
+    <Resource Include="Images\Button\ani_move_RTL.png" />
+    <Resource Include="Images\Button\ani_tornado.png" />
+    <Resource Include="Images\Button\ani_waterfall.png" />
+    <Resource Include="Images\Button\ani_zoom_1.png" />
+    <Resource Include="Images\Button\ani_zoom_2.png" />
+    <Resource Include="Images\Button\circle.png" />
+    <Resource Include="Images\Button\erase_pen.png" />
+    <Resource Include="Images\Button\erase_shape.png" />
+    <Resource Include="Images\Button\image.png" />
+    <Resource Include="Images\Button\line.png" />
+    <Resource Include="Images\Button\move_back.png" />
+    <Resource Include="Images\Button\move_front.png" />
+    <Resource Include="Images\Button\ani_move_TTB.png" />
+    <Resource Include="Images\Button\open.png" />
+    <Resource Include="Images\Button\pen.png" />
+    <Resource Include="Images\Button\polygon.png" />
+    <Resource Include="Images\Button\rectangle.png" />
+    <Resource Include="Images\Button\save.png" />
+    <Resource Include="Images\Button\select_release.png" />
+    <Resource Include="Images\Button\slide_new.png" />
+    <Resource Include="Images\Button\slide_show.png" />
+    <Resource Include="Images\Button\text.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Button\ani_radial.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Button\ani_block.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Button\background.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1610,10 +1610,10 @@ namespace KEAP
                             selected_Line.X1 = mouse_x;
                             selected_Line.Y1 = mouse_y;
                         }
-                        else if ((Math.Abs(selected_Line.X2 - mouse_x) + Math.Abs(selected_Line.Y2 - mouse_y)) < 4)
+                        if ((Math.Abs(selected_Line.X2 - mouse_x) + Math.Abs(selected_Line.Y2 - mouse_y)) < 4)
                         {
-                            selected_Line.X1 = mouse_x;
-                            selected_Line.Y1 = mouse_y;
+                            selected_Line.X2 = mouse_x;
+                            selected_Line.Y2 = mouse_y;
                         }
                     }
                     else if (selected_Image != null)
