@@ -983,7 +983,7 @@ namespace KEAP
                         edit_Rect = new Rectangle()
                         {
                             Width = max_x - min_x + 10,
-                            Height = max_x - min_x + 10,
+                            Height = max_y - min_y + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
@@ -1180,7 +1180,7 @@ namespace KEAP
                         edit_Rect = new Rectangle()
                         {
                             Width = max_x - min_x + 10,
-                            Height = max_x - min_x + 10,
+                            Height = max_y - min_y + 10,
                             Stroke = new SolidColorBrush(Colors.Black),
                             StrokeDashArray = dashes
                         };
@@ -1739,14 +1739,14 @@ namespace KEAP
                     else if ((MainCanvas.Width - End_Point.X) > (max_x - min_x - Start_Point_Shape.X))
                         m_left = (End_Point.X - Start_Point_Shape.X);
                     else
-                        m_left = MainCanvas.ActualWidth - selected_Polygon.Width;
+                        m_left = MainCanvas.Width - (max_x - min_x);
 
                     if (End_Point.Y < Start_Point_Shape.Y)
                         m_top = 0;
                     else if ((MainCanvas.Height - End_Point.Y) > (max_y - min_y - Start_Point_Shape.Y))
                         m_top = (End_Point.Y - Start_Point_Shape.Y);
                     else
-                        m_top = MainCanvas.ActualHeight - selected_Polygon.Height;
+                        m_top = MainCanvas.Height - (max_y-min_y);
 
                     double previous_x = Canvas.GetLeft(edit_Rect),
                         previous_y = Canvas.GetTop(edit_Rect);
@@ -1796,14 +1796,14 @@ namespace KEAP
                     else if (MainCanvas.Width - End_Point.X > (max_x - min_x - Start_Point_Shape.X))
                         m_left = (End_Point.X - Start_Point_Shape.X);
                     else
-                        m_left = MainCanvas.ActualWidth - selected_Line.Width;
+                        m_left = MainCanvas.Width - (max_x - min_x);
 
                     if (End_Point.Y < Start_Point_Shape.Y)
                         m_top = 0;
                     else if (MainCanvas.Height - End_Point.Y > (max_y - min_y - Start_Point_Shape.Y))
-                        m_top = (End_Point.X - Start_Point_Shape.Y);
+                        m_top = (End_Point.Y - Start_Point_Shape.Y);
                     else
-                        m_top = MainCanvas.ActualHeight - selected_Line.Height;
+                        m_top = MainCanvas.Height - (max_y - min_y);
 
                     double previous_x = Canvas.GetLeft(edit_Rect),
                         previous_y = Canvas.GetTop(edit_Rect);
