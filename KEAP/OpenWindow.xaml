@@ -11,39 +11,12 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180"/>
             <ColumnDefinition Width="650*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" Grid.Row="0">
-            <TextBlock Text="최근 열린 파일" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
-        </Grid>
         <Grid Grid.Column="1" Grid.Row="0">
             <TextBlock Text="템플릿 선택" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
         </Grid>
         <!-- recent presentation list grid view-->
-        <Grid Grid.Column="0" Grid.Row="1">
-            <ListBox Name="recentPresentationsList" HorizontalContentAlignment="Stretch" SelectionChanged="recentPresentations_SelectionChanged" MouseDoubleClick="recentPresentationsList_MouseDoubleClick" Margin="0,0,0,0.4">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid HorizontalAlignment="Stretch" Height="50">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="50"/>
-                                <ColumnDefinition Width="90"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="20"/>
-                                <RowDefinition Height="20"/>
-                            </Grid.RowDefinitions>
-                            <Image Margin="0,0,5,0" HorizontalAlignment="Left" Grid.Column="0" Grid.RowSpan="3" Source="{Binding presentationSmall}" Width="50" Height="50"/>
-                            <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding name}" FontSize="20" />
-                            <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding date}" FontSize="15" />
-                            <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding filePath}" FontSize="15" />
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </Grid>
 <!-- template list grid view-->
         <Grid Grid.Column="1" Grid.Row="1">
             <ListBox Name="templateList" HorizontalContentAlignment="Stretch" MouseDoubleClick="templateList_MouseDoubleClick" SelectionChanged="templateList_SelectionChanged" >

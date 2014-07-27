@@ -49,7 +49,7 @@ namespace KEAP
             PresentationListItem test1 = new PresentationListItem("Images/Button/newslide.png", "test", "date", "filepath");
             pItems.Add(test1);
             //test fin
-            recentPresentationsList.ItemsSource = pItems;
+//            recentPresentationsList.ItemsSource = pItems;
         }
         #region initial template list
         private void LoadTemplates()
@@ -226,22 +226,22 @@ namespace KEAP
             toOpenTemplateInfo = selected_item;
         }
 
-        private void recentPresentations_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            openBtn.IsEnabled = true;
-            var selected_item = recentPresentationsList.SelectedItem as PresentationListItem;
-            toOpenPresentationInfo = selected_item;
-            PresentationOpen(toOpenPresentationInfo);
-        }
+        //private void recentPresentations_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    openBtn.IsEnabled = true;
+        //    var selected_item = recentPresentationsList.SelectedItem as PresentationListItem;
+        //    toOpenPresentationInfo = selected_item;
+        //    PresentationOpen(toOpenPresentationInfo);
+        //}
 
-        private void recentPresentationsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            // TODO : open selected file
-            var selected_item = recentPresentationsList.SelectedItem as PresentationListItem;
-            toOpenPresentationInfo = selected_item;
-            PresentationOpen(toOpenPresentationInfo);
+        //private void recentPresentationsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        //{
+        //    // TODO : open selected file
+        //    var selected_item = recentPresentationsList.SelectedItem as PresentationListItem;
+        //    toOpenPresentationInfo = selected_item;
+        //    PresentationOpen(toOpenPresentationInfo);
 
-        }
+        //}
 
         private void PresentationOpen(PresentationListItem toOpenPresentationInfo)
         {
