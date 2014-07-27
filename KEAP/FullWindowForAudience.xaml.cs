@@ -440,6 +440,12 @@ namespace KEAP
         {
             // ZoomOut action
             // Keyboard Arrow's action change
+            zooming();
+            //throw new NotImplementedException();
+        }
+
+        public void zooming()
+        {
             sub_Monitor.Text = "Plus_KeyEventHandler";
             if (!zoom_Toggle)
             {
@@ -449,21 +455,12 @@ namespace KEAP
             else ZoomOut();
 
             zoom_Toggle = !zoom_Toggle;
-            //throw new NotImplementedException();
         }
 
         public void Down_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // if(ZoomIn) Move Down ;
-            sub_Monitor.Text = "Down_Arrow_KeyEventHandler";
-            if (zoom_Toggle)
-            {
-                if(zoom_Y<=0)
-                {
-                    ZoomIn(zoom_X, zoom_Y);
-                }
-                else ZoomIn(zoom_X, --zoom_Y);
-            }
+            DownArrow();
            // else
           //  {
 
@@ -471,7 +468,25 @@ namespace KEAP
             //throw new NotImplementedException();
         }
 
+        public void DownArrow()
+        {
+            sub_Monitor.Text = "Down_Arrow_KeyEventHandler";
+            if (zoom_Toggle)
+            {
+                if (zoom_Y <= 0)
+                {
+                    ZoomIn(zoom_X, zoom_Y);
+                }
+                else ZoomIn(zoom_X, --zoom_Y);
+            }
+        }
+
         public void Up_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            UpArrow();
+        }
+
+        public void UpArrow()
         {
             sub_Monitor.Text = "Up_Arrow_KeyEventHandler";
             if (zoom_Toggle)
@@ -490,6 +505,12 @@ namespace KEAP
         {
             // if(ZoomIn) Move Left;
             // else move to before slide or animation;
+            LeftArrow();
+            //throw new NotImplementedException();
+        }
+
+        public void LeftArrow()
+        {
             sub_Monitor.Text = "Left_Arrow_KeyEventHandler";
             if (zoom_Toggle)
             {
@@ -501,13 +522,18 @@ namespace KEAP
             }
             else
                 Slide_Turn(-1);
-            //throw new NotImplementedException();
         }
 
         public void Right_Arrow_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             // if(ZoomIn) Move Right;
             // else move to next slide or animation
+            RightArrow();
+            //throw new NotImplementedException();
+        }
+
+        public void RightArrow()
+        {
             sub_Monitor.Text = "Right_Arrow_KeyEventHandler";
             if (zoom_Toggle)
             {
@@ -519,7 +545,6 @@ namespace KEAP
             }
             else
                 Slide_Turn(1);
-            //throw new NotImplementedException();
         }
 
         private void Close_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)

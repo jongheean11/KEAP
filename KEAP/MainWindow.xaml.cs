@@ -586,6 +586,7 @@ namespace KEAP
                 else if (image_Mode)
                 {
                     int area1 = 0, area2 = 0, area3 = 0;
+                    if (MainCanvas.Children.Count == 0) return;
                     if (MainCanvas.Children[prev_Count_Children] is Image)
                     {
                         if (x1 < x2)
@@ -1989,6 +1990,7 @@ namespace KEAP
         private void Image_Click(object sender, RoutedEventArgs e)
         {
             SetAllModeFalse();
+            SetAllMoveModeFalse();
 
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".jpeg"; // Default file extension
@@ -2314,9 +2316,10 @@ namespace KEAP
                 {
                     XmlElement canvas_element = xmlDoc.CreateElement("Slide" + Convert.ToString(i));
                     List<BitmapFrame> bitmapFrame_List = null;
-                    if (i - 1 < bitmapFrame_Dictionary.Count)
-                        bitmapFrame_List = bitmapFrame_Dictionary[i - 1];
-                    
+                    if (bitmapFrame_Dictionary.Keys.Contains(i-1))
+                    {
+                        bitmapFrame_List = bitmapFrame_Dictionary[i-1];
+                    }
                     int j = 0;
                     foreach (UIElement obj in canvas.Children)
                     {
@@ -2598,21 +2601,22 @@ namespace KEAP
                             y2.InnerText = Convert.ToString(Canvas.GetTop(thisimage) + thisimage.Height);
                             I.AppendChild(y2);
 
-                            FileStream fs;
-                            BitmapFrame frame = bitmapFrame_List.ElementAt(j);
-                            string filepath = param_path + param_name + "_Image_" + Convert.ToString(i) + "_" + Convert.ToString(j) + ".png"; // filename_Image_(Canvas#)_(Image#).png
+                            
+                                FileStream fs;
+                                BitmapFrame frame = bitmapFrame_List.ElementAt(j);
+                                string filepath = param_path + param_name + "_Image_" + Convert.ToString(i) + "_" + Convert.ToString(j) + ".png"; // filename_Image_(Canvas#)_(Image#).png
 
-                            // Create a file stream for saving image
-                            fs = System.IO.File.OpenWrite(filepath);
-                            // Use png encoder for our data
-                            PngBitmapEncoder encoder = new PngBitmapEncoder();
-                            // push the rendered bitmap to it
-                            encoder.Frames.Add(BitmapFrame.Create(frame));
-                            // save the data to the stream
-                            encoder.Save(fs);
-                            //fs.Dispose();
-                            fs.Close();
-
+                                // Create a file stream for saving image
+                                fs = System.IO.File.OpenWrite(filepath);
+                                // Use png encoder for our data
+                                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                                // push the rendered bitmap to it
+                                encoder.Frames.Add(BitmapFrame.Create(frame));
+                                // save the data to the stream
+                                encoder.Save(fs);
+                                //fs.Dispose();
+                                fs.Close();
+                            
                             XmlElement image_path = xmlDoc.CreateElement("Path");
                             image_path.InnerText = param_name + "_Image_" + Convert.ToString(i) + "_" + Convert.ToString(j++) + ".png";
                             I.AppendChild(image_path);
