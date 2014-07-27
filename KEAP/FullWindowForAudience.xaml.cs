@@ -571,87 +571,87 @@ namespace KEAP
 
         public void get_SwipeRight_From_Kinect()
         {
-            sub_Monitor.Text = "get_SwipeRight_From_Kinect";
+//            sub_Monitor.Text = "get_SwipeRight_From_Kinect";
         }
 
         public void get_SwipeLeft_From_Kinect()
         {
-            sub_Monitor.Text = "get_SwipeLeft_From_Kinect";
+            //sub_Monitor.Text = "get_SwipeLeft_From_Kinect";
         }
 
         public void get_SwipeUp_From_Kinect()
         {
-            sub_Monitor.Text = "get_SwipeUp_From_Kinect";
+            //sub_Monitor.Text = "get_SwipeUp_From_Kinect";
         }
         //
         public void get_Start_From_Kinect()
         {
-            sub_Monitor.Text = "get_Start_From_Kinect";
+            //sub_Monitor.Text = "get_Start_From_Kinect";
         }
 
         public void get_ZoomIn_From_Kinect()
         {
-            sub_Monitor.Text = "get_ZoomIn_From_Kinect";
+            //sub_Monitor.Text = "get_ZoomIn_From_Kinect";
         }
 
         public void get_ZoomOut_From_Kinect()
         {
-            sub_Monitor.Text = "get_ZoomOut_From_Kinect";
+            //sub_Monitor.Text = "get_ZoomOut_From_Kinect";
         }
 
         public void get_Pause_From_Kinect()
         {
-            sub_Monitor.Text = "get_Pause_From_Kinect";
+            //sub_Monitor.Text = "get_Pause_From_Kinect";
         }
 
         public void get_RightDown_From_Kinect()
         {
-            sub_Monitor.Text = "get_RightDown_From_Kinect";
+            //sub_Monitor.Text = "get_RightDown_From_Kinect";
         }
 
         public void get_Down_From_Kinect()
         {
-            sub_Monitor.Text = "get_Down_From_Kinect";
+            //sub_Monitor.Text = "get_Down_From_Kinect";
         }
 
         public void get_RightUp_From_Kinect()
         {
-            sub_Monitor.Text = "get_RightUp_From_Kinect";
+            //sub_Monitor.Text = "get_RightUp_From_Kinect";
         }
 
         public void get_LeftDown_From_Kinect()
         {
-            sub_Monitor.Text = "get_LeftDown_From_Kinect";
+            //sub_Monitor.Text = "get_LeftDown_From_Kinect";
         }
 
         public void get_LeftUp_From_Kinect()
         {
-            sub_Monitor.Text = "get_LeftUp_From_Kinect";
+            //sub_Monitor.Text = "get_LeftUp_From_Kinect";
         }
 
         public void get_Left_From_Kinect()
         {
-            sub_Monitor.Text = "get_Left_From_Kinect";
+            //sub_Monitor.Text = "get_Left_From_Kinect";
         }
 
         public void get_Right_From_Kinect()
         {
-            sub_Monitor.Text = "get_Right_From_Kinect";
+            //sub_Monitor.Text = "get_Right_From_Kinect";
         }
 
         public void get_Up_From_Kinect()
         {
-            sub_Monitor.Text = "get_Up_From_Kinect";
+            //sub_Monitor.Text = "get_Up_From_Kinect";
         }
 
         public void get_Push_From_Kinect()
         {
-            sub_Monitor.Text = "get_Push_From_Kinect";
+            //sub_Monitor.Text = "get_Push_From_Kinect";
         }
 
         public void get_StrechedHands_From_Kinect()
         {
-            sub_Monitor.Text = "get_StrechedHands_From_Kinect";
+            //sub_Monitor.Text = "get_StrechedHands_From_Kinect";
         }
 
 
@@ -674,13 +674,13 @@ namespace KEAP
 
         public void getRightGripFromKinect(string data)
         {
-            grip_right.Text = data;
+            //grip_right.Text = data;
             //           sub_Monitor.Text = zzz;
         }
 
         public void getLeftGripFromKinect(string data)
         {
-            grip_left.Text = data;
+            //grip_left.Text = data;
             //           sub_Monitor.Text = zzz;
         }
 

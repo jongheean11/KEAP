@@ -25,6 +25,8 @@ using System.Windows.Navigation;
 using System.Configuration;
 using System.Diagnostics;
 using System.Collections.Specialized;
+using KEAP.Animations;
+using System.Windows.Media.Animation;
 
 namespace KEAP
 {
@@ -61,6 +63,13 @@ namespace KEAP
 
         // skeleton gesture recognizer
         private GestureController gestureController;
+
+        KEAPCanvas AudienceCanvas;
+        List<KEAPCanvas> canvas_arr;
+        Dictionary<int, List<Dictionary<int, string>>> animations = new Dictionary<int, List<Dictionary<int, string>>>();
+        int canvas_index = 0, animation_index = 0;
+        List<int> animation_indexes = new List<int>();
+        
 
         private FullWindowForPresentor()
         {
@@ -119,6 +128,174 @@ namespace KEAP
             // add timer for clearing last detected gesture
             _clearTimer = new Timer(2000);
             _clearTimer.Elapsed += new ElapsedEventHandler(clearTimer_Elapsed);
+
+            // Audience
+            int i = 0;
+            canvas_arr = new List<KEAPCanvas>();
+
+            foreach (KEAPCanvas canvas in main.canvas_List)
+            {
+                bool ani_null = false;
+                if (!main.animation_Dictionary.Keys.Contains(i)) ani_null = true;
+                else animations = main.animation_Dictionary;
+                List<Dictionary<int, string>> anilist = new List<Dictionary<int, string>>();
+                if (ani_null)
+                    anilist = null;
+                else
+                {
+                    //    if (i < animations.Count)
+                    Dictionary<int, string>[] ani_arr = new Dictionary<int, string>[main.animation_Dictionary[i].Count];
+                    //main.animation_Dictionary[i].CopyTo(animations);
+                    main.animation_Dictionary[i].CopyTo(ani_arr);
+                    for (int k = 0; k < main.animation_Dictionary[i].Count; k++)
+                    {
+                        Dictionary<int, string> tempdic = new Dictionary<int, string>();
+                        tempdic.Add(ani_arr[k].Keys.First(), ani_arr[k].Values.First());
+                        anilist.Add(tempdic);
+                    }
+                    //    else
+                    //        anilist = null;
+                }
+                canvas_arr.Add(new KEAPCanvas());
+                canvas_arr[i].Width = SystemParameters.WorkArea.Width;
+                canvas_arr[i].Height = SystemParameters.PrimaryScreenHeight;
+                canvas_arr[i].Background = canvas.Background;
+
+                for (int j = 0; j < main.canvas_List[i].Children.Count; j++)
+                {
+                    UIElement ele = main.canvas_List[i].Children[j];
+                    if (ele is EditableTextBlock)
+                    {
+                        EditableTextBlock copyele = ele as EditableTextBlock;
+                        EditableTextBlock textblock = new EditableTextBlock()
+                        {
+                            Text = copyele.Text,
+                            Width = copyele.Width * (SystemParameters.WorkArea.Width / canvas.Width),
+                            Height = copyele.Height * (SystemParameters.PrimaryScreenHeight / canvas.Height),
+                            FontSize = copyele.FontSize,
+                            TextAlignment = copyele.TextAlignment,
+                            Effect = copyele.Effect,
+                            FontWeight = copyele.FontWeight,
+                            FontFamily = copyele.FontFamily,
+                            Background = copyele.Background,
+                            Foreground = copyele.Foreground,
+                        };
+                        Canvas.SetLeft(textblock, Canvas.GetLeft(copyele) * (SystemParameters.WorkArea.Width / canvas.Width));
+                        Canvas.SetTop(textblock, Canvas.GetTop(copyele) * (SystemParameters.PrimaryScreenHeight / canvas.Height));
+
+                        canvas_arr[i].Children.Add(textblock);
+                    }
+                    else if (ele is Polygon)
+                    {
+                        Polygon copyele = ele as Polygon;
+                        Polygon polygon = new Polygon()
+                        {
+                            Points = copyele.Points,
+                            Stroke = copyele.Stroke,
+                            StrokeThickness = copyele.StrokeThickness,
+                            Fill = copyele.Fill
+                        };
+
+                        Point[] copy_points = new Point[polygon.Points.Count];
+                        PointCollection copy_collection = new PointCollection();
+                        polygon.Points.CopyTo(copy_points, 0);
+                        for (int p = 0; p < polygon.Points.Count; p++)
+                        {
+                            copy_points[p].X = copy_points[p].X * (SystemParameters.WorkArea.Width / canvas.Width);
+                            copy_points[p].Y = copy_points[p].Y * (SystemParameters.PrimaryScreenHeight / canvas.Height);
+                            copy_collection.Add(copy_points[p]);
+                        }
+                        polygon.Points = copy_collection;
+
+                        canvas_arr[i].Children.Add(polygon);
+                    }
+                    else if (ele is Line)
+                    {
+                        Line copyele = ele as Line;
+                        Line line = new Line()
+                        {
+                            X1 = copyele.X1 * (SystemParameters.WorkArea.Width / canvas.Width),
+                            Y1 = copyele.Y1 * (SystemParameters.PrimaryScreenHeight / canvas.Height),
+                            X2 = copyele.X2 * (SystemParameters.WorkArea.Width / canvas.Width),
+                            Y2 = copyele.Y2 * (SystemParameters.PrimaryScreenHeight / canvas.Height),
+                            Stroke = copyele.Stroke,
+                            StrokeThickness = copyele.StrokeThickness,
+                        };
+
+                        canvas_arr[i].Children.Add(line);
+                    }
+                    else if (ele is Image)
+                    {
+                        Image copyele = ele as Image;
+                        Image image = new Image()
+                        {
+                            Source = copyele.Source,
+                            Width = copyele.Width * (SystemParameters.WorkArea.Width / canvas.Width),
+                            Height = copyele.Height * (SystemParameters.PrimaryScreenHeight / canvas.Height)
+                        };
+                        Canvas.SetLeft(image, Canvas.GetLeft(copyele) * (SystemParameters.WorkArea.Width / canvas.Width));
+                        Canvas.SetTop(image, Canvas.GetTop(copyele) * (SystemParameters.PrimaryScreenHeight / canvas.Height));
+
+                        canvas_arr[i].Children.Add(image);
+                    }
+                    else if (ele is Rectangle)
+                    {
+                        Rectangle copyele = ele as Rectangle;
+                        Rectangle rectangle = new Rectangle()
+                        {
+                            Width = copyele.Width * (SystemParameters.WorkArea.Width / canvas.Width),
+                            Height = copyele.Height * (SystemParameters.PrimaryScreenHeight / canvas.Height),
+                            Fill = copyele.Fill,
+                            Stroke = copyele.Stroke,
+                            StrokeThickness = copyele.StrokeThickness
+                        };
+                        Canvas.SetLeft(rectangle, Canvas.GetLeft(copyele) * (SystemParameters.WorkArea.Width / canvas.Width));
+                        Canvas.SetTop(rectangle, Canvas.GetTop(copyele) * (SystemParameters.PrimaryScreenHeight / canvas.Height));
+
+                        canvas_arr[i].Children.Add(rectangle);
+                    }
+                    else if (ele is Ellipse)
+                    {
+                        Ellipse copyele = ele as Ellipse;
+                        Ellipse ellipse = new Ellipse()
+                        {
+                            Width = copyele.Width * (SystemParameters.WorkArea.Width / canvas.Width),
+                            Height = copyele.Height * (SystemParameters.PrimaryScreenHeight / canvas.Height),
+                            Fill = copyele.Fill,
+                            Stroke = copyele.Stroke,
+                            StrokeThickness = copyele.StrokeThickness
+                        };
+                        Canvas.SetLeft(ellipse, Canvas.GetLeft(copyele) * (SystemParameters.WorkArea.Width / canvas.Width));
+                        Canvas.SetTop(ellipse, Canvas.GetTop(copyele) * (SystemParameters.PrimaryScreenHeight / canvas.Height));
+
+                        canvas_arr[i].Children.Add(ellipse);
+                    }
+                    //canvas_arr[i].Measure(new Size(SystemParameters.WorkArea.Width, SystemParameters.MaximizedPrimaryScreenHeight));
+                    //canvas_arr[i].Arrange(new Rect(0, 0, SystemParameters.WorkArea.Width, SystemParameters.MaximizedPrimaryScreenHeight));
+                }
+                if (anilist != null)
+                {
+                    foreach (Dictionary<int, string> dic in anilist)
+                    {
+                        string ani = dic[dic.Keys.First()];
+                        if (ani.Contains("Bounds") || ani.Contains("Move") || ani.Contains("FadeIn")
+                            || ani.Contains("Interlaced") || ani.Contains("Block") || ani.Contains("Circle") || ani.Contains("Radial") || ani.Contains("WaterFall"))
+                        {
+                            canvas_arr[i].Children[dic.Keys.First()].Visibility = Visibility.Collapsed;
+                        }
+                    }
+                }
+                i++;
+            }
+
+            /*
+            for(i=0; i<main.animation_Dictionary.Count; i++)
+            {
+                animations.Add(i,new Dictionary<int,string>[main.animation_Dictionary[i].Count()]);
+                main.animation_Dictionary[i].CopyTo(animations[i]);
+            }*/
+            
+
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -245,6 +422,7 @@ namespace KEAP
                                     rightHandRelease = false;
                                     rightHandGrip = true;
                                     aud_View.get_Grip_From_Kinect();
+                                    RightHandGrip.Text = "RightHand Gripped";
                                     aud_View.getRightGripFromKinect("Gripped");
 
                                 }
@@ -253,6 +431,7 @@ namespace KEAP
                                     rightHandGrip = false;
                                     rightHandRelease = true;
                                     aud_View.get_Release_From_Kinect();
+                                    RightHandGrip.Text = "RightHand Release";
                                     aud_View.getRightGripFromKinect("Release");
                                 }
                             }
@@ -263,12 +442,14 @@ namespace KEAP
                                 {
                                     leftHandRelease = false;
                                     leftHandGrip = true;
+                                    LeftHandGrip.Text = "LeftHand Gripped";
                                     aud_View.getLeftGripFromKinect("Gripped");
                                 }
                                 else if (hand.HandType == InteractionHandType.Left && hand.HandEventType == InteractionHandEventType.GripRelease)
                                 {
                                     leftHandGrip = false;
                                     leftHandRelease = true;
+                                    LeftHandGrip.Text = "LeftHand Release";
                                     aud_View.getLeftGripFromKinect("Release");
                                 }
                             }
@@ -758,88 +939,88 @@ namespace KEAP
                 {
                     case "TurnSegments":
                         Gesture = "Pause";
-                        aud_View.getDataFromKinect("Pause");
+                        //aud_View.getDataFromKinect("Pause");
                         aud_View.get_Pause_From_Kinect();
                         start = false;
                         break;
                     case "RightDown":
                         Gesture = "RightDown";
-                        aud_View.getDataFromKinect("RightDown");
+                        //aud_View.getDataFromKinect("RightDown");
                         aud_View.DownArrow();
                         aud_View.RightArrow();
                         aud_View.get_RightDown_From_Kinect();
                         break;
                     case "Down":
                         Gesture = "Down";
-                        aud_View.getDataFromKinect("Down");
+                        //aud_View.getDataFromKinect("Down");
                         aud_View.DownArrow();
                         aud_View.get_Down_From_Kinect();
                         break;
                     case "RightUp":
                         Gesture = "RightUp";
-                        aud_View.getDataFromKinect("RightUp");
+                        //aud_View.getDataFromKinect("RightUp");
                         aud_View.RightArrow();
                         aud_View.UpArrow();
                         aud_View.get_RightUp_From_Kinect();
                         break;
                     case "LeftDown":
                         Gesture = "LeftDown";
-                        aud_View.getDataFromKinect("LeftDown");
+                        //aud_View.getDataFromKinect("LeftDown");
                         aud_View.LeftArrow();
                         aud_View.DownArrow();
                         aud_View.get_LeftDown_From_Kinect();
                         break;
                     case "LeftUp":
                         Gesture = "LeftUp";
-                        aud_View.getDataFromKinect("LeftUp");
+                        //aud_View.getDataFromKinect("LeftUp");
                         aud_View.LeftArrow();
                         aud_View.UpArrow();
                         aud_View.get_LeftUp_From_Kinect();
                         break;
                     case "Left":
                         Gesture = "Left";
-                        aud_View.getDataFromKinect("Left");
+                        //aud_View.getDataFromKinect("Left");
                         aud_View.LeftArrow();
                         aud_View.get_Left_From_Kinect();
                         break;
                     case "Right":
                         Gesture = "Right";
-                        aud_View.getDataFromKinect("Right");
+                        //aud_View.getDataFromKinect("Right");
                         aud_View.RightArrow();
                         aud_View.get_Right_From_Kinect();
                         break;
                     case "Up":
                         Gesture = "Up";
-                        aud_View.getDataFromKinect("Up");
+                        //aud_View.getDataFromKinect("Up");
                         aud_View.UpArrow();
                         aud_View.get_Up_From_Kinect();
                         break;
                     case "Push":
                         Gesture = "Push";
-                        aud_View.getDataFromKinect("Push");
+                        //aud_View.getDataFromKinect("Push");
                         aud_View.UpArrow();
                         aud_View.get_Push_From_Kinect();
                         break;
                     case "strechedHands":
                         Gesture = "strechedHands\n";
-                        aud_View.getDataFromKinect("strechedHands");
+                        //aud_View.getDataFromKinect("strechedHands");
                         aud_View.get_StrechedHands_From_Kinect();
                         break;
                     case "SwipeLeft":
                         Gesture = "Swipe Left\n";
-                        aud_View.getDataFromKinect("SwipeLeft");
+                        //aud_View.getDataFromKinect("SwipeLeft");
                         aud_View.LeftArrow();
                         aud_View.get_SwipeLeft_From_Kinect();
                         break;
                     case "SwipeRight":
                         Gesture = "Swipe Right\n";
-                        aud_View.getDataFromKinect("SwipeRight");
+                        //aud_View.getDataFromKinect("SwipeRight");
                         aud_View.RightArrow();
                         aud_View.get_SwipeRight_From_Kinect();
                         break;
                     case "SwipeUp":
                         Gesture = "Swipe Up\n";
-                        aud_View.getDataFromKinect("SwipeUp");
+                        //aud_View.getDataFromKinect("SwipeUp");
                         aud_View.get_SwipeUp_From_Kinect();
                         break;
                     default:
@@ -906,6 +1087,33 @@ namespace KEAP
 
             // maximized
             this.WindowState = System.Windows.WindowState.Maximized;
+
+            // audience
+            AudienceCanvas = new KEAPCanvas()
+            {
+                VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
+                Background = new SolidColorBrush(Colors.White)
+            };
+            AudienceCanvas.Width = SystemParameters.WorkArea.Width * (100 / 96);
+            AudienceCanvas.Height = SystemParameters.MaximizedPrimaryScreenHeight * (100 / 96);
+            AudienceCanvas = canvas_arr[0];
+            //AudienceCanvas.PreviewMouseLeftButtonDown += AudienceCanvas_PreviewMouseLeftButtonDown;
+            //AudienceCanvas.PreviewMouseRightButtonDown += AudienceCanvas_PreviewMouseRightButtonDown;
+            AudienceGrid.Children.Add(AudienceCanvas);
+
+            List<Dictionary<int, string>> anilist;
+            if (animations.Keys.Contains(canvas_index))
+                anilist = animations[canvas_index];
+            else
+                anilist = null;
+            if (anilist != null)
+            {
+                foreach (Dictionary<int, string> dic in anilist)
+                {
+                    animation_indexes.Add(dic.Keys.First());
+                }
+            }
         }
 
 
@@ -1012,6 +1220,457 @@ namespace KEAP
         private void Btn_Click(object sender, RoutedEventArgs e)
         {
             //aud_View.getDataFromKinect(message.Text);
+        }
+
+
+        #region animation effects
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 왼쪽에서 등장
+        private void BoundsLTR(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double xMove = 500;
+
+            ThicknessAnimation bounceAnimation = new ThicknessAnimation();
+            BounceEase BounceOrientation = new BounceEase();
+            BounceOrientation.Bounces = 4;
+            BounceOrientation.Bounciness = 2;
+            bounceAnimation.From = new Thickness(143, 0, 0, 0);
+            bounceAnimation.From = new Thickness(x - xMove, y, 0, 0);
+
+            bounceAnimation.To = new Thickness(x, y, 0, 0);
+            bounceAnimation.EasingFunction = BounceOrientation;
+
+            shape.BeginAnimation(MarginProperty, bounceAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 오른쪽에서 등장
+        private void BoundsRTL(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double xMove = 500;
+
+            ThicknessAnimation bounceAnimation = new ThicknessAnimation();
+            BounceEase BounceOrientation = new BounceEase();
+            BounceOrientation.Bounces = 4;
+            BounceOrientation.Bounciness = 2;
+            bounceAnimation.From = new Thickness(143, 0, 0, 0);
+            bounceAnimation.From = new Thickness(x + xMove, y, 0, 0);
+
+            bounceAnimation.To = new Thickness(x, y, 0, 0);
+            bounceAnimation.EasingFunction = BounceOrientation;
+
+            shape.BeginAnimation(MarginProperty, bounceAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 위쪽에서 등장
+        private void BoundsTTB(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double yMove = 500;
+
+            ThicknessAnimation bounceAnimation = new ThicknessAnimation();
+            BounceEase BounceOrientation = new BounceEase();
+            BounceOrientation.Bounces = 4;
+            BounceOrientation.Bounciness = 2;
+            bounceAnimation.From = new Thickness(143, 0, 0, 0);
+            bounceAnimation.From = new Thickness(x, y - yMove, 0, 0);
+
+            bounceAnimation.To = new Thickness(x, y, 0, 0);
+            bounceAnimation.EasingFunction = BounceOrientation;
+
+            shape.BeginAnimation(MarginProperty, bounceAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 아래쪽에서 등장
+        private void BoundsBTT(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double yMove = 500;
+
+            ThicknessAnimation bounceAnimation = new ThicknessAnimation();
+            BounceEase BounceOrientation = new BounceEase();
+            BounceOrientation.Bounces = 4;
+            BounceOrientation.Bounciness = 2;
+            bounceAnimation.From = new Thickness(143, 0, 0, 0);
+            bounceAnimation.From = new Thickness(x, y + yMove, 0, 0);
+
+            bounceAnimation.To = new Thickness(x, y, 0, 0);
+            bounceAnimation.EasingFunction = BounceOrientation;
+
+            shape.BeginAnimation(MarginProperty, bounceAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 왼쪽에서 등장
+        private void MoveLTR(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double xMove = 500;
+
+            PowerEase power = new PowerEase();
+            ThicknessAnimation linearAnimation = new ThicknessAnimation();
+            linearAnimation.From = new Thickness(x - xMove, y, 0, 0);
+            linearAnimation.To = new Thickness(x, y, 0, 0);
+            linearAnimation.EasingFunction = power;
+
+            shape.BeginAnimation(MarginProperty, linearAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 오른쪽에서 등장
+        private void MoveRTL(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double xMove = 500;
+
+            PowerEase power = new PowerEase();
+            ThicknessAnimation linearAnimation = new ThicknessAnimation();
+            linearAnimation.From = new Thickness(x + xMove, y, 0, 0);
+            linearAnimation.To = new Thickness(x, y, 0, 0);
+            linearAnimation.EasingFunction = power;
+
+            shape.BeginAnimation(MarginProperty, linearAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 위쪽에서 등장
+        private void MoveTTB(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double yMove = 500;
+
+            PowerEase power = new PowerEase();
+            ThicknessAnimation linearAnimation = new ThicknessAnimation();
+            linearAnimation.From = new Thickness(x, y - yMove, 0, 0);
+            linearAnimation.To = new Thickness(x, y, 0, 0);
+            linearAnimation.EasingFunction = power;
+
+            shape.BeginAnimation(MarginProperty, linearAnimation);
+        }
+
+        // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
+        // 아래쪽에서 등장
+        private void MoveBTT(FrameworkElement shape)
+        {
+            double x = shape.Margin.Left;
+            double y = shape.Margin.Top;
+            double yMove = 500;
+
+            PowerEase power = new PowerEase();
+            ThicknessAnimation linearAnimation = new ThicknessAnimation();
+            linearAnimation.From = new Thickness(x, y + yMove, 0, 0);
+            linearAnimation.To = new Thickness(x, y, 0, 0);
+            linearAnimation.EasingFunction = power;
+
+            shape.BeginAnimation(MarginProperty, linearAnimation);
+        }
+
+        // 밝아졌다가 형체가 나타난다.
+        private void FadeIn(FrameworkElement shape)
+        {
+            DoubleAnimation fadeIn = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(1), FillBehavior.HoldEnd);
+            shape.BeginAnimation(OpacityProperty, fadeIn);
+        }
+
+        // 어두워졌다가 밝아져서 형체가 사라진다.
+        private void FadeOut(FrameworkElement shape)
+        {
+            DoubleAnimation fadeOut = new DoubleAnimation(1.0, 0.0, TimeSpan.FromSeconds(1), FillBehavior.HoldEnd);
+            shape.BeginAnimation(OpacityProperty, fadeOut);
+            shape.Visibility = Visibility.Collapsed;
+        }
+
+        // 사각형이 커졌다 작아진다
+        private void ZoomIn(FrameworkElement shape)
+        {
+            DoubleAnimation zoomIn = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(0.5), FillBehavior.HoldEnd);
+
+            CustomZoomInEaseOutFunction be = new CustomZoomInEaseOutFunction();
+            be.EasingMode = EasingMode.EaseOut;
+
+            ScaleTransform trans = new ScaleTransform();
+            shape.RenderTransform = trans;
+            shape.RenderTransformOrigin = new Point(0.5, 0.5);
+            zoomIn.EasingFunction = be;
+            trans.BeginAnimation(ScaleTransform.ScaleXProperty, zoomIn);
+            trans.BeginAnimation(ScaleTransform.ScaleYProperty, zoomIn);
+        }
+
+        // 사각형이 작아진다 커졌다
+        private void ZoomOut(FrameworkElement shape)
+        {
+            DoubleAnimation zoomOut = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(0.5), FillBehavior.HoldEnd);
+
+            CustomZoomOutEaseOutFunction be = new CustomZoomOutEaseOutFunction();
+            be.EasingMode = EasingMode.EaseOut;
+
+            ScaleTransform trans = new ScaleTransform();
+            shape.RenderTransform = trans;
+            shape.RenderTransformOrigin = new Point(0.5, 0.5);
+            zoomOut.EasingFunction = be;
+            trans.BeginAnimation(ScaleTransform.ScaleXProperty, zoomOut);
+            trans.BeginAnimation(ScaleTransform.ScaleYProperty, zoomOut);
+        }
+
+        // 360도 회전, 0.5초
+        private void Tornado(FrameworkElement shape)
+        {
+            DoubleAnimation dbRotate = new DoubleAnimation(0, 360, new Duration(TimeSpan.FromSeconds(0.5)));
+
+            RotateTransform rotate = new RotateTransform();
+            shape.RenderTransform = rotate;
+            shape.RenderTransformOrigin = new Point(0.5, 0.5);
+            rotate.BeginAnimation(RotateTransform.AngleProperty, dbRotate);
+        }
+        private static void circleAnimation(FrameworkElement shape)
+        {
+            CircleAnimation circleAnimationHelper = new CircleAnimation();
+            //            circleAnimationHelper.MakeCircleAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            circleAnimationHelper.MakeCircleAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
+        }
+        private static void interlacedAnimation(FrameworkElement shape)
+        {
+            InterlacedAnimation interlacedAnimation = new InterlacedAnimation();
+            interlacedAnimation.MakeInterlacedAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
+            //            interlacedAnimation.MakeInterlacedAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+        }
+
+        private static void blockAnimation(FrameworkElement shape)
+        {
+            BlockAnimation blockAnimation = new BlockAnimation();
+            //            blockAnimation.MakeBlockAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            blockAnimation.MakeBlockAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
+        }
+        private static void radialAnimation(FrameworkElement shape)
+        {
+            RadialAnimation radialAnimation = new RadialAnimation();
+            //            radialAnimation.MakeRadiaAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            radialAnimation.MakeRadiaAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromMilliseconds(250));
+        }
+        private static void WaterFallAnimation(FrameworkElement shape)
+        {
+            WaterFallAnimation WaterFall = new WaterFallAnimation();
+            //            WaterFall.MakeWaterFallAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            WaterFall.MakeWaterFallAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
+        }
+        #endregion
+        Image zoom_img;
+        KEAPCanvas zoomCanvas;
+        void ZoomIn(int x, int y)
+        {
+            zoomCanvas = new KEAPCanvas();
+            zoomCanvas.Width = AudienceCanvas.Width;
+            zoomCanvas.Height = AudienceCanvas.Height;
+            zoomCanvas.Background = null;
+
+            Rectangle rec_BG = new Rectangle()
+            {
+                Width = SystemParameters.WorkArea.Width,
+                Height = SystemParameters.PrimaryScreenHeight,
+                Stroke = null,
+                Fill = AudienceCanvas.Background
+            };
+            Canvas.SetLeft(rec_BG, -(SystemParameters.WorkArea.Width * (100 / 96) * x / 8));
+            Canvas.SetTop(rec_BG, -(WindowSettings.resolution_Height * (100 / 96) * y / 8));
+            zoomCanvas.Children.Add(rec_BG);
+
+            UIElement[] copyuiele = new UIElement[AudienceCanvas.Children.Count];
+            AudienceCanvas.Children.CopyTo(copyuiele, 0);
+            foreach (UIElement ele in copyuiele)
+            {
+                if (ele is EditableTextBlock)
+                {
+                    EditableTextBlock copyele = ele as EditableTextBlock;
+                    EditableTextBlock textblock = new EditableTextBlock()
+                    {
+                        Text = copyele.Text,
+                        Width = copyele.Width,
+                        Height = copyele.Height,
+                        FontSize = copyele.FontSize,
+                        TextAlignment = copyele.TextAlignment,
+                        Effect = copyele.Effect,
+                        FontWeight = copyele.FontWeight,
+                        FontFamily = copyele.FontFamily,
+                        Background = copyele.Background,
+                        Foreground = copyele.Foreground,
+                    };
+                    Canvas.SetLeft(textblock, Canvas.GetLeft(copyele));
+                    Canvas.SetTop(textblock, Canvas.GetTop(copyele));
+
+                    double x1 = Canvas.GetLeft(ele),
+                        y1 = Canvas.GetTop(ele);
+
+                    Canvas.SetLeft(textblock, x1 - (SystemParameters.PrimaryScreenWidth * (100 / 100) * x / 8));
+                    Canvas.SetTop(textblock, y1 - (SystemParameters.PrimaryScreenHeight * (100 / 100) * y / 8));
+
+                    zoomCanvas.Children.Add(textblock);
+                }
+                else if (ele is Polygon)
+                {
+                    Polygon copyele = ele as Polygon;
+                    Polygon polygon = new Polygon()
+                    {
+                        Points = copyele.Points,
+                        Stroke = copyele.Stroke,
+                        StrokeThickness = copyele.StrokeThickness,
+                        Fill = copyele.Fill
+                    };
+
+                    Point[] copy_points = new Point[polygon.Points.Count];
+                    PointCollection copy_collection = new PointCollection();
+                    polygon.Points.CopyTo(copy_points, 0);
+                    for (int i = 0; i < polygon.Points.Count; i++)
+                    {
+                        copy_points[i].X = copy_points[i].X - (SystemParameters.WorkArea.Width * (100 / 100) * x / 8);
+                        copy_points[i].Y = copy_points[i].Y - (SystemParameters.PrimaryScreenHeight * (100 / 100) * y / 8);
+                        copy_collection.Add(copy_points[i]);
+                    }
+                    polygon.Points = copy_collection;
+
+                    zoomCanvas.Children.Add(polygon);
+                }
+                else if (ele is Line)
+                {
+                    Line copyele = ele as Line;
+                    Line line = new Line()
+                    {
+                        X1 = copyele.X1,
+                        Y1 = copyele.Y1,
+                        X2 = copyele.X2,
+                        Y2 = copyele.Y2,
+                        Stroke = copyele.Stroke,
+                        StrokeThickness = copyele.StrokeThickness,
+                    };
+
+                    line.X1 = ((Line)ele).X1 - (SystemParameters.WorkArea.Width * (100 / 100) * x / 8);
+                    line.Y1 = ((Line)ele).Y1 - (SystemParameters.PrimaryScreenHeight * (100 / 100) * y / 8);
+                    line.X2 = ((Line)ele).X2 - (SystemParameters.WorkArea.Width * (100 / 100) * y / 8);
+                    line.Y2 = ((Line)ele).Y2 - (SystemParameters.PrimaryScreenHeight * (100 / 100) * y / 8);
+
+                    zoomCanvas.Children.Add(line);
+                }
+                else if (ele is Image)
+                {
+                    Image copyele = ele as Image;
+                    Image image = new Image()
+                    {
+                        Source = copyele.Source,
+                        Width = copyele.Width,
+                        Height = copyele.Height,
+                    };
+                    Canvas.SetLeft(image, Canvas.GetLeft(copyele));
+                    Canvas.SetTop(image, Canvas.GetTop(copyele));
+
+                    double x1 = Canvas.GetLeft(ele),
+                        y1 = Canvas.GetTop(ele);
+
+                    Canvas.SetLeft(image, x1 - (SystemParameters.WorkArea.Width * (100 / 100) * x / 8));
+                    Canvas.SetTop(image, y1 - (SystemParameters.PrimaryScreenHeight * (100 / 100) * y / 8));
+
+                    zoomCanvas.Children.Add(image);
+                }
+                else if (ele is Rectangle)
+                {
+                    Rectangle copyele = ele as Rectangle;
+                    Rectangle rectangle = new Rectangle()
+                    {
+                        Width = copyele.Width,
+                        Height = copyele.Height,
+                        Fill = copyele.Fill,
+                        Stroke = copyele.Stroke,
+                        StrokeThickness = copyele.StrokeThickness
+                    };
+                    Canvas.SetLeft(rectangle, Canvas.GetLeft(copyele));
+                    Canvas.SetTop(rectangle, Canvas.GetTop(copyele));
+
+                    double x1 = Canvas.GetLeft(ele),
+                        y1 = Canvas.GetTop(ele);
+
+                    Canvas.SetLeft(rectangle, x1 - (SystemParameters.WorkArea.Width * (100 / 100) * x / 8));
+                    Canvas.SetTop(rectangle, y1 - (SystemParameters.PrimaryScreenHeight * (100 / 100) * y / 8));
+
+                    zoomCanvas.Children.Add(rectangle);
+                }
+                else if (ele is Ellipse)
+                {
+                    Ellipse copyele = ele as Ellipse;
+                    Ellipse ellipse = new Ellipse()
+                    {
+                        Width = copyele.Width,
+                        Height = copyele.Height,
+                        Fill = copyele.Fill,
+                        Stroke = copyele.Stroke,
+                        StrokeThickness = copyele.StrokeThickness
+                    };
+                    Canvas.SetLeft(ellipse, Canvas.GetLeft(copyele));
+                    Canvas.SetTop(ellipse, Canvas.GetTop(copyele));
+
+                    double x1 = Canvas.GetLeft(ele),
+                        y1 = Canvas.GetTop(ele);
+
+                    Canvas.SetLeft(ellipse, x1 - (SystemParameters.WorkArea.Width * (100 / 100) * x / 8));
+                    Canvas.SetTop(ellipse, y1 - (SystemParameters.PrimaryScreenHeight * (100 / 100) * y / 8));
+
+                    zoomCanvas.Children.Add(ellipse);
+                }
+            }
+
+            AudienceGrid.Background = null;
+            zoomCanvas.UpdateLayout();
+            zoom_img = new Image();
+
+            FrameworkElement TargetVisual = zoomCanvas as FrameworkElement;
+            int width, height;
+            TargetVisual.Arrange(new Rect(0, 0, 0, 0));
+            width = (int)TargetVisual.ActualWidth;
+            height = (int)TargetVisual.ActualHeight;
+            if (TargetVisual.RenderTransform != null)
+            {
+                Rect bounds = new Rect(0, 0, TargetVisual.ActualWidth, TargetVisual.ActualHeight);
+                bounds = TargetVisual.RenderTransform.TransformBounds(bounds);
+                TargetVisual.Arrange(new Rect(-bounds.Left, -bounds.Top, width, height));
+                width = (int)bounds.Width;
+                height = (int)bounds.Height;
+            }
+
+            RenderTargetBitmap zoom_rtb = new RenderTargetBitmap(width / 4 + 402, height / 4 + 237, 120d, 120d, System.Windows.Media.PixelFormats.Default);
+            AudienceGrid.Children.Insert(0, zoomCanvas);
+            AudienceGrid.Children.Remove(AudienceCanvas);
+            zoomCanvas.UpdateLayout();
+            AudienceGrid.UpdateLayout();
+            zoom_rtb.Render(TargetVisual);
+            zoom_img.Source = zoom_rtb;
+            zoom_img.HorizontalAlignment = HorizontalAlignment.Stretch;
+            zoom_img.VerticalAlignment = VerticalAlignment.Stretch;
+            zoom_img.Stretch = Stretch.Fill;
+            //AudienceGrid.Children.Remove(AudienceCanvas);
+            zoom_img.Width = SystemParameters.WorkArea.Width;
+            zoom_img.Height = SystemParameters.MaximizedPrimaryScreenHeight;
+
+            AudienceGrid.Children.Add(zoom_img);
+
+            AudienceGrid.Children.Remove(zoomCanvas);
+            //AudienceGrid.Background = new ImageBrush(zoom_img.Source);
+            //AudienceGrid.Background = new SolidColorBrush(Colors.Blue);
+        }
+        void ZoomOut()
+        {
+            if (AudienceGrid.Children.Contains(AudienceCanvas)) return;
+            if (AudienceGrid.Children.Contains(zoomCanvas)) AudienceGrid.Children.Remove(zoomCanvas);
+            if (AudienceGrid.Children.Contains(zoom_img)) AudienceGrid.Children.Remove(zoom_img);
+            AudienceGrid.Children.Add(AudienceCanvas);
         }
     }
 }

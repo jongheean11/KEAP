@@ -3900,7 +3900,7 @@ namespace KEAP
                     //                Presentor.Height = working_Area2.Height;
                     //Presentor.WindowState = WindowState.Maximized;
                     Presentor.WindowStyle = WindowStyle.None;
-                    Presentor.Topmost = true;
+                    //Presentor.Topmost = true;
                     Presentor.Show();
                 }
 

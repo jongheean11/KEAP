@@ -3,19 +3,32 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:kv="clr-namespace:Microsoft.Samples.Kinect.WpfViewers;assembly=Microsoft.Samples.Kinect.WpfViewers"
         xmlns:a="clr-namespace:KEAP"
-        Title="FullWindowForPresentor" Loaded="Presentor_Loaded" Height="300" Width="300" Background="White">
-    <Grid>
+        Title="FullWindowForPresentor" Height="300" Width="300" Background="White">
+    <Grid x:Name="AudienceGrid" Background="Black">
         
         <a:KEAPCanvas x:Name="PresenterCanvas" Background="WhiteSmoke">
         </a:KEAPCanvas>
 
 
-        <TextBlock Text="{Binding Gesture}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" FontWeight="Bold" Margin="-2,0,0,100"/>
-        <TextBlock Text="{Binding Values}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" FontWeight="Bold" Margin="-2,100,0,0"/>
-
-        <Button x:Name="Btn" Content="Button" HorizontalAlignment="Left" Margin="193,242,0,0" VerticalAlignment="Top" Width="75" Click="Btn_Click"/>
+        <!--        
+        <Button x:Name="Btn" Content="Button" HorizontalAlignment="Left" Margin="193,242,0,0" VerticalAlignment="Top" Width="75" Click="Btn_Click"/> 
         <TextBlock x:Name="send_Data" HorizontalAlignment="Left" Margin="217,31,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
         <TextBox x:Name="message" HorizontalAlignment="Left" Height="18" Margin="93,242,0,0" TextWrapping="Wrap" Text="Hello" VerticalAlignment="Top" Width="75"/>
+        -->
+<!--
         <kv:KinectSkeletonViewer HorizontalAlignment="Center" VerticalAlignment="Center" KinectSensorManager="{Binding KinectSensorManager}" Width="960" Height="720" ShowBones="True" ShowJoints="True" ShowCenter="True" ImageType="Depth" />
+-->
+        <Canvas>
+            <TextBlock Canvas.ZIndex="1006" Text="{Binding Gesture}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" FontWeight="Bold" Margin="-2,0,0,100"/>
+            <TextBlock Canvas.ZIndex="1007" Text="{Binding Values}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="48" FontWeight="Bold" Margin="-2,100,0,0"/>
+            <TextBlock Canvas.ZIndex="1008" Name="RightHandGrip" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="40" FontWeight="Bold" Margin="100,10,10,10"/>
+            <TextBlock Canvas.ZIndex="1009" Name="LeftHandGrip" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="40" FontWeight="Bold" Margin="10,10,100,10"/>
+            <kv:KinectSkeletonViewer
+                                        Canvas.ZIndex="0"
+                                        KinectSensorManager="{Binding KinectSensorManager}"
+                                        Width="320"
+                                        Height="240"
+                                        ShowBones="True" ShowJoints="True" ShowCenter="True" ImageType="Depth" />
+        </Canvas>
     </Grid>
 </Window>
