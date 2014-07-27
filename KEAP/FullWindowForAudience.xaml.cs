@@ -273,6 +273,7 @@ namespace KEAP
         {
             if (animation_indexes.Count <= animation_index) return;
             List<Dictionary<int, string>> anilist = animations[canvas_index];
+            if (anilist.Count == 0) return;
             string ani = (anilist[animation_index])[animation_indexes[animation_index]];
 
             if (ani == null) return;
