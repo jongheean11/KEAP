@@ -29,6 +29,7 @@ namespace KEAP.Animations
             _animatedElement = animatedElement;
             _height = height;
             _width = width;
+            _waterFallHeight = (int)(height / 5);
             myRectGeometry2 = new RectangleGeometry();
             pathGeometry2 = new PathGeometry();
             myRectGeometry5 = new RectangleGeometry();
@@ -53,7 +54,7 @@ namespace KEAP.Animations
                 pathGeometry2 = Geometry.Combine(pathGeometry2, myRectGeometry5, GeometryCombineMode.Exclude, null);
             }
             _animatedElement.Clip = pathGeometry2;
-            if (_rectangleSize == _height + _waterFallHeight)
+            if (_rectangleSize >= _height + _waterFallHeight)
             {
                 _timer.IsEnabled = false;
                 if (AnimationCompleted != null)
