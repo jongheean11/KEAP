@@ -155,15 +155,15 @@ namespace KEAP
             key_Down_Arrow.InputGestures.Add(new KeyGesture(Key.Down));
             CommandBindings.Add(new CommandBinding(key_Down_Arrow, Down_Arrow_KeyEventHandler));
 
-            // plus button
-            RoutedCommand key_Plus = new RoutedCommand();
-            key_Plus.InputGestures.Add(new KeyGesture(Key.OemPlus));
-            CommandBindings.Add(new CommandBinding(key_Plus, Plus_KeyEventHandler));
+            // space button
+            RoutedCommand key_Space = new RoutedCommand();
+            key_Space.InputGestures.Add(new KeyGesture(Key.Space));
+            CommandBindings.Add(new CommandBinding(key_Space, Space_KeyEventHandler));
 
-            // minus button
-            RoutedCommand key_Minus = new RoutedCommand();
-            key_Minus.InputGestures.Add(new KeyGesture(Key.OemMinus));
-            CommandBindings.Add(new CommandBinding(key_Minus, Minus_KeyEventHandler));
+            //// minus button
+            //RoutedCommand key_Minus = new RoutedCommand();
+            //key_Minus.InputGestures.Add(new KeyGesture(Key.OemMinus));
+            //CommandBindings.Add(new CommandBinding(key_Minus, Minus_KeyEventHandler));
 
             // enter button
             RoutedCommand key_Enter = new RoutedCommand();
@@ -172,17 +172,14 @@ namespace KEAP
 
         }
 
+
+
         private void Enter_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             aud_View.Enter_KeyEventHandler(sender, e);
         }
 
-        private void Minus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
-        {
-            aud_View.Minus_KeyEventHandler(sender, e);
-        }
-
-        private void Plus_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        private void Space_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
             aud_View.Space_KeyEventHandler(sender, e);
         }
@@ -741,6 +738,7 @@ namespace KEAP
                         Gesture = "ZoomIn\n";
                         aud_View.getDataFromKinect("ZoomIn");
                         aud_View.get_ZoomIn_From_Kinect();
+                        aud_View.zooming();
                         zoom = true;
                     }
                 }
@@ -751,7 +749,7 @@ namespace KEAP
                         Gesture = "ZoomOut\n";
                         aud_View.getDataFromKinect("ZoomOut");
                         aud_View.get_ZoomOut_From_Kinect();
-
+                        aud_View.zooming();
                         zoom = false;
                     }
                 }
@@ -767,46 +765,59 @@ namespace KEAP
                     case "RightDown":
                         Gesture = "RightDown";
                         aud_View.getDataFromKinect("RightDown");
+                        aud_View.DownArrow();
+                        aud_View.RightArrow();
                         aud_View.get_RightDown_From_Kinect();
                         break;
                     case "Down":
                         Gesture = "Down";
                         aud_View.getDataFromKinect("Down");
+                        aud_View.DownArrow();
                         aud_View.get_Down_From_Kinect();
                         break;
                     case "RightUp":
                         Gesture = "RightUp";
                         aud_View.getDataFromKinect("RightUp");
+                        aud_View.RightArrow();
+                        aud_View.UpArrow();
                         aud_View.get_RightUp_From_Kinect();
                         break;
                     case "LeftDown":
                         Gesture = "LeftDown";
                         aud_View.getDataFromKinect("LeftDown");
+                        aud_View.LeftArrow();
+                        aud_View.DownArrow();
                         aud_View.get_LeftDown_From_Kinect();
                         break;
                     case "LeftUp":
                         Gesture = "LeftUp";
                         aud_View.getDataFromKinect("LeftUp");
+                        aud_View.LeftArrow();
+                        aud_View.UpArrow();
                         aud_View.get_LeftUp_From_Kinect();
                         break;
                     case "Left":
                         Gesture = "Left";
                         aud_View.getDataFromKinect("Left");
+                        aud_View.LeftArrow();
                         aud_View.get_Left_From_Kinect();
                         break;
                     case "Right":
                         Gesture = "Right";
                         aud_View.getDataFromKinect("Right");
+                        aud_View.RightArrow();
                         aud_View.get_Right_From_Kinect();
                         break;
                     case "Up":
                         Gesture = "Up";
                         aud_View.getDataFromKinect("Up");
+                        aud_View.UpArrow();
                         aud_View.get_Up_From_Kinect();
                         break;
                     case "Push":
                         Gesture = "Push";
                         aud_View.getDataFromKinect("Push");
+                        aud_View.UpArrow();
                         aud_View.get_Push_From_Kinect();
                         break;
                     case "strechedHands":
@@ -817,11 +828,13 @@ namespace KEAP
                     case "SwipeLeft":
                         Gesture = "Swipe Left\n";
                         aud_View.getDataFromKinect("SwipeLeft");
+                        aud_View.LeftArrow();
                         aud_View.get_SwipeLeft_From_Kinect();
                         break;
                     case "SwipeRight":
                         Gesture = "Swipe Right\n";
                         aud_View.getDataFromKinect("SwipeRight");
+                        aud_View.RightArrow();
                         aud_View.get_SwipeRight_From_Kinect();
                         break;
                     case "SwipeUp":
