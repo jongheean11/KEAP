@@ -58,6 +58,8 @@ namespace KEAP
         bool edit_Mode = false, edit_Mode_Ready = false;
         bool canvas_LeftButton_Down = false;
         bool poly_Start_Get = false;
+        double shape_x = 0.0;
+        double shape_y = 0.0;
 
         Point Start_Point, Start_Point_Poly, Start_Point_Shape, Begin_Point_Shape;
 
@@ -3160,8 +3162,9 @@ namespace KEAP
         // 왼쪽에서 등장
         private void BoundsLTR(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double xMove = 500;
 
             ThicknessAnimation bounceAnimation = new ThicknessAnimation();
@@ -3181,8 +3184,9 @@ namespace KEAP
         // 오른쪽에서 등장
         private void BoundsRTL(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double xMove = 500;
 
             ThicknessAnimation bounceAnimation = new ThicknessAnimation();
@@ -3202,8 +3206,8 @@ namespace KEAP
         // 위쪽에서 등장
         private void BoundsTTB(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
             double yMove = 500;
 
             ThicknessAnimation bounceAnimation = new ThicknessAnimation();
@@ -3223,8 +3227,9 @@ namespace KEAP
         // 아래쪽에서 등장
         private void BoundsBTT(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double yMove = 500;
 
             ThicknessAnimation bounceAnimation = new ThicknessAnimation();
@@ -3244,8 +3249,9 @@ namespace KEAP
         // 왼쪽에서 등장
         private void MoveLTR(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double xMove = 500;
 
             PowerEase power = new PowerEase();
@@ -3261,8 +3267,9 @@ namespace KEAP
         // 오른쪽에서 등장
         private void MoveRTL(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double xMove = 500;
 
             PowerEase power = new PowerEase();
@@ -3278,8 +3285,9 @@ namespace KEAP
         // 위쪽에서 등장
         private void MoveTTB(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double yMove = 500;
 
             PowerEase power = new PowerEase();
@@ -3295,8 +3303,9 @@ namespace KEAP
         // 아래쪽에서 등장
         private void MoveBTT(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double yMove = 500;
 
             PowerEase power = new PowerEase();
@@ -3311,21 +3320,21 @@ namespace KEAP
         // 밝아졌다가 형체가 나타난다.
         private void FadeIn(FrameworkElement shape)
         {
-            DoubleAnimation fadeIn = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(1), FillBehavior.HoldEnd);
+            DoubleAnimation fadeIn = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(1), FillBehavior.Stop);
             shape.BeginAnimation(OpacityProperty, fadeIn);
         }
 
         // 어두워졌다가 밝아져서 형체가 사라진다.
         private void FadeOut(FrameworkElement shape)
         {
-            DoubleAnimation fadeOut = new DoubleAnimation(1.0, 0.0, TimeSpan.FromSeconds(1), FillBehavior.HoldEnd);
+            DoubleAnimation fadeOut = new DoubleAnimation(1.0, 0.0, TimeSpan.FromSeconds(1), FillBehavior.Stop);
             shape.BeginAnimation(OpacityProperty, fadeOut);
         }
 
         // 사각형이 커졌다 작아진다
         private void ZoomIn(FrameworkElement shape)
         {
-            DoubleAnimation zoomIn = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(0.5), FillBehavior.HoldEnd);
+            DoubleAnimation zoomIn = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(0.5), FillBehavior.Stop);
 
             CustomZoomInEaseOutFunction be = new CustomZoomInEaseOutFunction();
             be.EasingMode = EasingMode.EaseOut;
@@ -3341,7 +3350,7 @@ namespace KEAP
         // 사각형이 작아진다 커졌다
         private void ZoomOut(FrameworkElement shape)
         {
-            DoubleAnimation zoomOut = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(0.5), FillBehavior.HoldEnd);
+            DoubleAnimation zoomOut = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(0.5), FillBehavior.Stop);
 
             CustomZoomOutEaseOutFunction be = new CustomZoomOutEaseOutFunction();
             be.EasingMode = EasingMode.EaseOut;
@@ -4234,6 +4243,7 @@ namespace KEAP
 
         private void BoundsLTR_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) BoundsLTR(selected_Text);
             else if (selected_Polygon != null) BoundsLTR(selected_Polygon);
@@ -4245,6 +4255,7 @@ namespace KEAP
 
         private void BoundsRTL_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) BoundsRTL(selected_Text);
             else if (selected_Polygon != null) BoundsRTL(selected_Polygon);
@@ -4256,6 +4267,7 @@ namespace KEAP
 
         private void BoundsTTB_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) BoundsTTB(selected_Text);
             else if (selected_Polygon != null) BoundsTTB(selected_Polygon);
@@ -4267,6 +4279,7 @@ namespace KEAP
 
         private void BoundsBTT_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) BoundsBTT(selected_Text);
             else if (selected_Polygon != null) BoundsBTT(selected_Polygon);
@@ -4278,6 +4291,7 @@ namespace KEAP
 
         private void MoveLTR_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) MoveLTR(selected_Text);
             else if (selected_Polygon != null) MoveLTR(selected_Polygon);
@@ -4289,6 +4303,7 @@ namespace KEAP
 
         private void MoveRTL_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) MoveRTL(selected_Text);
             else if (selected_Polygon != null) MoveRTL(selected_Polygon);
@@ -4300,6 +4315,7 @@ namespace KEAP
 
         private void MoveTTB_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) MoveTTB(selected_Text);
             else if (selected_Polygon != null) MoveTTB(selected_Polygon);
@@ -4311,6 +4327,7 @@ namespace KEAP
 
         private void MoveBTT_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) MoveBTT(selected_Text);
             else if (selected_Polygon != null) MoveBTT(selected_Polygon);
@@ -4322,6 +4339,7 @@ namespace KEAP
 
         private void FadeIn_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) FadeIn(selected_Text);
             else if (selected_Polygon != null) FadeIn(selected_Polygon);
@@ -4333,6 +4351,7 @@ namespace KEAP
 
         private void FadeOut_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             edit_Rect.UpdateLayout();
             if (selected_Text != null) { FadeOut(selected_Text); selected_Text.Visibility = Visibility.Visible; selected_Text.UpdateLayout(); }
@@ -4346,6 +4365,7 @@ namespace KEAP
 
         private void ZoomIn_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) ZoomIn(selected_Text);
             else if (selected_Polygon != null) ZoomIn(selected_Polygon);
@@ -4357,6 +4377,7 @@ namespace KEAP
 
         private void ZoomOut_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) ZoomOut(selected_Text);
             else if (selected_Polygon != null) ZoomOut(selected_Polygon);
@@ -4368,6 +4389,7 @@ namespace KEAP
 
         private void Tornado_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) Tornado(selected_Text);
             else if (selected_Polygon != null) Tornado(selected_Polygon);
@@ -4379,6 +4401,7 @@ namespace KEAP
 
         private void Circle_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) circleAnimation(selected_Text);
             else if (selected_Polygon != null) circleAnimation(selected_Polygon);
@@ -4390,6 +4413,7 @@ namespace KEAP
 
         private void Interlaced_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) interlacedAnimation(selected_Text);
             else if (selected_Polygon != null) interlacedAnimation(selected_Polygon);
@@ -4401,6 +4425,7 @@ namespace KEAP
 
         private void Block_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) blockAnimation(selected_Text);
             else if (selected_Polygon != null) blockAnimation(selected_Polygon);
@@ -4412,6 +4437,7 @@ namespace KEAP
 
         private void Radial_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) radialAnimation(selected_Text);
             else if (selected_Polygon != null) radialAnimation(selected_Polygon);
@@ -4423,6 +4449,7 @@ namespace KEAP
 
         private void WaterFall_ToolTipOpening(object sender, ToolTipEventArgs e)
         {
+            if (edit_Rect == null) return;
             edit_Rect.Visibility = Visibility.Collapsed;
             if (selected_Text != null) WaterFallAnimation(selected_Text);
             else if (selected_Polygon != null) WaterFallAnimation(selected_Polygon);
@@ -4431,5 +4458,6 @@ namespace KEAP
             else if (selected_Shape != null) WaterFallAnimation(selected_Shape);
             edit_Rect.Visibility = Visibility.Visible;
         }
+
     }
 }
