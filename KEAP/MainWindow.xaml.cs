@@ -1509,41 +1509,92 @@ namespace KEAP
         bool left = false, right = false, top = false, bottom = false;
         private void UIElement_MouseMove(object sender, MouseEventArgs e)
         {
+            double x1, y1, x2, y2, mouse_x, mouse_y;
+            if (edit_Rect != null)
+            {
+                x1 = Canvas.GetLeft(edit_Rect) + 5;
+                y1 = Canvas.GetTop(edit_Rect) + 5;
+                x2 = Canvas.GetLeft(edit_Rect) + edit_Rect.Width - 5;
+                y2 = Canvas.GetTop(edit_Rect) + edit_Rect.Height - 5;
+                mouse_x = e.GetPosition(MainCanvas).X;
+                mouse_y = e.GetPosition(MainCanvas).Y;
+
+                if (selected_Text != null)
+                {
+                    x1 = Canvas.GetLeft(selected_Text);
+                    y1 = Canvas.GetTop(selected_Text);
+                    x2 = Canvas.GetLeft(selected_Text) + selected_Text.Width;
+                    y2 = Canvas.GetTop(selected_Text) + selected_Text.Height;
+                }
+                else if (selected_Image != null)
+                {
+                    x1 = Canvas.GetLeft(selected_Image);
+                    y1 = Canvas.GetTop(selected_Image);
+                    x2 = Canvas.GetLeft(selected_Image) + selected_Image.Width;
+                    y2 = Canvas.GetTop(selected_Image) + selected_Image.Height;
+                }
+                else if (selected_Shape != null)
+                {
+                    x1 = Canvas.GetLeft(selected_Shape);
+                    y1 = Canvas.GetTop(selected_Shape);
+                    x2 = Canvas.GetLeft(selected_Shape) + selected_Shape.Width;
+                    y2 = Canvas.GetTop(selected_Shape) + selected_Shape.Height;
+                }
+
+                if (edit_Rect != null)
+                {
+                    if ((Math.Abs(x1 - mouse_x) < 17) && (Math.Abs(y1 - mouse_y) < 17))
+                    {
+                        e.MouseDevice.SetCursor(Cursors.SizeNWSE);
+                    }
+                    else if ((Math.Abs(x1 - mouse_x) < 17) && (Math.Abs(y2 - mouse_y) < 17))
+                    {
+                        e.MouseDevice.SetCursor(Cursors.SizeNESW);
+                    }
+                    else if ((Math.Abs(x2 - mouse_x) < 17) && (Math.Abs(y1 - mouse_y) < 17))
+                    {
+                        e.MouseDevice.SetCursor(Cursors.SizeNESW);
+                    }
+                    else if ((Math.Abs(x2 - mouse_x) < 17) && (Math.Abs(y2 - mouse_y) < 17))
+                    {
+                        e.MouseDevice.SetCursor(Cursors.SizeNWSE);
+                    }
+                    else if (Math.Abs(y1 - mouse_y) < 17)
+                    {
+                        e.MouseDevice.SetCursor(Cursors.SizeNS);
+                    }
+                    else if (Math.Abs(y2 - mouse_y) < 17)
+                    {
+                        e.MouseDevice.SetCursor(Cursors.SizeNS);
+                    }
+                    else if (Math.Abs(x1 - mouse_x) < 17)
+                    {
+                        e.MouseDevice.SetCursor(Cursors.SizeWE);
+                    }
+                    else if (Math.Abs(x2 - mouse_x) < 17)
+                    {
+                        e.MouseDevice.SetCursor(Cursors.SizeWE);
+                    }
+                    else
+                    {
+                        e.MouseDevice.SetCursor(Cursors.Arrow);
+                    }
+                }
+            }
             if (!IsSelectMode() || !drag_Mode) return;
             if (!ui_LeftButton_Down) return;
             if ((!edit_Mode) && edit_Mode_Ready) return;
+
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 if (edit_Rect != null)
                 {
-                    double x1 = Canvas.GetLeft(edit_Rect) + 5,
-                        y1 = Canvas.GetTop(edit_Rect) + 5,
-                        x2 = Canvas.GetLeft(edit_Rect) + edit_Rect.Width - 5,
-                        y2 = Canvas.GetTop(edit_Rect) + edit_Rect.Height - 5,
-                        mouse_x = e.GetPosition(MainCanvas).X,
-                        mouse_y = e.GetPosition(MainCanvas).Y;
-                    if (selected_Text != null)
-                    {
-                        x1 = Canvas.GetLeft(selected_Text);
-                        y1 = Canvas.GetTop(selected_Text);
-                        x2 = Canvas.GetLeft(selected_Text) + selected_Text.Width;
-                        y2 = Canvas.GetTop(selected_Text) + selected_Text.Height;
-                    }
-                    else if (selected_Image!=null)
-                    {
-                        x1 = Canvas.GetLeft(selected_Image);
-                        y1 = Canvas.GetTop(selected_Image);
-                        x2 = Canvas.GetLeft(selected_Image) + selected_Image.Width;
-                        y2 = Canvas.GetTop(selected_Image) + selected_Image.Height;
-                    }
-                    else if(selected_Shape!=null)
-                    {
-                        x1 = Canvas.GetLeft(selected_Shape);
-                        y1 = Canvas.GetTop(selected_Shape);
-                        x2 = Canvas.GetLeft(selected_Shape) + selected_Shape.Width;
-                        y2 = Canvas.GetTop(selected_Shape) + selected_Shape.Height;
-                    }
-
+                    x1 = Canvas.GetLeft(edit_Rect) + 5;
+                    y1 = Canvas.GetTop(edit_Rect) + 5;
+                    x2 = Canvas.GetLeft(edit_Rect) + edit_Rect.Width - 5;
+                    y2 = Canvas.GetTop(edit_Rect) + edit_Rect.Height - 5;
+                    mouse_x = e.GetPosition(MainCanvas).X;
+                    mouse_y = e.GetPosition(MainCanvas).Y;
                     if (selected_Text != null)
                     {
                         if (left)
@@ -3005,7 +3056,7 @@ namespace KEAP
                                     A = fill_Color_A,
                                     G = fill_Color_G,
                                     R = fill_Color_R,
-                                    B = stroke_Color_B
+                                    B = fill_Color_B
                                 };
                                 newrectangle.Fill = new SolidColorBrush(fill_color);
                                 
@@ -3077,7 +3128,7 @@ namespace KEAP
                                     A = fill_Color_A,
                                     G = fill_Color_G,
                                     R = fill_Color_R,
-                                    B = stroke_Color_B
+                                    B = fill_Color_B
                                 };
 
                                 newellipse.Fill = new SolidColorBrush(fill_color);
@@ -4294,6 +4345,7 @@ namespace KEAP
 
         private void Erase_Click(object sender, RoutedEventArgs e)
         {
+            if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
             if (selected_Text != null)
                 MainCanvas.Children.Remove(selected_Text);
             else if (selected_Polygon != null)
