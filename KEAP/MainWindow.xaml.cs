@@ -3163,12 +3163,57 @@ namespace KEAP
             }
         }
 
+        public void animation_Enable_False()
+        {
+            BoundsLTR_preview.IsEnabled = false;
+            BoundsRTL_preview.IsEnabled = false;
+            BoundsBTT_preview.IsEnabled = false;
+            BoundsTTB_preview.IsEnabled = false;
+            MoveLTR_preview.IsEnabled = false;
+            MoveRTL_preview.IsEnabled = false;
+            MoveBTT_preview.IsEnabled = false;
+            MoveTTB_preview.IsEnabled = false;
+            FadeIn_preview.IsEnabled = false;
+            FadeOut_preview.IsEnabled = false;
+            ZoomIn_preview.IsEnabled = false;
+            ZoomOut_preview.IsEnabled = false;
+            Tornado_preview.IsEnabled = false;
+            Circle_preview.IsEnabled = false;
+            Interlaced_preview.IsEnabled = false;
+            WaterFall_preview.IsEnabled = false;
+            Radial_preview.IsEnabled = false;
+            Block_preview.IsEnabled = false;
+        }
+
+        public void animation_Enable_True()
+        {
+            BoundsLTR_preview.IsEnabled = true;
+            BoundsRTL_preview.IsEnabled = true;
+            BoundsBTT_preview.IsEnabled = true;
+            BoundsTTB_preview.IsEnabled = true;
+            MoveLTR_preview.IsEnabled = true;
+            MoveRTL_preview.IsEnabled = true;
+            MoveBTT_preview.IsEnabled = true;
+            MoveTTB_preview.IsEnabled = true;
+            FadeIn_preview.IsEnabled = true;
+            FadeOut_preview.IsEnabled = true;
+            ZoomIn_preview.IsEnabled = true;
+            ZoomOut_preview.IsEnabled = true;
+            Tornado_preview.IsEnabled = true;
+            Circle_preview.IsEnabled = true;
+            Interlaced_preview.IsEnabled = true;
+            WaterFall_preview.IsEnabled = true;
+            Radial_preview.IsEnabled = true;
+            Block_preview.IsEnabled = true;
+        }
         #region animation effects
 
         // TODO:움직이기 전 최초 좌표를 설정해줘야함. 지금은 임의로 -500값으로 진행중.
         // 왼쪽에서 등장
         private void BoundsLTR(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             double x = 0.0;
             double y = 0.0;
 
@@ -3183,7 +3228,7 @@ namespace KEAP
 
             bounceAnimation.To = new Thickness(x, y, 0, 0);
             bounceAnimation.EasingFunction = BounceOrientation;
-
+            bounceAnimation.Completed += (sender, eArgs) => animation_Enable_True();
             shape.BeginAnimation(MarginProperty, bounceAnimation);
         }
 
@@ -3191,6 +3236,8 @@ namespace KEAP
         // 오른쪽에서 등장
         private void BoundsRTL(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             double x = 0.0;
             double y = 0.0;
 
@@ -3205,6 +3252,7 @@ namespace KEAP
 
             bounceAnimation.To = new Thickness(x, y, 0, 0);
             bounceAnimation.EasingFunction = BounceOrientation;
+            bounceAnimation.Completed += (sender, eArgs) => animation_Enable_True();
 
             shape.BeginAnimation(MarginProperty, bounceAnimation);
         }
@@ -3213,6 +3261,8 @@ namespace KEAP
         // 위쪽에서 등장
         private void BoundsTTB(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             double x = 0.0;
             double y = 0.0;
             double yMove = 500;
@@ -3226,6 +3276,7 @@ namespace KEAP
 
             bounceAnimation.To = new Thickness(x, y, 0, 0);
             bounceAnimation.EasingFunction = BounceOrientation;
+            bounceAnimation.Completed += (sender, eArgs) => animation_Enable_True();
 
             shape.BeginAnimation(MarginProperty, bounceAnimation);
         }
@@ -3234,6 +3285,8 @@ namespace KEAP
         // 아래쪽에서 등장
         private void BoundsBTT(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             double x = 0.0;
             double y = 0.0;
 
@@ -3248,6 +3301,7 @@ namespace KEAP
 
             bounceAnimation.To = new Thickness(x, y, 0, 0);
             bounceAnimation.EasingFunction = BounceOrientation;
+            bounceAnimation.Completed += (sender, eArgs) => animation_Enable_True();
 
             shape.BeginAnimation(MarginProperty, bounceAnimation);
         }
@@ -3256,6 +3310,8 @@ namespace KEAP
         // 왼쪽에서 등장
         private void MoveLTR(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             double x = 0.0;
             double y = 0.0;
 
@@ -3266,6 +3322,7 @@ namespace KEAP
             linearAnimation.From = new Thickness(x - xMove, y, 0, 0);
             linearAnimation.To = new Thickness(x, y, 0, 0);
             linearAnimation.EasingFunction = power;
+            linearAnimation.Completed += (sender, eArgs) => animation_Enable_True();
 
             shape.BeginAnimation(MarginProperty, linearAnimation);
         }
@@ -3274,6 +3331,8 @@ namespace KEAP
         // 오른쪽에서 등장
         private void MoveRTL(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             double x = 0.0;
             double y = 0.0;
 
@@ -3284,6 +3343,7 @@ namespace KEAP
             linearAnimation.From = new Thickness(x + xMove, y, 0, 0);
             linearAnimation.To = new Thickness(x, y, 0, 0);
             linearAnimation.EasingFunction = power;
+            linearAnimation.Completed += (sender, eArgs) => animation_Enable_True();
 
             shape.BeginAnimation(MarginProperty, linearAnimation);
         }
@@ -3292,6 +3352,8 @@ namespace KEAP
         // 위쪽에서 등장
         private void MoveTTB(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             double x = 0.0;
             double y = 0.0;
 
@@ -3302,6 +3364,7 @@ namespace KEAP
             linearAnimation.From = new Thickness(x, y - yMove, 0, 0);
             linearAnimation.To = new Thickness(x, y, 0, 0);
             linearAnimation.EasingFunction = power;
+            linearAnimation.Completed += (sender, eArgs) => animation_Enable_True();
 
             shape.BeginAnimation(MarginProperty, linearAnimation);
         }
@@ -3310,6 +3373,8 @@ namespace KEAP
         // 아래쪽에서 등장
         private void MoveBTT(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             double x = 0.0;
             double y = 0.0;
 
@@ -3320,6 +3385,7 @@ namespace KEAP
             linearAnimation.From = new Thickness(x, y + yMove, 0, 0);
             linearAnimation.To = new Thickness(x, y, 0, 0);
             linearAnimation.EasingFunction = power;
+            linearAnimation.Completed += (sender, eArgs) => animation_Enable_True();
 
             shape.BeginAnimation(MarginProperty, linearAnimation);
         }
@@ -3327,20 +3393,30 @@ namespace KEAP
         // 밝아졌다가 형체가 나타난다.
         private void FadeIn(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             DoubleAnimation fadeIn = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(1), FillBehavior.Stop);
+            fadeIn.Completed += (sender, eArgs) => animation_Enable_True();
+
             shape.BeginAnimation(OpacityProperty, fadeIn);
         }
 
         // 어두워졌다가 밝아져서 형체가 사라진다.
         private void FadeOut(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             DoubleAnimation fadeOut = new DoubleAnimation(1.0, 0.0, TimeSpan.FromSeconds(1), FillBehavior.Stop);
+            fadeOut.Completed += (sender, eArgs) => animation_Enable_True();
+
             shape.BeginAnimation(OpacityProperty, fadeOut);
         }
 
         // 사각형이 커졌다 작아진다
         private void ZoomIn(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             DoubleAnimation zoomIn = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(0.5), FillBehavior.Stop);
 
             CustomZoomInEaseOutFunction be = new CustomZoomInEaseOutFunction();
@@ -3350,6 +3426,9 @@ namespace KEAP
             shape.RenderTransform = trans;
             shape.RenderTransformOrigin = new Point(0.5, 0.5);
             zoomIn.EasingFunction = be;
+
+            zoomIn.Completed += (sender, eArgs) => animation_Enable_True();
+
             trans.BeginAnimation(ScaleTransform.ScaleXProperty, zoomIn);
             trans.BeginAnimation(ScaleTransform.ScaleYProperty, zoomIn);
         }
@@ -3357,6 +3436,8 @@ namespace KEAP
         // 사각형이 작아진다 커졌다
         private void ZoomOut(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             DoubleAnimation zoomOut = new DoubleAnimation(0.0, 1.0, TimeSpan.FromSeconds(0.5), FillBehavior.Stop);
 
             CustomZoomOutEaseOutFunction be = new CustomZoomOutEaseOutFunction();
@@ -3366,6 +3447,9 @@ namespace KEAP
             shape.RenderTransform = trans;
             shape.RenderTransformOrigin = new Point(0.5, 0.5);
             zoomOut.EasingFunction = be;
+
+            zoomOut.Completed += (sender, eArgs) => animation_Enable_True();
+
             trans.BeginAnimation(ScaleTransform.ScaleXProperty, zoomOut);
             trans.BeginAnimation(ScaleTransform.ScaleYProperty, zoomOut);
         }
@@ -3373,42 +3457,51 @@ namespace KEAP
         // 360도 회전, 0.5초
         private void Tornado(FrameworkElement shape)
         {
+            animation_Enable_False();
+
             DoubleAnimation dbRotate = new DoubleAnimation(0, 360, new Duration(TimeSpan.FromSeconds(0.5)));
 
             RotateTransform rotate = new RotateTransform();
             shape.RenderTransform = rotate;
             shape.RenderTransformOrigin = new Point(0.5, 0.5);
+
+            dbRotate.Completed += (sender, eArgs) => animation_Enable_True();
             rotate.BeginAnimation(RotateTransform.AngleProperty, dbRotate);
         }
-        private static void circleAnimation(FrameworkElement shape)
+        private void circleAnimation(FrameworkElement shape)
         {
+            animation_Enable_False();
             CircleAnimation circleAnimationHelper = new CircleAnimation();
-            //            circleAnimationHelper.MakeCircleAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            circleAnimationHelper.AnimationCompleted+= () => animation_Enable_True();
             circleAnimationHelper.MakeCircleAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
         }
-        private static void interlacedAnimation(FrameworkElement shape)
+        private void interlacedAnimation(FrameworkElement shape)
         {
+            animation_Enable_False();
             InterlacedAnimation interlacedAnimation = new InterlacedAnimation();
+            interlacedAnimation.AnimationCompleted += () => animation_Enable_True();
             interlacedAnimation.MakeInterlacedAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
-            //            interlacedAnimation.MakeInterlacedAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
         }
 
-        private static void blockAnimation(FrameworkElement shape)
+        private void blockAnimation(FrameworkElement shape)
         {
+            animation_Enable_False();
             BlockAnimation blockAnimation = new BlockAnimation();
-            //            blockAnimation.MakeBlockAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            blockAnimation.AnimationCompleted += () => animation_Enable_True();
             blockAnimation.MakeBlockAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
         }
-        private static void radialAnimation(FrameworkElement shape)
+        private void radialAnimation(FrameworkElement shape)
         {
+            animation_Enable_False();
             RadialAnimation radialAnimation = new RadialAnimation();
-            //            radialAnimation.MakeRadiaAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            radialAnimation.AnimationCompleted += () => animation_Enable_True();
             radialAnimation.MakeRadiaAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromMilliseconds(250));
         }
-        private static void WaterFallAnimation(FrameworkElement shape)
+        private void WaterFallAnimation(FrameworkElement shape)
         {
+            animation_Enable_False();
             WaterFallAnimation WaterFall = new WaterFallAnimation();
-            //            WaterFall.MakeWaterFallAnimation((FrameworkElement)shape, shape.Width, shape.Height, new TimeSpan(0, 0, 1));
+            WaterFall.AnimationCompleted += () => animation_Enable_True();
             WaterFall.MakeWaterFallAnimation((FrameworkElement)shape, shape.Width, shape.Height, TimeSpan.FromSeconds(1));
         }
         #endregion
