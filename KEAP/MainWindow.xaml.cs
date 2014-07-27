@@ -3193,6 +3193,7 @@ namespace KEAP
                             int index = Convert.ToInt32(inner_List[0]);
                             string anime = inner_List[1];
                             Dictionary<int, string> add_dic = new Dictionary<int, string>();
+                            add_dic.Add(index, anime);
                             animation_List.Add(add_dic);
                         }
                         if(animation_List.Count==0)
