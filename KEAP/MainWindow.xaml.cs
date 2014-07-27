@@ -2079,9 +2079,12 @@ namespace KEAP
             MainCanvas_Border.Child = canvas_List.ElementAt(Slide_ListView.SelectedIndex);
             if (edit_Rect != null && Slide_ListView.SelectedIndex != canvas_List.IndexOf(MainCanvas)) MainCanvas.Children.Remove(edit_Rect);
             MainCanvas = canvas_List.ElementAt(Slide_ListView.SelectedIndex);
+            Add_AnimationList(Slide_ListView.SelectedIndex);
+
             Image image = RenderCanvas(MainCanvas);
             ((SlideInfo)(Slide_ListView.Items[Slide_ListView.SelectedIndex])).Source = image.Source;
             //Slide_ListView.Items[Slide_ListView.SelectedIndex]
+            
         }
 
 
@@ -2137,6 +2140,8 @@ namespace KEAP
             }
 
             Slide_ListView.ItemsSource = Slides_List;
+            if (animation_Dictionary.Count < canvas_List.Count)
+                animation_Dictionary.Add(animation_Dictionary.Count, new List<Dictionary<int,string>>());
         }
 
         void Autoedit_Slide_List(KEAPCanvas param_Canvas, int param_Number)
@@ -2198,6 +2203,8 @@ namespace KEAP
                 
                 string startPath = "c:\\KEAP\\"+filename;
                 string zipPath = fullpath;
+
+                if (edit_Rect != null) MainCanvas.Children.Remove(edit_Rect);
 
                 Directory.CreateDirectory(startPath);
                 Save_Xml(name, startPath);
@@ -3500,16 +3507,8 @@ namespace KEAP
 
         private void AniManaging(string anitype)
         {
-            List<Dictionary<int, string>> ani_List = new List<Dictionary<int, string>>();
-            if (animation_Dictionary.Count == Slide_ListView.Items.Count)
-            {
-                ani_List = animation_Dictionary[Slide_ListView.SelectedIndex];
-            }
-            else
-            {
-                ani_List = new List<Dictionary<int, string>>();
-            }
-
+            List<Dictionary<int, string>> ani_List = animation_Dictionary[Slide_ListView.SelectedIndex];
+            
             Dictionary<int, string> temp_dic = new Dictionary<int, string>();
             bool found = false;
             FrameworkElement ele = null;
@@ -4238,7 +4237,6 @@ namespace KEAP
                 i++;
             }
             Animation_ListBox.ItemsSource = Anis_List;
-            Animation_ListBox.UpdateLayout();
         }
 
         private void BoundsLTR_ToolTipOpening(object sender, ToolTipEventArgs e)
