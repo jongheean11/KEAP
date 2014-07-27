@@ -58,6 +58,8 @@ namespace KEAP
         bool edit_Mode = false, edit_Mode_Ready = false;
         bool canvas_LeftButton_Down = false;
         bool poly_Start_Get = false;
+        double shape_x = 0.0;
+        double shape_y = 0.0;
 
         Point Start_Point, Start_Point_Poly, Start_Point_Shape, Begin_Point_Shape;
 
@@ -3153,8 +3155,9 @@ namespace KEAP
         // 왼쪽에서 등장
         private void BoundsLTR(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double xMove = 500;
 
             ThicknessAnimation bounceAnimation = new ThicknessAnimation();
@@ -3174,8 +3177,9 @@ namespace KEAP
         // 오른쪽에서 등장
         private void BoundsRTL(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double xMove = 500;
 
             ThicknessAnimation bounceAnimation = new ThicknessAnimation();
@@ -3195,8 +3199,8 @@ namespace KEAP
         // 위쪽에서 등장
         private void BoundsTTB(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
             double yMove = 500;
 
             ThicknessAnimation bounceAnimation = new ThicknessAnimation();
@@ -3216,8 +3220,9 @@ namespace KEAP
         // 아래쪽에서 등장
         private void BoundsBTT(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double yMove = 500;
 
             ThicknessAnimation bounceAnimation = new ThicknessAnimation();
@@ -3237,8 +3242,9 @@ namespace KEAP
         // 왼쪽에서 등장
         private void MoveLTR(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double xMove = 500;
 
             PowerEase power = new PowerEase();
@@ -3254,8 +3260,9 @@ namespace KEAP
         // 오른쪽에서 등장
         private void MoveRTL(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double xMove = 500;
 
             PowerEase power = new PowerEase();
@@ -3271,8 +3278,9 @@ namespace KEAP
         // 위쪽에서 등장
         private void MoveTTB(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double yMove = 500;
 
             PowerEase power = new PowerEase();
@@ -3288,8 +3296,9 @@ namespace KEAP
         // 아래쪽에서 등장
         private void MoveBTT(FrameworkElement shape)
         {
-            double x = shape.Margin.Left;
-            double y = shape.Margin.Top;
+            double x = 0.0;
+            double y = 0.0;
+
             double yMove = 500;
 
             PowerEase power = new PowerEase();
