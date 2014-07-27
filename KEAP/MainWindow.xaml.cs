@@ -2248,6 +2248,9 @@ namespace KEAP
                 string filename = savedlg.SafeFileName;
                 string name = filename.Substring(0, filename.Length - 5);
 
+                current_File_Name = name;
+                FileName.Text = current_File_Name;
+
                 string fullpath = savedlg.FileName;
 
                 string startPath = "c:\\KEAP\\"+name+"\\";
@@ -2657,7 +2660,8 @@ namespace KEAP
             {
                 string filename = opendlg.SafeFileName;
                 string name = filename.Substring(0, filename.Length - 5);
-
+                current_File_Name = name;
+                FileName.Text = current_File_Name;
                 string fullpath = opendlg.FileName;
 
                 string zipPath = fullpath;

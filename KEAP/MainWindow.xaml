@@ -41,7 +41,7 @@
         <Border x:Name="Main_Border" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FFE6E6E6" >
             <Border x:Name="MainCanvas_Border" Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="LightGray" Background="White"/>
         </Border>
-        <TextBlock x:Name="FileName" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40" Grid.Row="0" Grid.ColumnSpan="2"/>
+        <TextBlock x:Name="FileName" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Grid.Row="0" Grid.ColumnSpan="2"/>
         <Button x:Name="HomeMenu" Content="홈" FontSize="11" HorizontalAlignment="Left" VerticalAlignment="Top" Width="40" Margin="10,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="HomeMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="InsertMenu" Content="삽입" FontSize="11" HorizontalAlignment="Left" VerticalAlignment="Top" Width="45" Margin="60,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="InsertMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
         <Button x:Name="AnimationMenu" Content="애니메이션" FontSize="11" HorizontalAlignment="Left" VerticalAlignment="Top" Width="65" Margin="120,0,10,0" Grid.Row="1" Grid.ColumnSpan="2" Click="AnimationMenu_Click" Background="{x:Null}" BorderBrush="{x:Null}"/>
