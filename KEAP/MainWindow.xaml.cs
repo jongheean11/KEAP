@@ -4676,5 +4676,94 @@ namespace KEAP
             (animation_Dictionary[canvas_List.IndexOf(MainCanvas)]).RemoveAt(Animation_ListBox.SelectedIndex);
             Add_AnimationList(canvas_List.IndexOf(MainCanvas));
         }
+
+        private void DeleteSlideButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (canvas_List.Count == 1)
+            {
+                MainCanvas_Border.Child = null;
+
+                canvas_List.Remove(MainCanvas);
+
+                KEAPCanvas new_Canvas = new KEAPCanvas()
+                {
+                    VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    Background = new ImageBrush(canvas_Background_Bitmapimage)
+                };
+
+                if ((this.Width * 3.75 / 4.45) < (((this.Height - 92) * 3 / 3.8) * (WindowSettings.resolution_Width / WindowSettings.resolution_Height)))
+                {
+                    new_Canvas.Width = (WindowSettings.current_Width * 3.75 / 4.45) - 50;
+                    new_Canvas.Height = (MainCanvas.Height * (WindowSettings.resolution_Height / WindowSettings.resolution_Width));
+                }
+                else
+                {
+                    new_Canvas.Height = (WindowSettings.current_Height - 92) * (3 / 3.8) - 50;
+                    new_Canvas.Width = (MainCanvas.Height * (WindowSettings.resolution_Width / WindowSettings.resolution_Height));
+                }
+
+                new_Canvas.PreviewMouseLeftButtonDown += MainCanvas_PreviewMouseLeftButtonDown;
+                new_Canvas.PreviewMouseLeftButtonUp += MainCanvas_PreviewMouseLeftButtonUp;
+                new_Canvas.PreviewMouseMove += MainCanvas_PreviewMouseMove;
+
+                MainCanvas_Border.Child = new_Canvas;
+
+                Slide_ListView.SelectionChanged -= Slide_ListView_SelectionChanged;
+                Slides_List.RemoveAt(0);
+                
+                canvas_List.Add(new_Canvas);
+                Slide_ListView.SelectionChanged += Slide_ListView_SelectionChanged;
+                Add_Slide_List(canvas_List.Count);
+
+                Autoedit_Slide_List(new_Canvas, canvas_List.Count - 1);
+
+                Image image_renew = RenderCanvas(canvas_List[canvas_List.Count - 1]);
+                ((SlideInfo)(Slide_ListView.Items[canvas_List.Count - 1])).Source = image_renew.Source;
+
+                MainCanvas = canvas_List.Last();
+            }
+            else if (canvas_List.IndexOf(MainCanvas) + 1 == canvas_List.Count)
+            {
+                int index = canvas_List.IndexOf(MainCanvas);
+                MainCanvas_Border.Child = null;
+
+                canvas_List.Remove(MainCanvas);
+
+                MainCanvas_Border.Child = canvas_List.Last();
+                MainCanvas = canvas_List.Last();
+
+                Slides_List.RemoveAt(index);
+                Slide_ListView.SelectedIndex = index - 1;
+                Autoedit_Slide_List(MainCanvas, index - 1);
+                Image image_renew = RenderCanvas(canvas_List[index - 1]);
+                ((SlideInfo)(Slide_ListView.Items[index - 1])).Source = image_renew.Source;
+            }
+            else
+            {
+                int index = canvas_List.IndexOf(MainCanvas);
+                MainCanvas_Border.Child = null;
+
+                canvas_List.Remove(MainCanvas);
+
+                MainCanvas_Border.Child = canvas_List.ElementAt(index);
+                MainCanvas = canvas_List.ElementAt(index);
+                Slide_ListView.SelectionChanged -= Slide_ListView_SelectionChanged;
+                Slide_ListView.ItemsSource = null;
+                Slides_List.RemoveAt(index);
+                for (int i = index; i < Slides_List.Count; i++ )
+                {
+                    Slides_List.ElementAt(i).Number = Convert.ToString(i+1);
+                }
+                Slide_ListView.ItemsSource = Slides_List;
+                Slide_ListView.SelectedIndex = index;
+                Slide_ListView.SelectionChanged += Slide_ListView_SelectionChanged;
+                Autoedit_Slide_List(MainCanvas, index);
+                
+                Slide_ListView.UpdateLayout();
+                Image image_renew = RenderCanvas(canvas_List[index]);
+                ((SlideInfo)(Slide_ListView.Items[index])).Source = image_renew.Source;
+            }
+        }
     }
 }
