@@ -29,7 +29,8 @@ namespace KEAP
         Dictionary<int, List<Dictionary<int, string>>> animations = new Dictionary<int, List<Dictionary<int, string>>>();
         int canvas_index = 0, animation_index = 0;
         List<int> animation_indexes = new List<int>();
-        
+        KEAPCanvas DefaultPage;
+        int DefaultPageNum;
         public FullWindowForAudience(MainWindow main, FullWindowForPresentor pre)
         {
             main_View = main;
@@ -201,7 +202,7 @@ namespace KEAP
                 animations.Add(i,new Dictionary<int,string>[main.animation_Dictionary[i].Count()]);
                 main.animation_Dictionary[i].CopyTo(animations[i]);
             }*/
-            
+            DefaultPageNum = main.DefaultCanvasNum;
         }
 
         public FullWindowForAudience()

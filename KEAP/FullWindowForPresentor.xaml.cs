@@ -70,6 +70,8 @@ namespace KEAP
         int canvas_index = 0, animation_index = 0;
         List<int> animation_indexes = new List<int>();
         
+        KEAPCanvas DefaultPage;
+        int DefaultPageNum;        
 
         private FullWindowForPresentor()
         {
@@ -110,6 +112,8 @@ namespace KEAP
 
             DataContext = this;
             InitializeComponent();
+
+            DefaultPageNum = main.DefaultCanvasNum;
 
             // initialize the Kinect sensor manager
             KinectSensorManager = new KinectSensorManager();

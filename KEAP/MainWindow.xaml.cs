@@ -40,6 +40,9 @@ namespace KEAP
         
         public List<Dictionary<int, string>> animation_List = new List<Dictionary<int, string>>();
         public Dictionary<int, List<Dictionary<int, string>>> animation_Dictionary = new Dictionary<int, List<Dictionary<int, string>>>();
+        public KEAPCanvas DefaultCanvas = new KEAPCanvas();
+        public int DefaultCanvasNum = -1;
+        
 
         int previous_selection = -1;
         KEAPCanvas MainCanvas;
@@ -74,7 +77,7 @@ namespace KEAP
         Polygon selected_Polygon;
         Shape selected_Shape;
         Image selected_Image;
-
+        
         Brush stroke_Brush, fill_Brush, font_Brush;
         FontFamily font_Family; int font_Family_Index;
         double font_Size; int font_Size_Index;
@@ -97,7 +100,7 @@ namespace KEAP
             canvas_Background_Bitmapimage.UriSource = new Uri(selected_Template.img_Uri);
             canvas_Background_Bitmapimage.EndInit();
             canvas_Background = BitmapFrame.Create(canvas_Background_Bitmapimage);
-
+            
             MainCanvas = new KEAPCanvas()
             {
                 VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
@@ -3717,8 +3720,7 @@ namespace KEAP
                         break;
                     else
                     {
-                        string temp = dic[MainCanvas.Children.IndexOf(ele)];
-                        temp = temp + "/" + anitype;
+                        dic[MainCanvas.Children.IndexOf(ele)] = anitype;
                     }
                 }
             }
@@ -4414,10 +4416,11 @@ namespace KEAP
 
         void Add_AnimationList(int index)
         {
-            List<Dictionary<int,string>> ani_list = animation_Dictionary[index];
+
+            List<Dictionary<int, string>> ani_list = animation_Dictionary[index];
             Anis_List.Clear();
             int i = 1;
-            foreach (Dictionary<int,string> dic in ani_list)
+            foreach (Dictionary<int, string> dic in ani_list)
             {
                 Anis_List.Add(new Ani_List_Info()
                 {
@@ -4427,6 +4430,8 @@ namespace KEAP
                 i++;
             }
             Animation_ListBox.ItemsSource = Anis_List;
+
+
         }
 
         private void BoundsLTR_ToolTipOpening(object sender, ToolTipEventArgs e)
@@ -4647,5 +4652,29 @@ namespace KEAP
             edit_Rect.Visibility = Visibility.Visible;
         }
 
+        private void DefaultSlide_Click(object sender, RoutedEventArgs e)
+        {
+            //default
+            if(MainCanvas==DefaultCanvas)
+            {
+                DefaultCanvas = new KEAPCanvas();
+                DefaultImage.Source = null;
+                DefaultCanvasNum = -1;
+            }
+            else
+            {
+                Image img = RenderCanvas(MainCanvas);
+                DefaultImage.Source = img.Source;
+                DefaultCanvas = MainCanvas;
+                DefaultCanvasNum = canvas_List.IndexOf(MainCanvas);
+            }
+        }
+
+        private void DeleteList_Click(object sender, RoutedEventArgs e)
+        {
+            if (Animation_ListBox.SelectedIndex < 0) return;
+            (animation_Dictionary[canvas_List.IndexOf(MainCanvas)]).RemoveAt(Animation_ListBox.SelectedIndex);
+            Add_AnimationList(canvas_List.IndexOf(MainCanvas));
+        }
     }
 }

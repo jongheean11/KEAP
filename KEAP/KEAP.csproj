@@ -309,6 +309,12 @@
   <ItemGroup>
     <Resource Include="Images\KEAP_Icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Button\default_page.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Button\delete_list.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

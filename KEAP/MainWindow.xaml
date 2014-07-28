@@ -15,8 +15,7 @@
             <RowDefinition Height="0.15*"/>
             <RowDefinition Height="92"/>
             <RowDefinition Height="3*"/>
-            <RowDefinition Height="0.4*"/>
-            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
         <ListView x:Name="Slide_ListView" Margin="0" SelectionChanged="Slide_ListView_SelectionChanged" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" ItemsSource="{Binding Slides_List}" Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="#FFE6E6E6">
             <ListView.ItemTemplate>
@@ -49,7 +48,7 @@
         <Border x:Name="Menu_Border" BorderBrush="Gray" BorderThickness="1" Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2">
         </Border>
 
-        <Grid x:Name="HomeMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="visible">
+        <Grid x:Name="HomeMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="62"/>
                 <!--0-->
@@ -541,7 +540,7 @@
             <Rectangle Grid.Column="19" Fill="Gray"/>
         </Grid>
 
-        <Grid x:Name="AnimationMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Collapsed">
+        <Grid x:Name="AnimationMenu_Grid"  Grid.Row="2" Grid.RowSpan="1" Grid.ColumnSpan="2" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="2"/>
@@ -590,7 +589,33 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <Button x:Name="Slide_Show" Grid.Column="2" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="64" Click="Slide_Show_Click" Grid.RowSpan="2" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button x:Name="DeleteList" Grid.Column="2" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Width="64" Click="DeleteList_Click" Grid.RowSpan="2" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;애니메이션 삭제&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;현재 선택한 애니메이션 설정을 지웁니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Top" Source="Images/Button/delete_list.png" Width="50" Stretch="Fill" Height="20"/>
+                </DockPanel>
+            </Button>
+            <Button x:Name="DefaultSlide" Grid.Column="2" HorizontalAlignment="Center" Margin="0,0,0,5" VerticalAlignment="Bottom" Width="64" Click="DefaultSlide_Click" Grid.RowSpan="2" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+                <Button.ToolTip>
+                    <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
+                        <StackPanel>
+                            <TextBlock Margin="3" ><Run Text="&lt;디폴트 페이지 설정&gt;"/></TextBlock>
+                            <TextBlock Margin="5" ><Run Text="&lt;현재 선택한 슬라이드를 디폴트 페이지로 설정합니다.&gt;"/></TextBlock>
+                        </StackPanel>
+                    </ToolTip>
+                </Button.ToolTip>
+                <DockPanel LastChildFill="True">
+                    <Image DockPanel.Dock="Top" Source="Images/Button/default_page.png" Width="50" Stretch="Fill" Height="40"/>
+                </DockPanel>
+            </Button>
+            <Button x:Name="Slide_Show" Grid.Column="4" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" Width="64" Click="Slide_Show_Click" Grid.RowSpan="2" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -604,7 +629,7 @@
                     <Label HorizontalContentAlignment="Center" DockPanel.Dock="Right" FontSize="9">슬라이드 쇼</Label>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="0" Grid.Column="4" Margin="5,10,5,5" Name="BoundsLTR_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsLTR_Click" ToolTipOpening="BoundsLTR_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="0" Grid.Column="6" Margin="5,10,5,5" Name="BoundsLTR_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsLTR_Click" ToolTipOpening="BoundsLTR_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -617,7 +642,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_bounds_LTR.png" Height="28" Width="48.8" Stretch="Fill"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="1" Grid.Column="4" Margin="5,10,5,5" Name="BoundsRTL_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsRTL_Click" ToolTipOpening="BoundsRTL_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="1" Grid.Column="6" Margin="5,10,5,5" Name="BoundsRTL_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsRTL_Click" ToolTipOpening="BoundsRTL_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -630,7 +655,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_bounds_RTL.png" Height="28" Width="48.8" Stretch="Fill" />
                 </DockPanel>
             </Button>
-            <Button Grid.Row="0" Grid.Column="6" Margin="5,10,5,5" Name="BoundsTTB_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsTTB_Click" ToolTipOpening="BoundsTTB_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="0" Grid.Column="8" Margin="5,10,5,5" Name="BoundsTTB_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsTTB_Click" ToolTipOpening="BoundsTTB_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -643,7 +668,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_bounds_TTB.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="1" Grid.Column="6" Margin="5,10,5,5" Name="BoundsBTT_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsBTT_Click" ToolTipOpening="BoundsBTT_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="1" Grid.Column="8" Margin="5,10,5,5" Name="BoundsBTT_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsBTT_Click" ToolTipOpening="BoundsBTT_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -656,7 +681,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_bounds_BTT.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="0" Grid.Column="8" Margin="5,10,5,5" Name="MoveLTR_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveLTR_Click" ToolTipOpening="MoveLTR_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="0" Grid.Column="10" Margin="5,10,5,5" Name="MoveLTR_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveLTR_Click" ToolTipOpening="MoveLTR_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -669,7 +694,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_move_LTR.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="1" Grid.Column="8" Margin="5,10,5,5" Name="MoveRTL_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveRTL_Click" ToolTipOpening="MoveRTL_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="1" Grid.Column="10" Margin="5,10,5,5" Name="MoveRTL_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveRTL_Click" ToolTipOpening="MoveRTL_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -682,7 +707,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_move_RTL.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="0" Grid.Column="10" Margin="5,10,5,5" Name="MoveTTB_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveTTB_Click" ToolTipOpening="MoveTTB_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="0" Grid.Column="12" Margin="5,10,5,5" Name="MoveTTB_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveTTB_Click" ToolTipOpening="MoveTTB_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -695,7 +720,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_move_TTB.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="1" Grid.Column="10" Margin="5,10,5,5" Name="MoveBTT_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveBTT_Click" ToolTipOpening="MoveBTT_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="1" Grid.Column="12" Margin="5,10,5,5" Name="MoveBTT_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="MoveBTT_Click" ToolTipOpening="MoveBTT_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -708,7 +733,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_move_BTT.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="0" Grid.Column="12" Margin="5,10,5,5" Name="FadeIn_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="FadeIn_Click" ToolTipOpening="FadeIn_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="0" Grid.Column="14" Margin="5,10,5,5" Name="FadeIn_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="FadeIn_Click" ToolTipOpening="FadeIn_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -721,7 +746,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_fade_in.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="1" Grid.Column="12" Margin="5,10,5,5" Name="FadeOut_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="FadeOut_Click" ToolTipOpening="FadeOut_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="1" Grid.Column="14" Margin="5,10,5,5" Name="FadeOut_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="FadeOut_Click" ToolTipOpening="FadeOut_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -734,7 +759,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_fade_out.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="0" Grid.Column="14" Margin="5,10,5,5" Name="ZoomIn_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="ZoomIn_Click" ToolTipOpening="ZoomIn_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="0" Grid.Column="16" Margin="5,10,5,5" Name="ZoomIn_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="ZoomIn_Click" ToolTipOpening="ZoomIn_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -747,7 +772,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_zoom_2.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="1" Grid.Column="14" Margin="5,10,5,5" Name="ZoomOut_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="ZoomOut_Click" ToolTipOpening="ZoomOut_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="1" Grid.Column="16" Margin="5,10,5,5" Name="ZoomOut_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="ZoomOut_Click" ToolTipOpening="ZoomOut_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -760,7 +785,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_zoom_1.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="0" Grid.Column="16" Margin="5,10,5,5" Name="Tornado_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Tornado_Click" ToolTipOpening="Tornado_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="0" Grid.Column="18" Margin="5,10,5,5" Name="Tornado_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Tornado_Click" ToolTipOpening="Tornado_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -773,7 +798,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_tornado.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="1" Grid.Column="16" Margin="5,10,5,5" Name="Circle_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Circle_Click" ToolTipOpening="Circle_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="1" Grid.Column="18" Margin="5,10,5,5" Name="Circle_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Circle_Click" ToolTipOpening="Circle_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -786,7 +811,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_circle.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="0" Grid.Column="18" Margin="5,10,5,5" Name="Interlaced_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Interlaced_Click" ToolTipOpening="Interlaced_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="0" Grid.Column="20" Margin="5,10,5,5" Name="Interlaced_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Interlaced_Click" ToolTipOpening="Interlaced_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -799,7 +824,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_interlaced.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="1" Grid.Column="18" Margin="5,10,5,5" Name="Block_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Block_Click" ToolTipOpening="Block_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="1" Grid.Column="20" Margin="5,10,5,5" Name="Block_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Block_Click" ToolTipOpening="Block_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -812,7 +837,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_block.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="0" Grid.Column="20" Margin="5,10,5,5" Name="Radial_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Radial_Click" ToolTipOpening="Radial_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="0" Grid.Column="22" Margin="5,10,5,5" Name="Radial_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="Radial_Click" ToolTipOpening="Radial_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -825,7 +850,7 @@
                     <Image DockPanel.Dock="Top" Source="Images/Button/ani_radial.png" Width="48.8" Stretch="Fill" Height="28"/>
                 </DockPanel>
             </Button>
-            <Button Grid.Row="1" Grid.Column="20" Margin="5,10,5,5" Name="WaterFall_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="WaterFall_Click" ToolTipOpening="WaterFall_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
+            <Button Grid.Row="1" Grid.Column="22" Margin="5,10,5,5" Name="WaterFall_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="WaterFall_Click" ToolTipOpening="WaterFall_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -850,7 +875,10 @@
             <Rectangle Grid.Column="17" Grid.RowSpan="2" Fill="Gray"/>
             <Rectangle Grid.Column="19" Grid.RowSpan="2" Fill="Gray"/>
             <Rectangle Grid.Column="21" Grid.RowSpan="2" Fill="Gray"/>
-
+            <Rectangle Grid.Column="23" Grid.RowSpan="2" Fill="Gray"/>
         </Grid>
+            
+        <Image x:Name="DefaultImage" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Fill" Grid.Column="0" Grid.Row="4" Margin="50,15"/>
+        
     </Grid>
 </Window>
