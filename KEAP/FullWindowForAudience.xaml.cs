@@ -1146,7 +1146,7 @@ namespace KEAP
             if(!container_inputed)
             {
                 container = canvas_arr[canvas_arr.IndexOf(AudienceCanvas)];
-                container_inputed = false;
+                container_inputed = true;
             }
             if(DefaultPage==AudienceCanvas)
             {
