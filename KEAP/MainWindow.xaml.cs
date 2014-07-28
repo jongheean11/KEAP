@@ -503,7 +503,7 @@ namespace KEAP
                         FontFamily = font_Family,
                         FontSize = font_Size
                     };
-
+                    
                     if (x1 < x2)
                     {
                         textblock.Width = x2 - x1;

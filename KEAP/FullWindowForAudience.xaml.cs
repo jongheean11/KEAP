@@ -1129,12 +1129,31 @@ namespace KEAP
             //AudienceGrid.Background = new ImageBrush(zoom_img.Source);
             //AudienceGrid.Background = new SolidColorBrush(Colors.Blue);
         }
+
         void ZoomOut()
         {
             if (AudienceGrid.Children.Contains(AudienceCanvas)) return;
             if (AudienceGrid.Children.Contains(zoomCanvas)) AudienceGrid.Children.Remove(zoomCanvas);
             if (AudienceGrid.Children.Contains(zoom_img)) AudienceGrid.Children.Remove(zoom_img);
             AudienceGrid.Children.Add(AudienceCanvas);
+        }
+
+
+        KEAPCanvas container = new KEAPCanvas();
+        void DefaultCall()
+        {
+            if(DefaultPage==AudienceCanvas)
+            {
+                AudienceCanvas=canvas_arr[canvas_arr.IndexOf(container)];
+            }
+            else
+            {
+                if(DefaultPageNum!=canvas_arr.IndexOf(AudienceCanvas))
+                {
+                    container = canvas_arr[canvas_arr.IndexOf(AudienceCanvas)];
+                    AudienceCanvas = canvas_arr[DefaultPageNum];
+                }
+            }
         }
     }
 }
