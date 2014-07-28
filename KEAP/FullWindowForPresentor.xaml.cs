@@ -359,9 +359,17 @@ namespace KEAP
             key_Enter.InputGestures.Add(new KeyGesture(Key.Enter));
             CommandBindings.Add(new CommandBinding(key_Enter, Enter_KeyEventHandler));
 
+            // key button
+            RoutedCommand key_Tab = new RoutedCommand();
+            key_Tab.InputGestures.Add(new KeyGesture(Key.Tab));
+            CommandBindings.Add(new CommandBinding(key_Tab, Tab_KeyEventHandler));
+
         }
 
-
+        private void Tab_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            aud_View.Tab_KeyEventHandler(sender, e);
+        }
 
         private void Enter_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
         {
@@ -1015,6 +1023,7 @@ namespace KEAP
                         break;
                     case "strechedHands":
                         Gesture = "strechedHands\n";
+                        aud_View.DefaultCall();
                         //aud_View.getDataFromKinect("strechedHands");
                         aud_View.get_StrechedHands_From_Kinect();
                         break;
