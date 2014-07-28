@@ -424,6 +424,17 @@ namespace KEAP
             key_Enter.InputGestures.Add(new KeyGesture(Key.Enter));
             CommandBindings.Add(new CommandBinding(key_Enter, Enter_KeyEventHandler));
 
+            // key button
+            RoutedCommand key_Tab = new RoutedCommand();
+            key_Tab.InputGestures.Add(new KeyGesture(Key.Tab));
+            CommandBindings.Add(new CommandBinding(key_Tab, Tab_KeyEventHandler));
+
+        }
+
+        public void Tab_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            DefaultCall();
+//            throw new NotImplementedException();
         }
 
         public void Enter_KeyEventHandler(object sender, ExecutedRoutedEventArgs e)
@@ -1139,27 +1150,28 @@ namespace KEAP
         }
 
 
-        KEAPCanvas container = new KEAPCanvas();
-        bool container_inputed = false;
-        void DefaultCall()
+        int container = -1;
+        bool toggle = false;
+        public void DefaultCall()
         {
-            if(!container_inputed)
+            if (DefaultPageNum == -1) return;
+            
+            if (!toggle)
             {
-                container = canvas_arr[canvas_arr.IndexOf(AudienceCanvas)];
-                container_inputed = true;
-            }
-            if(DefaultPage==AudienceCanvas)
-            {
-                AudienceCanvas=canvas_arr[canvas_arr.IndexOf(container)];
+                AudienceGrid.Children.Remove(AudienceCanvas);
+                container = canvas_arr.IndexOf(AudienceCanvas);
+                AudienceCanvas = canvas_arr[DefaultPageNum];
+                AudienceGrid.Children.Add(AudienceCanvas);
+                toggle = true;
             }
             else
             {
-                if(DefaultPageNum!=canvas_arr.IndexOf(AudienceCanvas))
-                {
-                    container = canvas_arr[canvas_arr.IndexOf(AudienceCanvas)];
-                    AudienceCanvas = canvas_arr[DefaultPageNum];
-                }
+                AudienceGrid.Children.Remove(AudienceCanvas);
+                AudienceCanvas=canvas_arr[container];
+                AudienceGrid.Children.Add(AudienceCanvas);
+                toggle = false;
             }
+            
         }
     }
 }
