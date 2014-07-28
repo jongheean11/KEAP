@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:kv="clr-namespace:Microsoft.Samples.Kinect.WpfViewers;assembly=Microsoft.Samples.Kinect.WpfViewers"
         xmlns:a="clr-namespace:KEAP"
-        Title="FullWindowForPresentor" Height="900" Width="1000" Background="White">
+        Title="FullWindowForPresentor" Height="900" Width="1000" Background="White" Icon="Images/KEAP_Icon.png">
     <Grid x:Name="PresentorGrid" Background="{x:Null}">
         <!--
         <a:KEAPCanvas x:Name="PresenterCanvas" Background="WhiteSmoke">

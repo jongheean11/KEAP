@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:Customcontrols"
         Title="KEAP" Width="1200"
         MinHeight="540"
-        MinWidth="650">
+        MinWidth="650" Icon="Images/KEAP_Icon.png">
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.7*"/>
@@ -62,7 +62,8 @@
                 <!--5-->
                 <ColumnDefinition Width="70"/>
                 <ColumnDefinition Width="2"/>
-                <ColumnDefinition Width="183"/>
+                <ColumnDefinition Width="93.8
+                                  "/>
                 <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="216"/>
                 <ColumnDefinition Width="2"/>
@@ -255,20 +256,7 @@
                 </local:Colorpicker.ToolTip>
             </local:Colorpicker>
             <Rectangle Grid.Column="8" Grid.RowSpan="3" Fill="Gray"/>
-
-            <Button x:Name="TextFlowButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,15,0,0" Background="{x:Null}" Grid.Column="9" Grid.RowSpan="3" BorderBrush="{x:Null}" Height="26" Width="84">
-                <DockPanel LastChildFill="True">
-                    <Image DockPanel.Dock="Left" Source="Images/Button/textflow.png" Height="16"/>
-                    <Label HorizontalContentAlignment="Left" DockPanel.Dock="Right" FontSize="10">텍스트 방향</Label>
-                </DockPanel>
-            </Button>
-            <Button x:Name="TextArrangeButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="95,15,0,0" Background="{x:Null}" Grid.Column="9" Grid.RowSpan="3" BorderBrush="{x:Null}" Height="26" Width="84">
-                <DockPanel LastChildFill="True">
-                    <Image DockPanel.Dock="Left" Source="Images/Button/textarrange.png" Height="16"/>
-                    <Label HorizontalContentAlignment="Left" DockPanel.Dock="Right" FontSize="10">텍스트 맞춤</Label>
-                </DockPanel>
-            </Button>
-            <Button x:Name="NormalButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,15" Background="{x:Null}" Grid.Column="9" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="NormalButton_Click">
+            <Button x:Name="NormalButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,15,0,15" Background="{x:Null}" Grid.Column="9" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="NormalButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -281,7 +269,7 @@
                     <Image DockPanel.Dock="Bottom" Source="Images/Button/normalalignment.png"/>
                 </DockPanel>
             </Button>
-            <Button x:Name="LeftButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="55,0,0,15" Background="{x:Null}" Grid.Column="9" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="LeftButton_Click">
+            <Button x:Name="LeftButton" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="55,15,0,15" Background="{x:Null}" Grid.Column="9" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="LeftButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -294,7 +282,7 @@
                     <Image DockPanel.Dock="Bottom" Source="Images/Button/leftalignment.png"/>
                 </DockPanel>
             </Button>
-            <Button x:Name="CenterButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="95,0,0,15" Background="{x:Null}" Grid.Column="9" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="CenterButton_Click">
+            <Button x:Name="CenterButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="55,0,0,15" Background="{x:Null}" Grid.Column="9" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="CenterButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
@@ -307,7 +295,7 @@
                     <Image DockPanel.Dock="Bottom" Source="Images/Button/centeralignment.png"/>
                 </DockPanel>
             </Button>
-            <Button x:Name="RightButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="135,0,0,15" Background="{x:Null}" Grid.Column="9" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="RightButton_Click">
+            <Button x:Name="RightButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,15" Background="{x:Null}" Grid.Column="9" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderBrush="{x:Null}" Height="25" Click="RightButton_Click">
                 <Button.ToolTip>
                     <ToolTip Background="Gainsboro" FontFamily="Kristen ITC">
                         <StackPanel>
