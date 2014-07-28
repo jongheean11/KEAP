@@ -87,6 +87,7 @@ namespace KEAP
                             FontFamily = copyele.FontFamily,
                             Background = copyele.Background,
                             Foreground = copyele.Foreground,
+                            TextDecorations = copyele.TextDecorations
                         };
                         Canvas.SetLeft(textblock, Canvas.GetLeft(copyele) * (SystemParameters.WorkArea.Width / canvas.Width) );
                         Canvas.SetTop(textblock, Canvas.GetTop(copyele) * (SystemParameters.PrimaryScreenHeight / canvas.Height) );
@@ -967,6 +968,7 @@ namespace KEAP
                         FontFamily = copyele.FontFamily,
                         Background = copyele.Background,
                         Foreground = copyele.Foreground,
+                        TextDecorations = copyele.TextDecorations
                     };
                     Canvas.SetLeft(textblock,Canvas.GetLeft(copyele));
                     Canvas.SetTop(textblock,Canvas.GetTop(copyele));

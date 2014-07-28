@@ -2480,7 +2480,14 @@ namespace KEAP
                             else
                                 e_Effect.InnerText = "0";
                             T.AppendChild(e_Effect);
-                            
+
+                            XmlElement e_TextDeco = xmlDoc.CreateElement("TextDecoration");
+                            if (thistextblock.TextDecorations.Count != 0)
+                                e_Effect.InnerText = "1";
+                            else
+                                e_Effect.InnerText = "0";
+                            T.AppendChild(e_TextDeco);
+
                             canvas_element.AppendChild(T);
                         }
 
@@ -2992,7 +2999,11 @@ namespace KEAP
                                 };
                                 if (effect != null)
                                     newtextbox.Effect = new DropShadowEffect() { ShadowDepth = 4, Direction = 315, Color = Colors.Black, Opacity = 0.5 };
-                                
+
+                                xmlnode = uielement.ChildNodes[p];
+                                if (xmlnode.InnerText == "1")
+                                    newtextbox.TextDecorations.Add(TextDecorations.Underline);
+
                                 Canvas.SetLeft(newtextbox, _points[0]);
                                 Canvas.SetTop(newtextbox, _points[1]);
                                 newtextbox.Width = _points[2] - _points[0];
@@ -4192,6 +4203,7 @@ namespace KEAP
                         FontFamily = copyele.FontFamily,
                         Background = copyele.Background,
                         Foreground = copyele.Foreground,
+                        TextDecorations = copyele.TextDecorations
                     };
                     
                     MainCanvas.Children.Remove(edit_Rect);
