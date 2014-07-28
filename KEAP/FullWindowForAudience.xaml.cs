@@ -1140,8 +1140,14 @@ namespace KEAP
 
 
         KEAPCanvas container = new KEAPCanvas();
+        bool container_inputed = false;
         void DefaultCall()
         {
+            if(!container_inputed)
+            {
+                container = canvas_arr[canvas_arr.IndexOf(AudienceCanvas)];
+                container_inputed = false;
+            }
             if(DefaultPage==AudienceCanvas)
             {
                 AudienceCanvas=canvas_arr[canvas_arr.IndexOf(container)];
