@@ -601,6 +601,7 @@
                 </Button.ToolTip>
                 <DockPanel LastChildFill="True">
                     <Image DockPanel.Dock="Top" Source="Images/Button/slide_show.png" Width="60" Stretch="Fill" Height="50"/>
+                    <Label HorizontalContentAlignment="Center" DockPanel.Dock="Right" FontSize="9">슬라이드 쇼</Label>
                 </DockPanel>
             </Button>
             <Button Grid.Row="0" Grid.Column="4" Margin="5,10,5,5" Name="BoundsLTR_preview" HorizontalAlignment="Center" VerticalAlignment="Center" Width="Auto" Click="BoundsLTR_Click" ToolTipOpening="BoundsLTR_ToolTipOpening" Background="{x:Null}" BorderBrush="#FFE6E6E6">
